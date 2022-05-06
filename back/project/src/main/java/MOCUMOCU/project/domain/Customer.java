@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ public class Customer {
     private int attendanceDate; //연속 출석 일수
     private int userPoint; //보유 포인트
     private boolean enable;
-    private Date lastDate; //마지막 접속 날짜 저장
+    private LocalDateTime lastDate; //마지막 접속 날짜 저장
 
     @OneToMany(mappedBy = "customer")
     private List<Coupon> coupons = new ArrayList<>();

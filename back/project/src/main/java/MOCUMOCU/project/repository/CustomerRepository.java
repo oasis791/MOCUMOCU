@@ -16,6 +16,18 @@ public class CustomerRepository {
         em.persist(customer);
     }
 
+    public void remove(Long id) {
+        em.remove(id);
+    }
+
+    public void update(Customer customer) {
+        em.persist(customer);
+    }
+
+
+    public Customer findOne(Long id) {
+        return em.find(Customer.class, id);
+    }
 
 
 }
