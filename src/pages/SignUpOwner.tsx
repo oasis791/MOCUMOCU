@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
   Modal,
@@ -12,6 +12,7 @@ import {
   StatusBar,
   TouchableHighlight,
   ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
@@ -115,16 +116,16 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
     email && name && password && checkPassword && telephoneNumber;
   const [modalVisible, setModalVisible] = useState<any>(true);
   const [scrollToBottom, setScrollToBottom] = useState<any>(false);
+  
+//   useEffect(() => {
+//     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => modalVisible)
+//       return () => backHandler.remove()
+//   }, []);
+    
   return (
     <DismissKeyboardView>
       <View>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}>
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
           <SafeAreaView style={{paddingTop: StatusBar.currentHeight}}>
             <ScrollView
               style={styles.scrollView}

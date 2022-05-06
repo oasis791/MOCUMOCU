@@ -118,13 +118,7 @@ function SignUp({navigation}: SignUpScreenProps) {
   return (
     <DismissKeyboardView>
       <View>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}>
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
           <SafeAreaView style={{paddingTop: StatusBar.currentHeight}}>
             <ScrollView
               style={styles.scrollView}
