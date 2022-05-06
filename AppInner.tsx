@@ -8,6 +8,7 @@ import Main from './src/pages/Main';
 import SignIn from './src/pages/SignIn';
 import SignInOwner from './src/pages/SignInOwner';
 import SignUp from './src/pages/SignUp';
+import SignUpOwner from './src/pages/SignUpOwner';
 import InitScreen from './src/pages/InitScreen';
 import {Image, View, Text} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -152,6 +153,11 @@ function AppInner() {
       <Stack.Screen
         name="SignUp"
         component={SignUp}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SignUpOwner"
+        component={SignUpOwner}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

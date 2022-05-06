@@ -17,6 +17,7 @@ export type RootStackParamList = {
   SignIn: undefined;
   SignInOwner: undefined;
   SignUp: undefined;
+  SignUpOwner: undefined;
   InitScreen: undefined;
 }; // -> 이 타입은 로그인 안 했을 때 보이는 페이지들
 

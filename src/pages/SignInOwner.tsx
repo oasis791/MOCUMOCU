@@ -18,9 +18,9 @@ import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
-type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
+type SignInOwnerScreenProps = NativeStackScreenProps<RootStackParamList, 'SignInOwner'>;
 
-function SignIn({navigation}: SignInScreenProps) {
+function SignInOwner({navigation}: SignInOwnerScreenProps) {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
@@ -75,8 +75,8 @@ function SignIn({navigation}: SignInScreenProps) {
   const onChangePassword = useCallback(text => {
     setPassword(text);
   }, []);
-  const toSignUp = useCallback(() => {
-    navigation.navigate('SignUp');
+  const toSignUpOwner = useCallback(() => {
+    navigation.navigate('SignUpOwner');
   }, [navigation]);
   const canGoNext = email && password;
   return (
@@ -160,16 +160,16 @@ function SignIn({navigation}: SignInScreenProps) {
           </Pressable>
           <TouchableHighlight
             underlayColor={'#e6e6e6'}
-            onPress={toSignUp}
+            onPress={toSignUpOwner}
             style={styles.signUpButton}>
             <Text style={styles.signUpButtonText}>회원가입</Text>
           </TouchableHighlight>
           <View style={styles.zZone}>
-            <Pressable onPress={toSignUp}>
+            <Pressable onPress={toSignUpOwner}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
             <Text style={{marginLeft: 5}}>/</Text>
-            <Pressable onPress={toSignUp}>
+            <Pressable onPress={toSignUpOwner}>
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
             </Pressable>
           </View>
@@ -267,4 +267,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default SignInOwner;
