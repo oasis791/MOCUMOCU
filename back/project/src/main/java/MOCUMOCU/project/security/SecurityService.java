@@ -15,7 +15,7 @@ public class SecurityService {
     private static final String SECRET_KEY = "asdfasdfasdfaasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdsdfsadfasdfsdfasdfasdfasdfasdf";
 
     //로그인 서비스 던질 때 같이
-    public String createToken(String subject, long expTime) {
+    /*public String createToken(String subject, long expTime) {
         if (expTime <= 0) {
             throw new RuntimeException("Expire Time has to bigger than 0");
         }
@@ -27,6 +27,23 @@ public class SecurityService {
 
         return Jwts.builder()
                 .setSubject(subject)
+                .signWith(signingKey, signatureAlgorithm)
+                .setExpiration(new Date(System.currentTimeMillis() + expTime))
+                .compact();
+    }*/
+
+    public String createToken(TestPerson person, long expTime) {
+        if (expTime <= 0) {
+            throw new RuntimeException("Expire Time has to bigger than 0");
+        }
+
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+
+        byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
+        Key signingKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
+
+        return Jwts.builder()
+                .setSubject(person.getName())
                 .signWith(signingKey, signatureAlgorithm)
                 .setExpiration(new Date(System.currentTimeMillis() + expTime))
                 .compact();
