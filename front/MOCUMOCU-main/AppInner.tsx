@@ -85,7 +85,6 @@ function AppInner() {
       screenOptions={{
         tabBarActiveTintColor: '#414FFD',
       }}>
-    
       <Tab.Screen
         name="saveUp"
         component={saveUp}

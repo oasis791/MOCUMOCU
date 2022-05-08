@@ -10,6 +10,7 @@ import {
   Image,
   TouchableHighlight,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
@@ -81,6 +82,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
   const canGoNext = email && password;
   return (
     <View>
+      <StatusBar hidden={true} />
       <DismissKeyboardView>
         <View style={styles.inputWrapper}>
           <Image

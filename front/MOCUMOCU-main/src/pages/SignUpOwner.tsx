@@ -124,9 +124,11 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
     
   return (
     <DismissKeyboardView>
+      
       <View>
+        <StatusBar hidden={true} />
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <SafeAreaView style={{paddingTop: StatusBar.currentHeight}}>
+          <SafeAreaView style={{paddingTop: 0}}>
             <ScrollView
               style={styles.scrollView}
               fadingEdgeLength={10}
@@ -229,7 +231,7 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
         </Modal>
         <View>
           <Text style={[styles.welcomeText, {marginBottom: 18}]}>
-            회원님, {'\n'}환영합니다!
+            점주님, {'\n'}환영합니다!
           </Text>
         </View>
         <View style={styles.inputWrapper}>
@@ -416,9 +418,12 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   scrollView: {
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     backgroundColor: 'white',
     width: '100%',
     height: '100%',
+    paddingTop: 10,
     // alignItems: 'center',
     // justifyContent: 'center',
   },
@@ -456,7 +461,8 @@ const styles = StyleSheet.create({
   },
   privacyAgreeText: {
     marginHorizontal: 40,
-    marginBottom: 100,
+    marginBottom: 120,
+    lineHeight: 20,
   },
   welcomeText: {
     fontSize: 24,

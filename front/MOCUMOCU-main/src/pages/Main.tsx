@@ -9,6 +9,7 @@ import {
   Alert,
   Dimensions,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
 // import InsetShadow from 'react-native-inset-shadow';
@@ -38,7 +39,8 @@ function Main() {
     Alert.alert('알림', '포인트 상점으로 이동');
   };
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
+      <StatusBar hidden={true} />
       <View style={styles.event}>
         <TouchableOpacity
           onPress={onSubmitEvent}
