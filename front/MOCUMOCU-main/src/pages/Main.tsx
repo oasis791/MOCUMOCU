@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'black',
   },
   eventBanner: {
-    backgroundColor: 'purple',
+    // backgroundColor: 'purple',
     height: screenHeight - 467,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,

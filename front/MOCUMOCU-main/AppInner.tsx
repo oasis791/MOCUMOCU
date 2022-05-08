@@ -10,9 +10,16 @@ import SignInOwner from './src/pages/SignInOwner';
 import SignUp from './src/pages/SignUp';
 import SignUpOwner from './src/pages/SignUpOwner';
 import InitScreen from './src/pages/InitScreen';
-import {Image, View, Text} from 'react-native';
+import {Image, View, Text, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from './src/store/reducer';
+import { useAppDispatch } from './src/store';
+import { useEffect } from 'react';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import SplashScreen from 'react-native-splash-screen';
+import axios, {AxiosError} from 'axios';
+import userSlice from './src/slices/user';
+import Config from 'react-native-config';
 // export type LoggedInParamList = {
 //   Orders: undefined;
 //   Settings: undefined;
@@ -29,13 +36,56 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 function AppInner() {
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
+  const dispatch = useAppDispatch();
   // const isLoggedIn = false;
+
+    // 앱 실행 시 토큰 있으면 로그인하는 코드
+  useEffect(() => {
+    const getTokenAndRefresh = async () => {
+      // SplashScreen.hide();
+      try {
+        const token = await EncryptedStorage.getItem('refreshToken');
+        if (!token) {
+          console.log("!token");
+          SplashScreen.hide();
+          return;
+        }
+        const response = await axios.post(
+          `${Config.API_URL}/refreshToken`,
+          {},
+          {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        dispatch(
+          userSlice.actions.setUser({
+            name: response.data.data.name,
+            email: response.data.data.email,
+            accessToken: response.data.data.accessToken,
+          }),
+        );
+      } catch (error) {
+        console.error(error);
+        if ((error as AxiosError).response?.data.code === 'expired') {
+          Alert.alert('알림', '다시 로그인 해주세요.');
+        }
+      } finally {
+        console.log("asdf");
+        SplashScreen.hide();
+      }
+    };
+    getTokenAndRefresh();
+  }, [dispatch]);
+
   return isLoggedIn ? (
     <Tab.Navigator
       initialRouteName="main"
       screenOptions={{
         tabBarActiveTintColor: '#414FFD',
       }}>
+    
       <Tab.Screen
         name="saveUp"
         component={saveUp}

@@ -27,6 +27,7 @@
     "react-native-linear-gradient": "^2.5.6",
     "react-native-safe-area-context": "^4.2.5",
     "react-native-screens": "3.0",
+    "react-native-splash-screen": "^3.3.0",
     "react-redux": "^8.0.1",
     "redux-flipper": "^2.0.1"
   },
