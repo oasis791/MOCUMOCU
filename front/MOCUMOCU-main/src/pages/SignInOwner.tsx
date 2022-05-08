@@ -8,22 +8,30 @@ import {
   Alert,
   StyleSheet,
   Image,
+  TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
-
-type SignInOwnerScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  'SignInOwner'
->;
+import axios, {AxiosError} from 'axios';
+import Config from 'react-native-config';
+import {useAppDispatch} from '../store';
+import userSlice from '../slices/user';
+import EncryptedStorage from 'react-native-encrypted-storage';
+type SignInOwnerScreenProps = NativeStackScreenProps<RootStackParamList, 'SignInOwner'>;
 
 function SignInOwner({navigation}: SignInOwnerScreenProps) {
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const canGoNext = email && password;
+  // const canGoNext = email && password;
   const emailRef = useRef<TextInput | null>(null); //< > => generic
   const passwordRef = useRef<TextInput | null>(null);
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
+    if (loading) {
+      return;
+    }
     if (!email || !email.trim()) {
       //trim은 좌우 공백 없애는 함수
       return Alert.alert('알림', '이메일을 입력해주세요');
@@ -31,17 +39,46 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
     if (!password || !password.trim()) {
       return Alert.alert('알림', '비밀번호를 입력해주세요');
     }
-    Alert.alert('알림', '로그인 되었습니다');
-  }, [email, password]);
+    try {
+      setLoading(true);
+      const response = await axios.post(`${Config.API_URL}/login`, {
+        email,
+        password,
+      });
+      console.log(response.data);
+      Alert.alert('알림', '로그인 되었습니다.');
+      setLoading(false);
+      dispatch(
+        userSlice.actions.setUser({
+          // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
+          name: response.data.data.name,
+          email: response.data.data.email,
+          accessToken: response.data.data.accessToken,
+        }),
+      );
+      await EncryptedStorage.setItem(
+        'refreshToken',
+        response.data.data.refreshToken,
+      );
+      console.log(EncryptedStorage.getItem('refreshToken'));
+    } catch (error) {
+      setLoading(false);
+      const errorResponse = (error as AxiosError).response;
+      if (errorResponse) {
+        Alert.alert('알림', errorResponse.data.message);
+      }
+    }
+  }, [loading, dispatch, email, password]);
   const onChangeEmail = useCallback(text => {
     setEmail(text);
   }, []);
   const onChangePassword = useCallback(text => {
     setPassword(text);
   }, []);
-  const toSignUp = useCallback(() => {
-    navigation.navigate('SignUp');
+  const toSignUpOwner = useCallback(() => {
+    navigation.navigate('SignUpOwner');
   }, [navigation]);
+  const canGoNext = email && password;
   return (
     <View>
       <DismissKeyboardView>
@@ -50,11 +87,11 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
             style={{
               marginTop: 30,
               resizeMode: 'stretch',
-              width: 150,
-              height: 20,
-              marginBottom: 20,
+              width: 100,
+              height: 50,
+              marginBottom: 10,
             }}
-            source={require('../assets/logo_blue.png')}
+            source={require('../assets/logo_black.png')}
           />
         </View>
         <View style={styles.inputBoxWrapper}>
@@ -87,9 +124,10 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
             importantForAutofill="yes"
             autoComplete="password"
             textContentType="password"
-            keyboardType="decimal-pad"
+            keyboardType="default"
             ref={passwordRef}
             onSubmitEditing={onSubmit}
+            clearButtonMode="while-editing"
           />
         </View>
         <View style={styles.buttonZone}>
@@ -104,64 +142,39 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
                   )
             }
             disabled={!canGoNext}>
-            <Text style={styles.loginButtonText}>로그인</Text>
+            {loading ? (
+              <ActivityIndicator style={styles.indicator} color="white" />
+            ) : (
+              <Text
+                style={
+                  !canGoNext
+                    ? styles.loginButtonText
+                    : StyleSheet.compose(
+                        styles.loginButtonText,
+                        styles.loginButtonTextActive,
+                      )
+                }>
+                로그인
+              </Text>
+            )}
           </Pressable>
-          <Pressable onPress={toSignUp} style={styles.signUpButton}>
+          <TouchableHighlight
+            underlayColor={'#e6e6e6'}
+            onPress={toSignUpOwner}
+            style={styles.signUpButton}>
             <Text style={styles.signUpButtonText}>회원가입</Text>
-          </Pressable>
+          </TouchableHighlight>
           <View style={styles.zZone}>
-            <Pressable onPress={toSignUp}>
+            <Pressable onPress={toSignUpOwner}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
             <Text style={{marginLeft: 5}}>/</Text>
-            <Pressable onPress={toSignUp}>
+            <Pressable onPress={toSignUpOwner}>
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
             </Pressable>
           </View>
         </View>
       </DismissKeyboardView>
-      <View style={styles.socialButtonWrapper}>
-        <Pressable style={styles.socialButton}>
-          <Image
-            style={{
-              resizeMode: 'stretch',
-              width: 20,
-              height: 20,
-            }}
-            source={require('../assets/kakaotalk.png')}
-          />
-        </Pressable>
-        <Pressable style={styles.socialButton}>
-          <Image
-            style={{
-              resizeMode: 'stretch',
-              width: 15,
-              height: 15,
-            }}
-            source={require('../assets/naver.png')}
-          />
-        </Pressable>
-        <Pressable style={styles.socialButton}>
-          <Image
-            style={{
-              resizeMode: 'stretch',
-              width: 20,
-              height: 20,
-            }}
-            source={require('../assets/facebook.png')}
-          />
-        </Pressable>
-        <Pressable style={styles.socialButton}>
-          <Image
-            style={{
-              resizeMode: 'stretch',
-              width: 18,
-              height: 18,
-            }}
-            source={require('../assets/google.png')}
-          />
-        </Pressable>
-      </View>
     </View>
   );
 }
@@ -204,22 +217,23 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 10,
   },
-  loginButtonActive: {backgroundColor: '#59A0DD'},
-  signUpButtonText: {
-    // backgroundColor: 'black',
-    color: '#59A0DD',
-    fontSize: 14,
-    bottom: '15%',
-    fontFamily: 'NotoSansCJKkr-Black (TTF)',
-  },
+  loginButtonActive: {backgroundColor: '#363636'},
   loginButtonText: {
     color: 'white',
     fontSize: 14,
     bottom: '15%',
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
+  loginButtonTextActive: {color: '#ffffff'},
+  signUpButtonText: {
+    // backgroundColor: 'black',
+    color: '#363636',
+    fontSize: 14,
+    bottom: '15%',
+    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+  },
   socialButtonWrapper: {
-    marginTop: 20,
+    marginTop: 90,
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -239,6 +253,17 @@ const styles = StyleSheet.create({
   },
   zZoneText: {
     marginLeft: 5,
+    fontSize: 12,
+  },
+  indicator: {
+    // backgroundColor: 'gray',
+    paddingHorizontal: '7%',
+    // paddingVertical: 10,
+    borderRadius: 5,
+    // marginTop: '4%',
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
