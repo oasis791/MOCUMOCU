@@ -10,7 +10,10 @@ import {
   Dimensions,
   ScrollView,
   StatusBar,
+  ImageBackground,
+  Button,
 } from 'react-native';
+import Carousel from './Carousel';
 // import LinearGradient from 'react-native-linear-gradient';
 // import InsetShadow from 'react-native-inset-shadow';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -23,6 +26,10 @@ function Main() {
   const isAlarm = false;
   const userName = '현욱병수';
   const myPoint = 1000;
+  const images = [
+    require('../assets/eventBanner.png'),
+    require('../assets/eventBanner2.png'),
+  ];
   const onSubmitSetting = () => {
     Alert.alert('알림', '설정');
   };
@@ -39,13 +46,13 @@ function Main() {
     Alert.alert('알림', '포인트 상점으로 이동');
   };
   return (
-    <View style={{ flex: 1 }}>
+    <View>
       <StatusBar hidden={true} />
-      <View style={styles.event}>
-        <TouchableOpacity
-          onPress={onSubmitEvent}
-          style={styles.eventBanner}
-          activeOpacity={1}>
+      <ImageBackground
+        style={styles.event}
+        source={require('../assets/mainMyPageBackground.png')}>
+        <Pressable onPress={onSubmitEvent} style={styles.eventBanner}>
+          <Carousel images={images} />
           <View style={styles.header}>
             <Image
               style={styles.headerLogo}
@@ -70,7 +77,7 @@ function Main() {
               </Pressable>
             </View>
           </View>
-        </TouchableOpacity>
+        </Pressable>
         <View style={styles.myInfo}>
           <Text style={styles.myInfoText}>
             {userName} 님,{'\n'}오늘도 모쿠하세요!
@@ -95,7 +102,7 @@ function Main() {
             </Pressable>
           </View>
         </View>
-      </View>
+      </ImageBackground>
       <View style={styles.myCoupon}>
         <View style={styles.myCouponTextWrapper}>
           <Text style={styles.myCouponText}>내 쿠폰함</Text>
@@ -132,7 +139,7 @@ function Main() {
   );
 }
 const styles = StyleSheet.create({
-  event: {flex: 1, backgroundColor: 'lightgray', elevation: 20},
+  event: {},
   header: {
     backgroundColor: 'trasparent',
     flexDirection: 'row',
@@ -174,10 +181,10 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     // zIndex: 10,
-    elevation: 15,
+    // elevation: 15,
   },
   myInfo: {
-    backgroundColor: 'pink',
+    // backgroundColor: 'pink',
     height: 200,
     // elevation:
   },

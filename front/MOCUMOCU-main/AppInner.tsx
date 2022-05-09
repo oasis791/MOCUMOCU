@@ -13,8 +13,8 @@ import InitScreen from './src/pages/InitScreen';
 import {Image, View, Text, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from './src/store/reducer';
-import { useAppDispatch } from './src/store';
-import { useEffect } from 'react';
+import {useAppDispatch} from './src/store';
+import {useEffect} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from 'react-native-splash-screen';
 import axios, {AxiosError} from 'axios';
@@ -39,14 +39,14 @@ function AppInner() {
   const dispatch = useAppDispatch();
   // const isLoggedIn = false;
 
-    // 앱 실행 시 토큰 있으면 로그인하는 코드
+  // 앱 실행 시 토큰 있으면 로그인하는 코드
   useEffect(() => {
     const getTokenAndRefresh = async () => {
       // SplashScreen.hide();
       try {
         const token = await EncryptedStorage.getItem('refreshToken');
         if (!token) {
-          console.log("!token");
+          console.log('!token');
           SplashScreen.hide();
           return;
         }
@@ -72,7 +72,7 @@ function AppInner() {
           Alert.alert('알림', '다시 로그인 해주세요.');
         }
       } finally {
-        console.log("asdf");
+        // console.log('asdf');
         SplashScreen.hide();
       }
     };
