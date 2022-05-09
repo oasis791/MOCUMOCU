@@ -5,15 +5,12 @@ import {
   Image,
   StyleSheet,
   Pressable,
-  TouchableOpacity,
   Alert,
   Dimensions,
   ScrollView,
   StatusBar,
   ImageBackground,
-  Button,
 } from 'react-native';
-import Carousel from './Carousel';
 // import LinearGradient from 'react-native-linear-gradient';
 // import InsetShadow from 'react-native-inset-shadow';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -24,12 +21,8 @@ import Carousel from './Carousel';
 const screenHeight = Dimensions.get('screen').height;
 function Main() {
   const isAlarm = false;
-  const userName = '현욱병수';
+  const userName = '여민수';
   const myPoint = 1000;
-  const images = [
-    require('../assets/eventBanner.png'),
-    require('../assets/eventBanner2.png'),
-  ];
   const onSubmitSetting = () => {
     Alert.alert('알림', '설정');
   };
@@ -37,7 +30,7 @@ function Main() {
     Alert.alert('알림', '알람');
   };
   const onSubmitEvent = () => {
-    Alert.alert('알림', '이벤트');
+    // Alert.alert('알림', '이벤트');
   };
   const toUsePoint = () => {
     Alert.alert('알림', '포인트 사용내역 이동');
@@ -52,8 +45,31 @@ function Main() {
         style={styles.event}
         source={require('../assets/mainMyPageBackground.png')}>
         <Pressable onPress={onSubmitEvent} style={styles.eventBanner}>
-          <Carousel images={images} />
-          <View style={styles.header}>
+          <ScrollView
+            horizontal={true}
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={true}
+            style={styles.scrollView}>
+            <View style={styles.scrollImage}>
+              <Image
+                source={require('../assets/eventBanner.png')}
+                style={styles.bannerImage}
+              />
+            </View>
+            <View style={styles.scrollImage}>
+              <Image
+                source={require('../assets/eventBanner2.png')}
+                style={styles.bannerImage}
+              />
+            </View>
+            <View style={styles.scrollImage}>
+              <Text style={styles.myInfoPointText}>쿠폰 3</Text>
+              <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
+                C 가게
+              </Text>
+            </View>
+          </ScrollView>
+          <View style={[styles.header, {position: 'absolute'}]}>
             <Image
               style={styles.headerLogo}
               source={require('../assets/mainLogo.png')}
@@ -158,7 +174,7 @@ const styles = StyleSheet.create({
   headerButtonWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'space-around',
   },
   headerSetting: {
     width: 20,
@@ -166,6 +182,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'black',
     resizeMode: 'contain',
     height: 18,
+    left: 225,
   },
   headerAlarm: {
     // marginTop: ,
@@ -173,15 +190,11 @@ const styles = StyleSheet.create({
     width: 50,
     resizeMode: 'contain',
     height: 20,
+    left: 220,
     // backgroundColor: 'black',
   },
   eventBanner: {
-    // backgroundColor: 'purple',
     height: screenHeight - 467,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    // zIndex: 10,
-    // elevation: 15,
   },
   myInfo: {
     // backgroundColor: 'pink',
@@ -279,6 +292,24 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 10,
     elevation: 20,
+  },
+  bannerImage: {
+    // flexDirection: 'row',
+    // position: 'absolute',
+    resizeMode: 'cover',
+    height: 150,
+    width: Dimensions.get('screen').width,
+    marginTop: 35,
+    // marginLeft: ,
+    borderRadius: 0,
+    // left: -100,
+  },
+  scrollImage: {
+    // marginLeft: 10,
+    // marginLeft: 20,
+    // width: 300,
+    // height: 100,
+    // marginTop: 10,
   },
 });
 export default Main;

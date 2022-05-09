@@ -79,6 +79,9 @@ function SignUp({navigation}: SignUpScreenProps) {
         '비밀번호는 영문,숫자,특수문자($@^!%*#?&)를 모두 포함하여 8자 이상 입력해야합니다.',
       );
     }
+    if (password !== checkPassword) {
+      return Alert.alert('알림', '비밀번호와 확인 값이 다릅니다.');
+    }
     console.log(email, name, password, checkPassword, telephoneNumber);
     // Alert.alert('알림', '회원가입 되었습니다.');
     try {
@@ -342,7 +345,7 @@ function SignUp({navigation}: SignUpScreenProps) {
         </View> */}
         <View style={styles.buttonZone}>
           <TouchableHighlight
-            underlayColor={'#C76857'}
+            underlayColor={'#c4c4c4'}
             style={
               canGoNext
                 ? StyleSheet.compose(

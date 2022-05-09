@@ -53,11 +53,12 @@ const styles = StyleSheet.create({
   image: {
     // flexDirection: 'row',
     position: 'absolute',
-    resizeMode: 'stretch',
+    resizeMode: 'contain',
     height: 160,
     width: Dimensions.get('screen').width,
     marginTop: 30,
     borderRadius: 70,
+    margin: 0,
     // left: -100,
   },
   container: {},
