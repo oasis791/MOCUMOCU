@@ -1,66 +1,50 @@
-import React, {useRef, useState} from 'react';
+import React, {useMemo} from 'react';
 import {
-  Animated,
-  View,
-  Image,
-  StyleSheet,
   Dimensions,
+  FlatList,
+  View,
+  StyleSheet,
   Pressable,
+  ImageBackground,
+  Alert,
 } from 'react-native';
-type Props = {
-  images: string[];
-};
 
-const Carousel: React.FC<Props> = ({images}: Props) => {
-  const animation = useRef(new Animated.Value(0));
-  const [currentImage, setCurrentImage] = useState(0);
-  const handleAnimation = () => {
-    let newCurrentImage = currentImage - 1;
-    Animated.spring(animation.current, {
-      toValue: -(Dimensions.get('screen').width * newCurrentImage),
-      useNativeDriver: true,
-    }).start();
-    setCurrentImage(newCurrentImage);
-    // console.log(image);
+function Carousel() {
+  const data = useMemo(
+    () => [
+      {
+        image: require('../assets/eventBannerTest.jpeg'),
+      },
+      {
+        image2: require('../assets/eventBanner2.png'),
+      },
+    ],
+    [],
+  );
+  const toEventPage = () => {
+    Alert.alert('알림', '이벤트 페이지');
   };
   return (
-    <>
-      <View>
-        <Pressable onPress={handleAnimation}>
-          {/* <Text>Press</Text> */}
-          <Animated.View
-            style={[
-              styles.container,
-              {
-                transform: [
-                  {
-                    translateX: animation.current,
-                  },
-                ],
-              },
-            ]}>
-            {images.map(image => (
-              <Image source={image} style={styles.image} />
-            ))}
-          </Animated.View>
-        </Pressable>
-      </View>
-    </>
+    <View style={styles.container}>
+      <FlatList
+        data={data}
+        horizontal
+        // pagingEnabled={true}
+        // contentContainerStyle={}
+        renderItem={({item}) => (
+          <Pressable onPress={toEventPage}>
+            <ImageBackground source={item.image} />
+          </Pressable>
+        )}
+        keyExtractor={(_, index) => String(index)}
+      />
+    </View>
   );
-};
-
+}
 const styles = StyleSheet.create({
-  image: {
-    // flexDirection: 'row',
-    position: 'absolute',
-    resizeMode: 'contain',
-    height: 160,
-    width: Dimensions.get('screen').width,
-    marginTop: 30,
-    borderRadius: 70,
-    margin: 0,
-    // left: -100,
+  container: {
+    width: width,
+    // height: 100,
   },
-  container: {},
 });
 export default Carousel;

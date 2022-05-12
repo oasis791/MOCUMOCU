@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -10,15 +10,28 @@ import {
   ScrollView,
   StatusBar,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
+
+import Carousel from 'react-native-snap-carousel';
 // import LinearGradient from 'react-native-linear-gradient';
 // import InsetShadow from 'react-native-inset-shadow';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
 // import Ing from './Ing';
 // import Complete from './Complete';
+// import { SafeAreaView } from 'react-native-safe-area-context';
 // const Stack = createNativeStackNavigator();
-
-const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+const data = [
+  {
+    id: 1,
+    url: 'https://i.ibb.co/F6rmJFW/event-Banner.png',
+  },
+  {
+    id: 2,
+    url: 'https://i.ibb.co/HCY0yzX/event-Banner2.png',
+  },
+];
 function Main() {
   const isAlarm = false;
   const userName = '여민수';
@@ -30,7 +43,7 @@ function Main() {
     Alert.alert('알림', '알람');
   };
   const onSubmitEvent = () => {
-    // Alert.alert('알림', '이벤트');
+    Alert.alert('알림', '이벤트');
   };
   const toUsePoint = () => {
     Alert.alert('알림', '포인트 사용내역 이동');
@@ -38,62 +51,65 @@ function Main() {
   const toUsePointShop = () => {
     Alert.alert('알림', '포인트 상점으로 이동');
   };
+  const renderItem = ({item}: any) => {
+    return (
+      <TouchableOpacity onPress={onSubmitEvent} activeOpacity={0.7}>
+        <ImageBackground
+          style={styles.eventImage}
+          source={{uri: item.url}}
+          imageStyle={{borderBottomLeftRadius: 20, borderBottomRightRadius: 20}}
+        />
+      </TouchableOpacity>
+    );
+  };
+  const isCarousel = useRef(null);
   return (
     <View>
       <StatusBar hidden={true} />
       <ImageBackground
         style={styles.event}
         source={require('../assets/mainMyPageBackground.png')}>
-        <Pressable onPress={onSubmitEvent} style={styles.eventBanner}>
-          <ScrollView
-            horizontal={true}
-            pagingEnabled={true}
-            showsHorizontalScrollIndicator={true}
-            style={styles.scrollView}>
-            <View style={styles.scrollImage}>
+        <Carousel
+          ref={isCarousel}
+          layout={'default'}
+          data={data}
+          renderItem={renderItem}
+          sliderWidth={screenWidth}
+          // activeAnimationOptions=
+          // sliderHeight={210}
+          itemWidth={screenWidth}
+          autoplay
+          loop
+          autoplayInterval={4000}
+          enableSnap
+          activeAnimationType="decay"
+          inactiveSlideScale={1}
+        />
+        <View style={[styles.header, {position: 'absolute'}]}>
+          <Image
+            style={styles.headerLogo}
+            source={require('../assets/mainLogo.png')}
+          />
+          <View style={styles.headerButtonWrapper}>
+            <Pressable onPress={onSubmitSetting}>
               <Image
-                source={require('../assets/eventBanner.png')}
-                style={styles.bannerImage}
+                source={require('../assets/icon/mainSetting.png')}
+                style={styles.headerSetting}
               />
-            </View>
-            <View style={styles.scrollImage}>
+            </Pressable>
+            <Pressable onPress={onSubmitAlarm}>
               <Image
-                source={require('../assets/eventBanner2.png')}
-                style={styles.bannerImage}
+                source={
+                  isAlarm
+                    ? require('../assets/icon/mainAlarmActive.png')
+                    : require('../assets/icon/mainAlarm.png')
+                }
+                style={styles.headerAlarm}
               />
-            </View>
-            <View style={styles.scrollImage}>
-              <Text style={styles.myInfoPointText}>쿠폰 3</Text>
-              <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-                C 가게
-              </Text>
-            </View>
-          </ScrollView>
-          <View style={[styles.header, {position: 'absolute'}]}>
-            <Image
-              style={styles.headerLogo}
-              source={require('../assets/mainLogo.png')}
-            />
-            <View style={styles.headerButtonWrapper}>
-              <Pressable onPress={onSubmitSetting}>
-                <Image
-                  source={require('../assets/icon/mainSetting.png')}
-                  style={styles.headerSetting}
-                />
-              </Pressable>
-              <Pressable onPress={onSubmitAlarm}>
-                <Image
-                  source={
-                    isAlarm
-                      ? require('../assets/icon/mainAlarmActive.png')
-                      : require('../assets/icon/mainAlarm.png')
-                  }
-                  style={styles.headerAlarm}
-                />
-              </Pressable>
-            </View>
+            </Pressable>
           </View>
-        </Pressable>
+        </View>
+
         <View style={styles.myInfo}>
           <Text style={styles.myInfoText}>
             {userName} 님,{'\n'}오늘도 모쿠하세요!
@@ -194,11 +210,14 @@ const styles = StyleSheet.create({
     // backgroundColor: 'black',
   },
   eventBanner: {
-    height: screenHeight - 467,
+    height: 210,
+    width: screenWidth,
+    // elevation: 10,
   },
   myInfo: {
     // backgroundColor: 'pink',
-    height: 200,
+    // height: 200,
+    // width: ,
     // elevation:
   },
   myInfoText: {
@@ -207,6 +226,7 @@ const styles = StyleSheet.create({
     marginLeft: 25,
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: 'white',
+    width: 150,
   },
   myInfoPoint: {
     flexDirection: 'row',
@@ -293,23 +313,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 20,
   },
-  bannerImage: {
-    // flexDirection: 'row',
-    // position: 'absolute',
-    resizeMode: 'cover',
-    height: 150,
-    width: Dimensions.get('screen').width,
-    marginTop: 35,
-    // marginLeft: ,
-    borderRadius: 0,
-    // left: -100,
-  },
-  scrollImage: {
-    // marginLeft: 10,
-    // marginLeft: 20,
-    // width: 300,
-    // height: 100,
-    // marginTop: 10,
+  eventImage: {
+    height: 210,
+    borderRadius: 10,
   },
 });
 export default Main;

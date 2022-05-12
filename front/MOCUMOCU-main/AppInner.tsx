@@ -68,7 +68,7 @@ function AppInner() {
         );
       } catch (error) {
         console.error(error);
-        if ((error as AxiosError).response?.data.code === 'expired') {
+        if ((error as AxiosError<any>).response?.data.code === 'expired') {
           Alert.alert('알림', '다시 로그인 해주세요.');
         }
       } finally {
@@ -79,7 +79,7 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
-  return isLoggedIn ? (
+  return !isLoggedIn ? (
     <Tab.Navigator
       initialRouteName="main"
       screenOptions={{

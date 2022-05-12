@@ -3,7 +3,6 @@ import {Provider} from 'react-redux';
 import store from './src/store';
 import AppInner from './AppInner';
 import {NavigationContainer} from '@react-navigation/native';
-import { View } from 'react-native';
 
 export type LoggedInParamList = {
   Orders: undefined;
