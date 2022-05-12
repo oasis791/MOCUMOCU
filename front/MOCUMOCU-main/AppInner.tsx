@@ -36,6 +36,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 function AppInner() {
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
+  const isOwner = true;
   const dispatch = useAppDispatch();
   // const isLoggedIn = false;
 
@@ -68,7 +69,7 @@ function AppInner() {
         );
       } catch (error) {
         console.error(error);
-        if ((error as AxiosError<any>).response?.data.code === 'expired') {
+        if ((error as AxiosError).response?.data.code === 'expired') {
           Alert.alert('알림', '다시 로그인 해주세요.');
         }
       } finally {
@@ -80,108 +81,238 @@ function AppInner() {
   }, [dispatch]);
 
   return !isLoggedIn ? (
-    <Tab.Navigator
-      initialRouteName="main"
-      screenOptions={{
-        tabBarActiveTintColor: '#414FFD',
-      }}>
-      <Tab.Screen
-        name="saveUp"
-        component={saveUp}
-        options={{
-          tabBarLabel: '적립',
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarIcon: ({focused}) => (
-            <View
-              style={{alignItems: 'center', justifyContent: 'center', top: 7}}>
-              <Image
-                source={require('./src/assets/saveButton.png')}
-                resizeMode="contain"
+    isOwner ? (
+      <Tab.Navigator
+        initialRouteName="main"
+        screenOptions={{
+          tabBarActiveTintColor: '#414FFD',
+        }}>
+        <Tab.Screen
+          name="saveUp"
+          component={saveUp}
+          options={{
+            tabBarLabel: '적립',
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarIcon: ({focused}) => (
+              <View
                 style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: focused ? '#414FFD' : '#A5A5A5',
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 11,
-                  top: -3,
-                  fontFamily: 'NotoSansCJKkr-Black (TTF)',
-                  color: focused ? '#414FFD' : '#A5A5A5',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: 7,
                 }}>
-                적립
-              </Text>
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="main"
-        component={Main}
-        options={{
-          tabBarLabel: '메인',
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarIcon: ({focused}) => (
-            <View
-              style={{alignItems: 'center', justifyContent: 'center', top: 7}}>
-              <Image
-                source={require('./src/assets/homeButton.png')}
-                resizeMode="contain"
+                <Image
+                  source={require('./src/assets/saveButton.png')}
+                  resizeMode="contain"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    tintColor: focused ? '#414FFD' : '#A5A5A5',
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: 11,
+                    top: -3,
+                    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+                    color: focused ? '#414FFD' : '#A5A5A5',
+                  }}>
+                  적립/사용
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="main"
+          component={Main}
+          options={{
+            tabBarLabel: '메인',
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarIcon: ({focused}) => (
+              <View
                 style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: focused ? '#414FFD' : 'A5A5A5',
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 11,
-                  top: -3,
-                  fontFamily: 'NotoSansCJKkr-Black (TTF)',
-                  color: focused ? '#414FFD' : '#A5A5A5',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: 7,
                 }}>
-                홈
-              </Text>
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={Settings}
-        options={{
-          tabBarLabel: '더보기',
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarIcon: ({focused}) => (
-            <View
-              style={{alignItems: 'center', justifyContent: 'center', top: 7}}>
-              <Image
-                source={require('./src/assets/moreButton.png')}
-                resizeMode="contain"
+                <Image
+                  source={require('./src/assets/homeButton.png')}
+                  resizeMode="contain"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    tintColor: focused ? '#414FFD' : 'A5A5A5',
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: 11,
+                    top: -3,
+                    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+                    color: focused ? '#414FFD' : '#A5A5A5',
+                  }}>
+                  홈
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={Settings}
+          options={{
+            tabBarLabel: '더보기',
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarIcon: ({focused}) => (
+              <View
                 style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: focused ? '#414FFD' : 'A5A5A5',
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 11,
-                  top: -3,
-                  fontFamily: 'NotoSansCJKkr-Black (TTF)',
-                  color: focused ? '#414FFD' : '#A5A5A5',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: 7,
                 }}>
-                더보기
-              </Text>
-            </View>
-          ),
-        }}
-      />
-    </Tab.Navigator>
+                <Image
+                  source={require('./src/assets/moreButton.png')}
+                  resizeMode="contain"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    tintColor: focused ? '#414FFD' : 'A5A5A5',
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: 11,
+                    top: -3,
+                    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+                    color: focused ? '#414FFD' : '#A5A5A5',
+                  }}>
+                  더보기
+                </Text>
+              </View>
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    ) : (
+      // 여기서 부터 회원
+      <Tab.Navigator
+        initialRouteName="main"
+        screenOptions={{
+          tabBarActiveTintColor: '#414FFD',
+        }}>
+        <Tab.Screen
+          name="saveUp"
+          component={saveUp}
+          options={{
+            tabBarLabel: '적립',
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: 7,
+                }}>
+                <Image
+                  source={require('./src/assets/saveButton.png')}
+                  resizeMode="contain"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    tintColor: focused ? '#414FFD' : '#A5A5A5',
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: 11,
+                    top: -3,
+                    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+                    color: focused ? '#414FFD' : '#A5A5A5',
+                  }}>
+                  적립/사용(회원)
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="main"
+          component={Main}
+          options={{
+            tabBarLabel: '메인',
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: 7,
+                }}>
+                <Image
+                  source={require('./src/assets/homeButton.png')}
+                  resizeMode="contain"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    tintColor: focused ? '#414FFD' : 'A5A5A5',
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: 11,
+                    top: -3,
+                    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+                    color: focused ? '#414FFD' : '#A5A5A5',
+                  }}>
+                  홈(회원)
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={Settings}
+          options={{
+            tabBarLabel: '더보기',
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: 7,
+                }}>
+                <Image
+                  source={require('./src/assets/moreButton.png')}
+                  resizeMode="contain"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    tintColor: focused ? '#414FFD' : 'A5A5A5',
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: 11,
+                    top: -3,
+                    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+                    color: focused ? '#414FFD' : '#A5A5A5',
+                  }}>
+                  더보기(회원)
+                </Text>
+              </View>
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    )
   ) : (
     <Stack.Navigator>
       <Stack.Screen
