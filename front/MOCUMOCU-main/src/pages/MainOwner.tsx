@@ -166,9 +166,12 @@ function Main() {
                   <Text style={styles.analysisStoreNameText}>{stores["name"]}</Text>
                   <View style={styles.cardChart}>
                     <View style={ styles.todayVistorWrapper}>
-                      <View>
+                    <View>
                         <Text style={[styles.todaysText, {top: 10} ]}>오늘 방문자 수</Text>
-                        <Text style={[styles.todaysText, {bottom:10}] }>{stores["todays"]}명</Text>
+                      <Text style={[styles.todaysText, {bottom: 10}]}>
+                        {stores['todays']}명
+                      </Text>
+                          
                         </View>
                     </View>
                     
@@ -182,7 +185,13 @@ function Main() {
                           ?
                           <>
                             <Text style={[styles.todaysText, { top:10, color: "blue" }]}>남자 {stores["male"]}</Text>
-                            <Text style={[styles.todaysText, { bottom:10, color: "red" }]}>여자 {stores["female"]}</Text>
+                        <Text
+                          style={[
+                            styles.todaysText,
+                            {bottom: 10, color: 'red'},
+                          ]}>
+                          여자 {stores['female']}
+                        </Text>
                           </>
                           :
                           <>
