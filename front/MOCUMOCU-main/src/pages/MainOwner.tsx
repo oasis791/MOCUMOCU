@@ -167,9 +167,6 @@ function Main() {
                   <View style={styles.cardChart}>
                     <View style={ styles.todayVistorWrapper}>
                       <View>
-                        {
-                          
-                        }
                         <Text style={[styles.todaysText, {top: 10} ]}>오늘 방문자 수</Text>
                         <Text style={[styles.todaysText, {bottom:10}] }>{stores["todays"]}명</Text>
                         </View>
