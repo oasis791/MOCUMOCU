@@ -30,18 +30,30 @@ function Main() {
   const stores = [
     {
       name: '캔버스 커피',
+      todays: 54,
+      male: 42,
+      female: 12,
     },
 
     {
-      name:  "카페현욱",
+      name: "카페현욱",
+      todays: 30,
+      male: 12,
+      female: 18,
     },
         
     {
       name: '라떼는말이야',
+      todays: 0,
+      male: 0,
+      female: 0,
     },     
     
     {
-      name: "캔버스 커피",
+      name: "민수와 아이들",
+      todays: 10,
+      male: 5,
+      female: 5,
     },
   
   ];
@@ -51,11 +63,11 @@ function Main() {
   const onSubmitAlarm = () => {
     Alert.alert('알림', '알람');
   };
-  const toUsePoint = () => {
-    Alert.alert('알림', '포인트 사용내역 이동');
+  const toAddStore = () => {
+    Alert.alert('알림', '매장 등록 이동');
   };
-  const toUsePointShop = () => {
-    Alert.alert('알림', '포인트 상점으로 이동');
+  const toDeleteStore = () => {
+    Alert.alert('알림', '매장 삭제 이동');
   };
   return (
     <ScrollView>
@@ -117,15 +129,15 @@ function Main() {
 
           </ScrollView>
             
-          <View style={styles.pointButtonWrapper}>
-            <Pressable style={styles.pointButton}>
-              <Text style={styles.pointButtonText} onPress={toUsePoint}>
+          <View style={styles.storeControlWrapper}>
+            <Pressable style={styles.controlStoreButton}>
+              <Text style={styles.controlStoreButtonText} onPress={toAddStore}>
                 매장 등록
               </Text>
             </Pressable>
             <Text style={styles.pointButtonBar}>|</Text>
-            <Pressable style={styles.pointButton}>
-              <Text style={styles.pointButtonText} onPress={toUsePointShop}>
+            <Pressable style={styles.controlStoreButton}>
+              <Text style={styles.controlStoreButtonText} onPress={toDeleteStore}>
                 매장 삭제
               </Text>
             </Pressable>
@@ -142,55 +154,59 @@ function Main() {
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}
           style={styles.storeAnalysisScrollView}>
+        {
+            stores.map((stores, i) => {
+              return (
+                <TouchableOpacity
+                  style={styles.analysisCard}
+                  onPress={() => {
+                     Alert.alert('알림', `${stores['name']} 매장 분석으로 이동`);
+                   }}
+                >
+                  <Text style={styles.analysisStoreNameText}>{stores["name"]}</Text>
+                  <View style={styles.cardChart}>
+                    <View style={ styles.todayVistorWrapper}>
+                      <View>
+                        {
+                          
+                        }
+                        <Text style={[styles.todaysText, {top: 10} ]}>오늘 방문자 수</Text>
+                        <Text style={[styles.todaysText, {bottom:10}] }>{stores["todays"]}명</Text>
+                        </View>
+                    </View>
+                    
+                    <View>
+                      <Text>차트</Text>
+                    </View>
+
+                    <View>
+                      {
+                        stores["male"] > stores["female"]
+                          ?
+                          <>
+                            <Text style={[styles.todaysText, { top:10, color: "blue" }]}>남자 {stores["male"]}</Text>
+                            <Text style={[styles.todaysText, { bottom:10, color: "red" }]}>여자 {stores["female"]}</Text>
+                          </>
+                          :
+                          <>
+                            <Text style={[styles.todaysText, { top:10, color: "red" }]}>여자 {stores["female"]}</Text>
+                            <Text style={[styles.todaysText, { bottom:10, color: "blue" }]}>남자 {stores["male"]}</Text>
+                          </>
+                      }
+              
+
+                    </View>
           
-          {
+                  </View>
 
+              </TouchableOpacity>
+              );
+            })
           }
-
-          <View style={styles.analysisCard}>
-            <Text style={styles.analysisStoreNameText}>쿠폰 1</Text>
-
-          </View>
-          <View style={styles.analysisCard}>
-            <Text style={styles.analysisStoreNameText}>쿠폰 2</Text>
-          </View>
-
-
+        
           </ScrollView>
       </View>
 
-      {/* <View style={styles.myCoupon}>
-        <View style={styles.myCouponTextWrapper}>
-          <Text style={styles.myCouponText}>내 쿠폰함</Text>
-          <Pressable style={styles.myCouponboxButton}>
-            <Text style={styles.myCouponboxButtonText}>전체 +</Text>
-          </Pressable>
-        </View>
-        <ScrollView
-          horizontal={true}
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={true}
-          style={styles.scrollView}>
-          <View style={styles.scrollItem}>
-            <Text style={styles.myInfoPointText}>쿠폰 1</Text>
-            <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-              A 가게
-            </Text>
-          </View>
-          <View style={styles.scrollItem}>
-            <Text style={styles.myInfoPointText}>쿠폰 2</Text>
-            <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-              B 가게
-            </Text>
-          </View>
-          <View style={styles.scrollItem}>
-            <Text style={styles.myInfoPointText}>쿠폰 3</Text>
-            <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-              C 가게
-            </Text>
-          </View>
-        </ScrollView>
-      </View> */}
     </ScrollView>
   );
 }
@@ -279,18 +295,23 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: 'black',
   },
-  pointButtonWrapper: {
+
+  cardChart: {
+    flexDirection: 'row',
+    justifyContent: "center"
+  },
+  storeControlWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     width: '100%',
     marginVertical: 10
   },
-  pointButton: {
+  controlStoreButton: {
     marginLeft: 45,
     flex: 1,
   },
-  pointButtonText: {
+  controlStoreButtonText: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: 'white',
     paddingLeft: 28
@@ -322,42 +343,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
-  storeAnalysis: {
-    padding: 25
-  },
-
-  storeAnalysisTitle: {
-    marginTop: -10,
-    // marginLeft: 30,
-    fontFamily: 'NotoSansCJKkr-Black (TTF)',
-    color: 'black',
-    fontSize: 18,
-
-  },
-
-  storeAnalysisScrollView: {
-    
-  },
-  scrollView: {
-    // marginVertical: ,
-    // backgroundColor: 'green',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-  },
-  analysisCard: {
-    marginTop: 5,
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    marginHorizontal: 10,
-    // marginBottom: 20,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    // alignItems: 'baseline',
-    width: 300,
-    height: 80,
-    borderRadius: 10,
-    elevation: 20,
-  },
+ 
   eventImage: {
     height: 210,
     borderRadius: 10,
@@ -402,7 +388,41 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 15,
     backgroundColor: "lightgray",
+  },
 
+ storeAnalysis: {
+    padding: 25
+  },
+
+  storeAnalysisTitle: {
+    marginTop: -10,
+    // marginLeft: 30,
+    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+    color: 'black',
+    fontSize: 18,
+
+  },
+
+  storeAnalysisScrollView: {
+    
+  },
+
+  analysisCard: {
+    marginTop: 5,
+    backgroundColor: 'white',
+    marginHorizontal: 10,
+    width: 300,
+    borderRadius: 10,
+    elevation: 20,
+  },
+
+  todayVistorWrapper: {
+    flexDirection: 'row'
+  },
+
+  todaysText: {
+    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+    color: "black",
   }
 
 
