@@ -20,6 +20,7 @@ import SplashScreen from 'react-native-splash-screen';
 import axios, {AxiosError} from 'axios';
 import userSlice from './src/slices/user';
 import Config from 'react-native-config';
+import MainOwner from './src/pages/MainOwner';
 // export type LoggedInParamList = {
 //   Orders: undefined;
 //   Settings: undefined;
@@ -125,7 +126,7 @@ function AppInner() {
         />
         <Tab.Screen
           name="main"
-          component={Main}
+          component={MainOwner}
           options={{
             tabBarLabel: '메인',
             headerShown: false,
