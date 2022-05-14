@@ -33,6 +33,20 @@ const data = [
     url: 'https://i.ibb.co/HCY0yzX/event-Banner2.png',
   },
 ];
+const couponList = [
+  {
+    couponId: '쿠폰 1',
+    market: 'A 가게',
+  },
+  {
+    couponId: '쿠폰 2',
+    market: 'B 가게',
+  },
+  {
+    couponId: '쿠폰 3',
+    market: 'C 가게',
+  },
+];
 function Main() {
   const isAlarm = true;
   const userName = '여민수';
@@ -55,6 +69,19 @@ function Main() {
   const toCouponList = () => {
     Alert.alert('알림', '쿠폰 리스트 화면으로 이동');
   };
+  const renderCoupon = couponList.map(coupon => {
+    return (
+      <>
+        <View style={styles.scrollItem}>
+          <Text style={styles.myInfoPointText}>{coupon.couponId}</Text>
+          <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
+            {coupon.market}
+          </Text>
+        </View>
+      </>
+    );
+  });
+
   const renderItem = ({item}: any) => {
     return (
       <TouchableOpacity onPress={onSubmitEvent} activeOpacity={0.7}>
@@ -80,8 +107,6 @@ function Main() {
             data={data}
             renderItem={renderItem}
             sliderWidth={screenWidth}
-            // activeAnimationOptions=
-            // sliderHeight={210}
             itemWidth={screenWidth}
             autoplay
             loop
@@ -152,24 +177,7 @@ function Main() {
             pagingEnabled={true}
             showsHorizontalScrollIndicator={true}
             contentContainerStyle={styles.scrollViewHorizontal}>
-            <View style={styles.scrollItem}>
-              <Text style={styles.myInfoPointText}>쿠폰 1</Text>
-              <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-                A 가게
-              </Text>
-            </View>
-            <View style={styles.scrollItem}>
-              <Text style={styles.myInfoPointText}>쿠폰 2</Text>
-              <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-                B 가게
-              </Text>
-            </View>
-            <View style={styles.scrollItem}>
-              <Text style={styles.myInfoPointText}>쿠폰 3</Text>
-              <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-                C 가게
-              </Text>
-            </View>
+            {renderCoupon}
           </ScrollView>
         </View>
         <View style={styles.footer}>

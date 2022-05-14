@@ -20,17 +20,6 @@ import SplashScreen from 'react-native-splash-screen';
 import axios, {AxiosError} from 'axios';
 import userSlice from './src/slices/user';
 import Config from 'react-native-config';
-// export type LoggedInParamList = {
-//   Orders: undefined;
-//   Settings: undefined;
-//   Delivery: undefined;
-//   Complete: {orderId: string};
-// };
-
-// export type RootStackParamList = {
-//   SignIn: undefined;
-//   SignUp: undefined;
-// };
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
