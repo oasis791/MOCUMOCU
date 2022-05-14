@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 import Carousel from 'react-native-snap-carousel';
 // import LinearGradient from 'react-native-linear-gradient';
@@ -33,7 +34,7 @@ const data = [
   },
 ];
 function Main() {
-  const isAlarm = false;
+  const isAlarm = true;
   const userName = '여민수';
   const myPoint = 1000;
   const onSubmitSetting = () => {
@@ -51,6 +52,9 @@ function Main() {
   const toUsePointShop = () => {
     Alert.alert('알림', '포인트 상점으로 이동');
   };
+  const toCouponList = () => {
+    Alert.alert('알림', '쿠폰 리스트 화면으로 이동');
+  };
   const renderItem = ({item}: any) => {
     return (
       <TouchableOpacity onPress={onSubmitEvent} activeOpacity={0.7}>
@@ -64,110 +68,136 @@ function Main() {
   };
   const isCarousel = useRef(null);
   return (
-    <View>
-      <StatusBar hidden={true} />
-      <ImageBackground
-        style={styles.event}
-        source={require('../assets/mainMyPageBackground.png')}>
-        <Carousel
-          ref={isCarousel}
-          layout={'default'}
-          data={data}
-          renderItem={renderItem}
-          sliderWidth={screenWidth}
-          // activeAnimationOptions=
-          // sliderHeight={210}
-          itemWidth={screenWidth}
-          autoplay
-          loop
-          autoplayInterval={4000}
-          enableSnap
-          activeAnimationType="decay"
-          inactiveSlideScale={1}
-        />
-        <View style={[styles.header, {position: 'absolute'}]}>
-          <Image
-            style={styles.headerLogo}
-            source={require('../assets/mainLogo.png')}
+    <SafeAreaView style={styles.scrollView}>
+      <ScrollView fadingEdgeLength={10}>
+        <StatusBar hidden={true} />
+        <ImageBackground
+          style={styles.event}
+          source={require('../assets/mainMyPageBackground.png')}>
+          <Carousel
+            ref={isCarousel}
+            layout={'default'}
+            data={data}
+            renderItem={renderItem}
+            sliderWidth={screenWidth}
+            // activeAnimationOptions=
+            // sliderHeight={210}
+            itemWidth={screenWidth}
+            autoplay
+            loop
+            autoplayInterval={4000}
+            enableSnap
+            activeAnimationType="decay"
+            inactiveSlideScale={1}
           />
-          <View style={styles.headerButtonWrapper}>
-            <Pressable onPress={onSubmitSetting}>
-              <Image
-                source={require('../assets/icon/mainSetting.png')}
-                style={styles.headerSetting}
-              />
-            </Pressable>
-            <Pressable onPress={onSubmitAlarm}>
-              <Image
-                source={
-                  isAlarm
-                    ? require('../assets/icon/mainAlarmActive.png')
-                    : require('../assets/icon/mainAlarm.png')
-                }
-                style={styles.headerAlarm}
-              />
-            </Pressable>
+          <View style={[styles.header, {position: 'absolute'}]}>
+            <Image
+              style={styles.headerLogo}
+              source={require('../assets/mainLogo.png')}
+            />
+            <View style={styles.headerButtonWrapper}>
+              <Pressable onPress={onSubmitSetting}>
+                <Image
+                  source={require('../assets/icon/mainSetting.png')}
+                  style={styles.headerSetting}
+                />
+              </Pressable>
+              <Pressable onPress={onSubmitAlarm}>
+                <Image
+                  source={
+                    isAlarm
+                      ? require('../assets/icon/mainAlarmActive.png')
+                      : require('../assets/icon/mainAlarm.png')
+                  }
+                  style={styles.headerAlarm}
+                />
+              </Pressable>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.myInfo}>
-          <Text style={styles.myInfoText}>
-            {userName} 님,{'\n'}오늘도 모쿠하세요!
-          </Text>
-          <View style={styles.myInfoPoint}>
-            <Text style={styles.myInfoPointText}>내 포인트</Text>
-            <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-              {myPoint} P
+          <View style={styles.myInfo}>
+            <Text style={styles.myInfoText}>
+              {userName} 님,{'\n'}오늘도 모쿠하세요!
             </Text>
+            <View style={styles.myInfoPoint}>
+              <Text style={styles.myInfoPointText}>내 포인트</Text>
+              <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
+                {myPoint} P
+              </Text>
+            </View>
+            <View style={styles.pointButtonWrapper}>
+              <Pressable style={styles.pointButton}>
+                <Text style={styles.pointButtonText} onPress={toUsePoint}>
+                  포인트 사용내역
+                </Text>
+              </Pressable>
+              <Text style={styles.pointButtonBar}>|</Text>
+              <Pressable style={styles.pointButton}>
+                <Text style={styles.pointButtonText} onPress={toUsePointShop}>
+                  포인트 상점
+                </Text>
+              </Pressable>
+            </View>
           </View>
-          <View style={styles.pointButtonWrapper}>
-            <Pressable style={styles.pointButton}>
-              <Text style={styles.pointButtonText} onPress={toUsePoint}>
-                포인트 사용내역
-              </Text>
+        </ImageBackground>
+        <View style={styles.myCoupon}>
+          <View style={styles.myCouponTextWrapper}>
+            <Text style={styles.myCouponText}>내 쿠폰함</Text>
+            <Pressable style={styles.myCouponboxButton} onPress={toCouponList}>
+              <Text style={styles.myCouponboxButtonText}>전체 +</Text>
             </Pressable>
-            <Text style={styles.pointButtonBar}>|</Text>
-            <Pressable style={styles.pointButton}>
-              <Text style={styles.pointButtonText} onPress={toUsePointShop}>
-                포인트 상점
+          </View>
+          <ScrollView
+            horizontal={true}
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={true}
+            contentContainerStyle={styles.scrollViewHorizontal}>
+            <View style={styles.scrollItem}>
+              <Text style={styles.myInfoPointText}>쿠폰 1</Text>
+              <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
+                A 가게
               </Text>
-            </Pressable>
+            </View>
+            <View style={styles.scrollItem}>
+              <Text style={styles.myInfoPointText}>쿠폰 2</Text>
+              <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
+                B 가게
+              </Text>
+            </View>
+            <View style={styles.scrollItem}>
+              <Text style={styles.myInfoPointText}>쿠폰 3</Text>
+              <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
+                C 가게
+              </Text>
+            </View>
+          </ScrollView>
+        </View>
+        <View style={styles.footer}>
+          <View style={styles.footerButtonWrapper}>
+            <TouchableOpacity
+              style={styles.footerButtonLeft}
+              activeOpacity={0.7}>
+              <Text style={styles.footerButtonText}>도움말</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.footerButtonRight}
+              activeOpacity={0.7}>
+              <Text style={styles.footerButtonText}>공지사항</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.footerTextWrapper}>
+            <Text style={styles.footerText}>
+              멤버십 모쿠모쿠 관련 문의 : 1234 - 5678
+            </Text>
+            <Text style={styles.footerText}>쿠폰 및 기타 문의 : 8765-4321</Text>
+            <Text style={styles.footerText}>
+              이용약관 {'\t'}| {'\t'}
+              개인정보 처리 방침
+            </Text>
           </View>
         </View>
-      </ImageBackground>
-      <View style={styles.myCoupon}>
-        <View style={styles.myCouponTextWrapper}>
-          <Text style={styles.myCouponText}>내 쿠폰함</Text>
-          <Pressable style={styles.myCouponboxButton}>
-            <Text style={styles.myCouponboxButtonText}>전체 +</Text>
-          </Pressable>
-        </View>
-        <ScrollView
-          horizontal={true}
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={true}
-          style={styles.scrollView}>
-          <View style={styles.scrollItem}>
-            <Text style={styles.myInfoPointText}>쿠폰 1</Text>
-            <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-              A 가게
-            </Text>
-          </View>
-          <View style={styles.scrollItem}>
-            <Text style={styles.myInfoPointText}>쿠폰 2</Text>
-            <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-              B 가게
-            </Text>
-          </View>
-          <View style={styles.scrollItem}>
-            <Text style={styles.myInfoPointText}>쿠폰 3</Text>
-            <Text style={[styles.myInfoPointText, {color: '#ec6478'}]}>
-              C 가게
-            </Text>
-          </View>
-        </ScrollView>
-      </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
@@ -177,6 +207,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    // elevation: 10,
   },
   headerLogo: {
     marginTop: 10,
@@ -185,6 +216,7 @@ const styles = StyleSheet.create({
     height: 25,
     marginHorizontal: 10,
     marginBottom: 10,
+    // elevation: 10,
     // justifyContent: 'flex-start',
   },
   headerButtonWrapper: {
@@ -270,7 +302,8 @@ const styles = StyleSheet.create({
   myCoupon: {
     // flex: 1,
     backgroundColor: 'white',
-    height: 135,
+    height: 250,
+    // elevation: 20,
     // elevation: 30,
   },
   myCouponboxButton: {
@@ -293,14 +326,9 @@ const styles = StyleSheet.create({
     color: '#414FFD',
     fontSize: 18,
   },
-  scrollView: {
-    // marginVertical: ,
-    // backgroundColor: 'green',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-  },
+
   scrollItem: {
-    marginTop: 5,
+    marginTop: 8,
     flexDirection: 'row',
     backgroundColor: 'white',
     marginHorizontal: 10,
@@ -309,13 +337,78 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // alignItems: 'baseline',
     width: 300,
-    height: 80,
+    height: 130,
     borderRadius: 10,
-    elevation: 20,
+    elevation: 12,
   },
   eventImage: {
-    height: 210,
+    width: screenWidth,
+    height: 190,
     borderRadius: 10,
+  },
+  scrollView: {
+    backgroundColor: 'white',
+    width: '100%',
+    height: '100%',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+  scrollViewHorizontal: {
+    // backgroundColor: 'black',
+    // width: '100%',
+    // height: 150,
+    alignItems: 'baseline',
+    // elevation: 2,
+    // sh``
+  },
+  footer: {
+    // borderStyle: 'solid',
+    // borderWidth: 1,
+    backgroundColor: '#f7f7f7',
+    height: 250,
+    width: screenWidth,
+    elevation: 10,
+  },
+  footerButtonWrapper: {
+    flexDirection: 'row',
+    marginTop: 18,
+  },
+  footerButtonLeft: {
+    // borderWidth: 1,
+    backgroundColor: 'white',
+    width: screenWidth / 2,
+    height: 40,
+    flex: 1,
+    justifyContent: 'center',
+    // elevation: 5,
+  },
+  footerButtonRight: {
+    // borderWidth: 1,
+    backgroundColor: 'white',
+    width: screenWidth / 2,
+    height: 40,
+    flex: 1,
+    justifyContent: 'center',
+    // elevation: 5,
+  },
+  footerButtonText: {
+    textAlign: 'center',
+    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+    color: '#aeaeae',
+    fontSize: 12,
+  },
+  footerTextWrapper: {
+    // backgroundColor: 'black',
+    marginTop: 40,
+    alignItems: 'center',
+    height: 50,
+  },
+  footerText: {
+    textAlign: 'center',
+    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+    color: '#aeaeae',
+    fontSize: 10,
+    lineHeight: 30,
   },
 });
 export default Main;

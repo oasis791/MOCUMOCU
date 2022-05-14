@@ -36,7 +36,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 function AppInner() {
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
-  const isOwner = true;
+  const isOwner = false;
   const dispatch = useAppDispatch();
   // const isLoggedIn = false;
 
@@ -143,7 +143,7 @@ function AppInner() {
                   style={{
                     width: 20,
                     height: 20,
-                    tintColor: focused ? '#414FFD' : 'A5A5A5',
+                    tintColor: focused ? '#414FFD' : '#A5A5A5',
                   }}
                 />
                 <Text
