@@ -2,7 +2,7 @@ import * as React from 'react';
 // import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Settings from './src/pages/Settings';
+import More from './src/pages/More';
 import saveUp from './src/pages/saveUp';
 import Main from './src/pages/Main';
 import SignIn from './src/pages/SignIn';
@@ -149,8 +149,8 @@ function AppInner() {
           }}
         />
         <Tab.Screen
-          name="Settings"
-          component={Settings}
+          name="More"
+          component={More}
           options={{
             tabBarLabel: '더보기',
             headerShown: false,
@@ -265,8 +265,8 @@ function AppInner() {
           }}
         />
         <Tab.Screen
-          name="Settings"
-          component={Settings}
+          name="More"
+          component={More}
           options={{
             tabBarLabel: '더보기',
             headerShown: false,

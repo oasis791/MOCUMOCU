@@ -8,7 +8,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-function Settings() {
+function More() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const dispatch = useAppDispatch();
   const onLogout = useCallback(async () => {
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Settings;
+export default More;
