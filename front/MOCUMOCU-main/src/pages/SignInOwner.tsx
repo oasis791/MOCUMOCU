@@ -176,19 +176,12 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
             <Text style={styles.signUpButtonText}>회원가입</Text>
           </TouchableHighlight>
           <View style={styles.zZone}>
-<<<<<<< HEAD
-            <Pressable onPress={toSignInOwner}>
-              <Text style={styles.zZoneText}>아이디 찾기</Text>
-            </Pressable>
-            <Text style={{marginLeft: 5}}>/</Text>
-            <Pressable onPress={toSignInOwner}>
-=======
             <Pressable onPress={toFindIdOwner}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
             <Text style={{marginLeft: 5}}>/</Text>
             <Pressable onPress={toFindPasswordOwner}>
->>>>>>> su
+
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
             </Pressable>
           </View>
