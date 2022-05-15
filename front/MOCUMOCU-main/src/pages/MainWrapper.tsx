@@ -3,7 +3,7 @@ import React from 'react';
 import {Image, Text, View} from 'react-native';
 import Main from './Main';
 import More from './More';
-import saveUp from './saveUp';
+import saveUp from './SaveUp';
 
 const Tab = createBottomTabNavigator();
 

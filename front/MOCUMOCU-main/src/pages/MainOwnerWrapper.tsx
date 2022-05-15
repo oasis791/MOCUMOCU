@@ -2,7 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image, Text, View} from 'react-native';
 import More from './More';
-import saveUp from './saveUp';
+import saveUp from './SaveUp';
 import MainOwner from './MainOwner';
 
 const Tab = createBottomTabNavigator();
