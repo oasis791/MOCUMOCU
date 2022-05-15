@@ -73,7 +73,7 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
-  return isLoggedIn ? (
+  return !isLoggedIn ? (
     isOwner ? (
       <Tab.Navigator
         initialRouteName="main"
