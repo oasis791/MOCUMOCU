@@ -20,25 +20,11 @@ import SplashScreen from 'react-native-splash-screen';
 import axios, {AxiosError} from 'axios';
 import userSlice from './src/slices/user';
 import Config from 'react-native-config';
-<<<<<<< HEAD
 import MainOwner from './src/pages/MainOwner';
-// export type LoggedInParamList = {
-//   Orders: undefined;
-//   Settings: undefined;
-//   Delivery: undefined;
-//   Complete: {orderId: string};
-// };
-
-// export type RootStackParamList = {
-//   SignIn: undefined;
-//   SignUp: undefined;
-// };
-=======
 import findPassword from './src/pages/FindPassword';
 import findPasswordOwner from './src/pages/FindPasswordOwner';
 import findIdOwner from './src/pages/FindIdOwner';
 import findId from './src/pages/FindId';
->>>>>>> su
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
