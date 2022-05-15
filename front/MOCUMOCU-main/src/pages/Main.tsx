@@ -1,4 +1,4 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback, useRef} from 'react';
 import {
   View,
@@ -16,7 +16,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import Carousel from 'react-native-snap-carousel';
-import { LoggedInParamList } from '../../App';
+import {LoggedInUserParamList} from '../../App';
 // import LinearGradient from 'react-native-linear-gradient';
 // import InsetShadow from 'react-native-inset-shadow';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -50,7 +50,7 @@ const couponList = [
   },
 ];
 
-type MainScreenProps = NativeStackScreenProps<LoggedInParamList, 'Main'>;
+type MainScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'Main'>;
 function Main({navigation}: MainScreenProps) {
   const isAlarm = true;
   const userName = '여민수';
@@ -64,15 +64,11 @@ function Main({navigation}: MainScreenProps) {
   const onSubmitEvent = () => {
     Alert.alert('알림', '이벤트');
   };
-  const toUsePoint = () => {
-    Alert.alert('알림', '포인트 사용내역 이동');
-  };
-  // const toUsePointShop = () => {
-  //   Alert.alert('알림', '포인트 상점으로 이동');
-  // };
-
-  const toUsePointShop = useCallback(() => {
-    navigation.navigate('CustomerShop');
+  const toPointLog = useCallback(() => {
+    navigation.navigate('PointLog');
+  }, [navigation]);
+  const toCustomShop = useCallback(() => {
+    navigation.navigate('CustomShop');
   }, [navigation]);
   const toCouponList = () => {
     Alert.alert('알림', '쿠폰 리스트 화면으로 이동');
@@ -160,13 +156,13 @@ function Main({navigation}: MainScreenProps) {
             </View>
             <View style={styles.pointButtonWrapper}>
               <Pressable style={styles.pointButton}>
-                <Text style={styles.pointButtonText} onPress={toUsePoint}>
+                <Text style={styles.pointButtonText} onPress={toPointLog}>
                   포인트 사용내역
                 </Text>
               </Pressable>
               <Text style={styles.pointButtonBar}>|</Text>
               <Pressable style={styles.pointButton}>
-                <Text style={styles.pointButtonText} onPress={toUsePointShop}>
+                <Text style={styles.pointButtonText} onPress={toCustomShop}>
                   포인트 상점
                 </Text>
               </Pressable>

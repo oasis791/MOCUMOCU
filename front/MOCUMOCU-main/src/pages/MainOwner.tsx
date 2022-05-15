@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import ActivityRings from "react-native-activity-rings";  
+import ActivityRings from 'react-native-activity-rings';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -51,30 +51,29 @@ function MainOwner() {
     },
   ];
 
-//   const activityData = [ 
-//    { value: 0.8 }, 
-//    { value: 0.6 }, 
-//    { value: 0.2 }
-//  ];
+  //   const activityData = [
+  //    { value: 0.8 },
+  //    { value: 0.6 },
+  //    { value: 0.2 }
+  //  ];
 
-const activityConfig = {
-  width: 150,
-  height: 150,
-  radius: 50,
-  ringSize: 14,
-}
-  
+  const activityConfig = {
+    width: 150,
+    height: 150,
+    radius: 50,
+    ringSize: 14,
+  };
+
   const activityData = [
-//  {
-//     value: 0.8, // ring will use color from theme
-//   },
-  {
-    label: "ACTIVITY",
-    value: 0.5,
-    color: "#FA6072",
-  },
-
-];
+    //  {
+    //     value: 0.8, // ring will use color from theme
+    //   },
+    {
+      label: 'ACTIVITY',
+      value: 0.5,
+      color: '#FA6072',
+    },
+  ];
 
   const onSubmitSetting = () => {
     Alert.alert('알림', '설정');
@@ -176,13 +175,10 @@ const activityConfig = {
               <TouchableOpacity
                 style={styles.analysisCard}
                 onPress={() => {
-                  Alert.alert('알림', `${stores['name']} 매장 분석으로 이동`);
+                  Alert.alert('알림', `${stores.name} 매장 분석으로 이동`);
                 }}
-                key={stores}  
-              >
-                <Text style={styles.analysisStoreNameText}>
-                  {stores['name']}
-                </Text>
+                key={stores}>
+                <Text style={styles.analysisStoreNameText}>{stores.name}</Text>
                 <View style={styles.cardChart}>
                   <View style={styles.todayVistorWrapper}>
                     <View>
@@ -192,51 +188,58 @@ const activityConfig = {
                       <Text style={[styles.todaysText, {bottom: 10}]}>
                         {stores.todays}명
                       </Text>
-
-                  </View>
-
-                  <View>
-                 
-                     <ActivityRings data={activityData} config={activityConfig} /> 
-                  </View>
+                    </View>
 
                     <View>
-                    {stores['male'] > stores.female ? (
-                      <>
+                      <ActivityRings
+                        data={activityData}
+                        config={activityConfig}
+                      />
+                    </View>
+
+                    <View>
+                      {stores.male > stores.female ? (
+                        <>
                           <Text
-                          style={[styles.todaysText, {top: 10, color: 'blue'}]}>
-                          남자 {stores['male']}
+                            style={[
+                              styles.todaysText,
+                              {top: 10, color: 'blue'},
+                            ]}>
+                            남자 {stores.male}
                           </Text>
                           <Text
                             style={[
                               styles.todaysText,
-                            {bottom: 10, color: 'red'},
-                          ]}>
-                          여자 {stores.female}
-                        </Text>
-                      </>
-                    ) : (
-                      <>
-                        <Text
-                          style={[styles.todaysText, {top: 10, color: 'red'}]}>
-                          여자 {stores['female']}
-                        </Text>
-                        <Text
-                          style={[
-                            styles.todaysText,
-                            {bottom: 10, color: 'blue'},
-                          ]}>
-                          남자 {stores['male']}
-                        </Text>
-                      </>
+                              {bottom: 10, color: 'red'},
+                            ]}>
+                            여자 {stores.female}
+                          </Text>
+                        </>
+                      ) : (
+                        <>
+                          <Text
+                            style={[
+                              styles.todaysText,
+                              {top: 10, color: 'red'},
+                            ]}>
+                            여자 {stores.female}
+                          </Text>
+                          <Text
+                            style={[
+                              styles.todaysText,
+                              {bottom: 10, color: 'blue'},
+                            ]}>
+                            남자 {stores.male}
+                          </Text>
+                        </>
                       )}
-                      </View>
+                    </View>
                   </View>
-      </View>
+                </View>
               </TouchableOpacity>
             );
           })}
-</ScrollView>
+        </ScrollView>
       </View>
     </ScrollView>
   );

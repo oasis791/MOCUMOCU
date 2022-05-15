@@ -1,16 +1,12 @@
 import * as React from 'react';
 // import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import More from './src/pages/More';
-import saveUp from './src/pages/saveUp';
-import Main from './src/pages/Main';
 import SignIn from './src/pages/SignIn';
 import SignInOwner from './src/pages/SignInOwner';
 import SignUp from './src/pages/SignUp';
 import SignUpOwner from './src/pages/SignUpOwner';
 import InitScreen from './src/pages/InitScreen';
-import {Image, View, Text, Alert} from 'react-native';
+import {Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from './src/store/reducer';
 import {useAppDispatch} from './src/store';
@@ -20,15 +16,15 @@ import SplashScreen from 'react-native-splash-screen';
 import axios, {AxiosError} from 'axios';
 import userSlice from './src/slices/user';
 import Config from 'react-native-config';
-import MainOwner from './src/pages/MainOwner';
 import findPassword from './src/pages/FindPassword';
 import findPasswordOwner from './src/pages/FindPasswordOwner';
 import findIdOwner from './src/pages/FindIdOwner';
 import findId from './src/pages/FindId';
 import MainWrapper from './src/pages/MainWrapper';
-import CustomerShop from './src/pages/CustomerShop';
+import CustomShop from './src/pages/CustomShop';
+import MainOwnerWrapper from './src/pages/MainOwnerWrapper';
+import PointLog from './src/pages/PointLog';
 
-const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 function AppInner() {
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
@@ -78,137 +74,172 @@ function AppInner() {
 
   return !isLoggedIn ? (
     isOwner ? (
-      <Tab.Navigator
-        initialRouteName="main"
-        screenOptions={{
-          tabBarActiveTintColor: '#414FFD',
-        }}>
-        <Tab.Screen
-          name="saveUp"
-          component={saveUp}
-          options={{
-            tabBarLabel: '적립',
-            headerShown: false,
-            tabBarShowLabel: false,
-            tabBarIcon: ({focused}) => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  top: 7,
-                }}>
-                <Image
-                  source={require('./src/assets/saveButton.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: 20,
-                    height: 20,
-                    tintColor: focused ? '#414FFD' : '#A5A5A5',
-                  }}
-                />
-                <Text
-                  style={{
-                    fontSize: 11,
-                    top: -3,
-                    fontFamily: 'NotoSansCJKkr-Black (TTF)',
-                    color: focused ? '#414FFD' : '#A5A5A5',
-                  }}>
-                  적립/사용
-                </Text>
-              </View>
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="main"
-          component={MainOwner}
-          options={{
-            tabBarLabel: '메인',
-            headerShown: false,
-            tabBarShowLabel: false,
-            tabBarIcon: ({focused}) => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  top: 7,
-                }}>
-                <Image
-                  source={require('./src/assets/homeButton.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: 20,
-                    height: 20,
-                    tintColor: focused ? '#414FFD' : '#A5A5A5',
-                  }}
-                />
-                <Text
-                  style={{
-                    fontSize: 11,
-                    top: -3,
-                    fontFamily: 'NotoSansCJKkr-Black (TTF)',
-                    color: focused ? '#414FFD' : '#A5A5A5',
-                  }}>
-                  홈
-                </Text>
-              </View>
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="More"
-          component={More}
-          options={{
-            tabBarLabel: '더보기',
-            headerShown: false,
-            tabBarShowLabel: false,
-            tabBarIcon: ({focused}) => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  top: 7,
-                }}>
-                <Image
-                  source={require('./src/assets/moreButton.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: 20,
-                    height: 20,
-                    tintColor: focused ? '#414FFD' : '#A5A5A5',
-                  }}
-                />
-                <Text
-                  style={{
-                    fontSize: 11,
-                    top: -3,
-                    fontFamily: 'NotoSansCJKkr-Black (TTF)',
-                    color: focused ? '#414FFD' : '#A5A5A5',
-                  }}>
-                  더보기
-                </Text>
-              </View>
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    ) : (
       <Stack.Navigator>
         <Stack.Screen
-          name="Main"
+          name="MainOwnerWrapper"
+          component={MainOwnerWrapper}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SettingsOwner"
+          component={SettingsOwner}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="NoticeOwner"
+          component={NoticeOwner}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AddStore"
+          component={AddStore}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="StoreInfo"
+          component={StoreInfo}
+          options={{headerShown: false}}
+        />
+        {/* 매장 상세보기 탭 */}
+        <Stack.Screen
+          name="ModifyStore"
+          component={ModifyStore}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AddEvent"
+          component={AddEvent}
+          options={{headerShown: false}}
+        />
+        {/* 매장 상세보기 탭 */}
+        <Stack.Screen
+          name="StoreAnalysis"
+          component={StoreAnalysis}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PrivacyOwner"
+          component={PrivacyOwner}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="HelpOwner"
+          component={Help}
+          options={{headerShown: false}}
+        />
+        {/* 점주 홈 화면 탭 */}
+        <Stack.Screen
+          name="ModifyInfoOwner"
+          component={ModifyInfoOwner}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DevInfoOwner"
+          component={DevInfoOwner}
+          options={{headerShown: false}}
+        />
+        {/* 점주 더보기 탭 */}
+        <Stack.Screen
+          name="StampControl"
+          component={StampControl}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="QRcodeScanner"
+          component={QRcodeScanner}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PhoneNumScanner"
+          component={PhoneNumScanner}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="StampAmount"
+          component={StampAmount}
+          options={{headerShown: false}}
+        />
+        {/* 점주 적립/사용 탭 */}
+      </Stack.Navigator>
+    ) : (
+      //회원 파트
+      <Stack.Navigator>
+        <Stack.Screen
+          name="MainWrapper"
           component={MainWrapper}
           options={{headerShown: false}}
-          />
+        />
         <Stack.Screen
-          name="CustomerShop"
-          component={CustomerShop}
+          name="EventInfo"
+          component={EventInfo}
           options={{headerShown: false}}
-          />
-            
-        
+        />
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Notice"
+          component={Notice}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CustomShop"
+          component={CustomShop}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PointLog"
+          component={PointLog}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CouponList"
+          component={CouponList}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CouponInfo"
+          component={CouponInfo}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Privacy"
+          component={Privacy}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Help"
+          component={Help}
+          options={{headerShown: false}}
+        />
+        {/* 홈 탭 */}
+
+        <Stack.Screen
+          name="ModifyUserInfo"
+          component={ModifyInfo}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UsageHistory"
+          component={UsageHistory}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DevInfo"
+          component={DevInfo}
+          options={{headerShown: false}}
+        />
+        {/* 더보기 탭 */}
+
+        <Stack.Screen
+          name="RewardList"
+          component={RewardList}
+          options={{headerShown: false}}
+        />
+        {/* 쿠폰 사용 및 적립 탭 */}
       </Stack.Navigator>
-        
-    
     )
   ) : (
     <Stack.Navigator>
