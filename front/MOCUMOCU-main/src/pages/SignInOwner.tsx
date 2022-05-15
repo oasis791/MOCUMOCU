@@ -76,7 +76,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
   const onChangePassword = useCallback(text => {
     setPassword(text);
   }, []);
-  const toSignUpOwner = useCallback(() => {
+  const toSignInOwner = useCallback(() => {
     navigation.navigate('SignUpOwner');
   }, [navigation]);
   const canGoNext = email && password;
@@ -162,16 +162,16 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
           </Pressable>
           <TouchableHighlight
             underlayColor={'#e6e6e6'}
-            onPress={toSignUpOwner}
+            onPress={toSignInOwner}
             style={styles.signUpButton}>
             <Text style={styles.signUpButtonText}>회원가입</Text>
           </TouchableHighlight>
           <View style={styles.zZone}>
-            <Pressable onPress={toSignUpOwner}>
+            <Pressable onPress={toSignInOwner}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
             <Text style={{marginLeft: 5}}>/</Text>
-            <Pressable onPress={toSignUpOwner}>
+            <Pressable onPress={toSignInOwner}>
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
             </Pressable>
           </View>

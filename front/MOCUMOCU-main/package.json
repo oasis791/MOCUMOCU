@@ -21,6 +21,7 @@
     "install": "^0.13.0",
     "react": "17.0.2",
     "react-native": "0.68.1",
+    "react-native-activity-rings": "^1.1.2",
     "react-native-config": "^1.4.5",
     "react-native-encrypted-storage": "^4.0.2",
     "react-native-inset-shadow": "^1.0.3",
@@ -30,6 +31,7 @@
     "react-native-screens": "3.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-splash-screen": "^3.3.0",
+    "react-native-svg": "^9.13.6",
     "react-redux": "^8.0.1",
     "redux-flipper": "^2.0.1"
   },

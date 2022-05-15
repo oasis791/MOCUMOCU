@@ -1,5 +1,4 @@
-import { StackRouter } from '@react-navigation/native';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -14,17 +13,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import Carousel from 'react-native-snap-carousel';
-import store from '../store';
-// import LinearGradient from 'react-native-linear-gradient';
-// import InsetShadow from 'react-native-inset-shadow';
-// import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import Ing from './Ing';
-// import Complete from './Complete';
-// import { SafeAreaView } from 'react-native-safe-area-context';
-// const Stack = createNativeStackNavigator();
+import ActivityRings from "react-native-activity-rings";  
+
 const screenWidth = Dimensions.get('screen').width;
-function Main() {
+const screenHeight = Dimensions.get('screen').height;
+
+function MainOwner() {
   const isAlarm = false;
   const userName = '김준서';
   const stores = [
@@ -36,27 +30,52 @@ function Main() {
     },
 
     {
-      name: "카페현욱",
+      name: '카페현욱',
       todays: 30,
       male: 12,
       female: 18,
     },
-        
+
     {
       name: '라떼는말이야',
       todays: 0,
       male: 0,
       female: 0,
-    },     
-    
+    },
+
     {
-      name: "민수와 아이들",
+      name: '민수와 아이들',
       todays: 10,
       male: 5,
       female: 5,
     },
-  
   ];
+
+//   const activityData = [ 
+//    { value: 0.8 }, 
+//    { value: 0.6 }, 
+//    { value: 0.2 }
+//  ];
+
+const activityConfig = {
+  width: 150,
+  height: 150,
+  radius: 50,
+  ringSize: 14,
+}
+  
+  const activityData = [
+//  {
+//     value: 0.8, // ring will use color from theme
+//   },
+  {
+    label: "ACTIVITY",
+    value: 0.5,
+    color: "#FA6072",
+  },
+
+];
+
   const onSubmitSetting = () => {
     Alert.alert('알림', '설정');
   };
@@ -104,31 +123,27 @@ function Main() {
           <Text style={styles.myInfoText}>
             {userName} 점주님,{'\n'}오늘도 모쿠하세요!
           </Text>
-          
+
           <View style={styles.storeListWrapper}>
             <Text style={styles.storeListTitle}>매장 리스트</Text>
           </View>
 
           <ScrollView style={styles.storeScrollView}>
-           {
-            stores.map((stores, i) => {
+            {stores.map((stores, i) => {
               return (
                 <TouchableOpacity
                   key={i}
                   onPress={() => {
-                    Alert.alert('알림', `${stores['name']} 세부정보로 이동`);
+                    Alert.alert('알림', `${stores.name} 세부정보로 이동`);
                   }}
-                  style={styles.storeTab}
-                >
-                  <Text style={styles.storeTabText}>{stores["name"]}</Text>
+                  style={styles.storeTab}>
+                  <Text style={styles.storeTabText}>{stores.name}</Text>
                   {/* <Text  style={[styles.storeTabText, {alignItems: 'flex-end'}]} > {">"} </Text> */}
                 </TouchableOpacity>
               );
-            })
-          }
-
+            })}
           </ScrollView>
-            
+
           <View style={styles.storeControlWrapper}>
             <Pressable style={styles.controlStoreButton}>
               <Text style={styles.controlStoreButtonText} onPress={toAddStore}>
@@ -137,7 +152,9 @@ function Main() {
             </Pressable>
             <Text style={styles.pointButtonBar}>|</Text>
             <Pressable style={styles.controlStoreButton}>
-              <Text style={styles.controlStoreButtonText} onPress={toDeleteStore}>
+              <Text
+                style={styles.controlStoreButtonText}
+                onPress={toDeleteStore}>
                 매장 삭제
               </Text>
             </Pressable>
@@ -145,7 +162,7 @@ function Main() {
         </View>
       </ImageBackground>
 
-      <View style={styles.div}></View>
+      <View style={styles.divider} />
 
       <View style={styles.storeAnalysis}>
         <Text style={styles.storeAnalysisTitle}>매장 분석</Text>
@@ -154,65 +171,73 @@ function Main() {
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}
           style={styles.storeAnalysisScrollView}>
-        {
-            stores.map((stores, i) => {
-              return (
-                <TouchableOpacity
-                  style={styles.analysisCard}
-                  onPress={() => {
-                     Alert.alert('알림', `${stores['name']} 매장 분석으로 이동`);
-                   }}
-                >
-                  <Text style={styles.analysisStoreNameText}>{stores["name"]}</Text>
-                  <View style={styles.cardChart}>
-                    <View style={ styles.todayVistorWrapper}>
+          {stores.map((stores, i) => {
+            return (
+              <TouchableOpacity
+                style={styles.analysisCard}
+                onPress={() => {
+                  Alert.alert('알림', `${stores['name']} 매장 분석으로 이동`);
+                }}
+                key={stores}  
+              >
+                <Text style={styles.analysisStoreNameText}>
+                  {stores['name']}
+                </Text>
+                <View style={styles.cardChart}>
+                  <View style={styles.todayVistorWrapper}>
                     <View>
-                        <Text style={[styles.todaysText, {top: 10} ]}>오늘 방문자 수</Text>
-                      <Text style={[styles.todaysText, {bottom: 10}]}>
-                        {stores['todays']}명
+                      <Text style={[styles.todaysText, {top: 10}]}>
+                        오늘 방문자 수
                       </Text>
-                          
-                        </View>
-                    </View>
-                    
-                    <View>
-                      <Text>차트</Text>
-                    </View>
+                      <Text style={[styles.todaysText, {bottom: 10}]}>
+                        {stores.todays}명
+                      </Text>
+
+                  </View>
+
+                  <View>
+                 
+                     <ActivityRings data={activityData} config={activityConfig} /> 
+                  </View>
 
                     <View>
-                      {
-                        stores["male"] > stores["female"]
-                          ?
-                          <>
-                            <Text style={[styles.todaysText, { top:10, color: "blue" }]}>남자 {stores["male"]}</Text>
+                    {stores['male'] > stores.female ? (
+                      <>
+                          <Text
+                          style={[styles.todaysText, {top: 10, color: 'blue'}]}>
+                          남자 {stores['male']}
+                          </Text>
+                          <Text
+                            style={[
+                              styles.todaysText,
+                            {bottom: 10, color: 'red'},
+                          ]}>
+                          여자 {stores.female}
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <Text
+                          style={[styles.todaysText, {top: 10, color: 'red'}]}>
+                          여자 {stores['female']}
+                        </Text>
                         <Text
                           style={[
                             styles.todaysText,
-                            {bottom: 10, color: 'red'},
+                            {bottom: 10, color: 'blue'},
                           ]}>
-                          여자 {stores['female']}
+                          남자 {stores['male']}
                         </Text>
-                          </>
-                          :
-                          <>
-                            <Text style={[styles.todaysText, { top:10, color: "red" }]}>여자 {stores["female"]}</Text>
-                            <Text style={[styles.todaysText, { bottom:10, color: "blue" }]}>남자 {stores["male"]}</Text>
-                          </>
-                      }
-              
-
-                    </View>
-          
+                      </>
+                      )}
+                      </View>
                   </View>
-
-              </TouchableOpacity>
-              );
-            })
-          }
-        
-          </ScrollView>
       </View>
-
+              </TouchableOpacity>
+            );
+          })}
+</ScrollView>
+      </View>
     </ScrollView>
   );
 }
@@ -257,7 +282,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     height: 20,
     // left: 220,
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
     // backgroundColor: 'black',
   },
   eventBanner: {
@@ -291,7 +316,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 10,
     elevation: 10,
-    top : 70
+    top: 70,
   },
   analysisStoreNameText: {
     marginTop: 5,
@@ -304,14 +329,14 @@ const styles = StyleSheet.create({
 
   cardChart: {
     flexDirection: 'row',
-    justifyContent: "center"
+    justifyContent: 'center',
   },
   storeControlWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     width: '100%',
-    marginVertical: 10
+    marginVertical: 10,
   },
   controlStoreButton: {
     marginLeft: 45,
@@ -320,7 +345,7 @@ const styles = StyleSheet.create({
   controlStoreButtonText: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: 'white',
-    paddingLeft: 28
+    paddingLeft: 28,
   },
   pointButtonBar: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
@@ -349,7 +374,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
- 
   eventImage: {
     height: 210,
     borderRadius: 10,
@@ -357,8 +381,8 @@ const styles = StyleSheet.create({
 
   storeListTitle: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
-    color: "white",
-    fontSize: 18
+    color: 'white',
+    fontSize: 18,
   },
 
   storeListWrapper: {
@@ -367,7 +391,7 @@ const styles = StyleSheet.create({
   },
 
   storeScrollView: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     marginHorizontal: 25,
     height: 240,
     borderRadius: 8,
@@ -376,10 +400,9 @@ const styles = StyleSheet.create({
   storeTab: {
     height: 80,
     width: '100%',
-    alignContent: "center",
-    flexDirection: "row",
+    alignContent: 'center',
+    flexDirection: 'row',
     // backgroundColor: "blue"
-    
   },
 
   storeTabText: {
@@ -390,14 +413,14 @@ const styles = StyleSheet.create({
     padding: 18,
   },
 
-  div: {
+  divider: {
     width: '100%',
     height: 15,
-    backgroundColor: "lightgray",
+    backgroundColor: 'lightgray',
   },
 
- storeAnalysis: {
-    padding: 25
+  storeAnalysis: {
+    padding: 25,
   },
 
   storeAnalysisTitle: {
@@ -406,12 +429,9 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: 'black',
     fontSize: 18,
-
   },
 
-  storeAnalysisScrollView: {
-    
-  },
+  storeAnalysisScrollView: {},
 
   analysisCard: {
     marginTop: 5,
@@ -423,14 +443,12 @@ const styles = StyleSheet.create({
   },
 
   todayVistorWrapper: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
 
   todaysText: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
-    color: "black",
-  }
-
-
+    color: 'black',
+  },
 });
-export default Main;
+export default MainOwner;

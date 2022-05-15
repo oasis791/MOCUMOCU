@@ -124,7 +124,6 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
     
   return (
     <DismissKeyboardView>
-      
       <View>
         <StatusBar hidden={true} />
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -274,9 +273,6 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
             placeholderTextColor="#c4c4c4"
             onChangeText={onChangePassword}
             value={password}
-            keyboardType={
-              Platform.OS === 'android' ? 'default' : 'ascii-capable'
-            }
             textContentType="password"
             secureTextEntry
             returnKeyType="next"
