@@ -32,7 +32,7 @@ export type LoggedInOwnerParamList = {
   AddEvent: undefined;
   StoreAnalysis: undefined;
   PrivacyOwner: undefined;
-  Help: undefined;
+  HelpOwner: undefined;
   ModifyInfoOwner: undefined;
   DevInfoOwner: undefined;
   StampControl: undefined;

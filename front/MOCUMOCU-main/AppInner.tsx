@@ -124,7 +124,7 @@ function AppInner() {
         />
         <Stack.Screen
           name="HelpOwner"
-          component={Help}
+          component={HelpOwner}
           options={{headerShown: false}}
         />
         {/* 점주 홈 화면 탭 */}
