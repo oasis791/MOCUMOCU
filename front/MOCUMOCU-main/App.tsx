@@ -8,7 +8,8 @@ export type LoggedInParamList = {
   Orders: undefined;
   Settings: undefined;
   Main: undefined;
-  Complete: {orderId: string};
+  Complete: { orderId: string };
+  CustomerShop: undefined;
   // orderId : parameter 칸 => 주문에 고유한 ID가 부여되어 있음 이걸 변수처럼 사용하기 위해서 넣어줌
 }; // -> 로그인 했을 때 보이는 페이지들
 

@@ -1,4 +1,5 @@
-import React, {useRef} from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, {useCallback, useRef} from 'react';
 import {
   View,
   Text,
@@ -15,6 +16,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import Carousel from 'react-native-snap-carousel';
+import { LoggedInParamList } from '../../App';
 // import LinearGradient from 'react-native-linear-gradient';
 // import InsetShadow from 'react-native-inset-shadow';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -47,7 +49,9 @@ const couponList = [
     market: 'C 가게',
   },
 ];
-function Main() {
+
+type MainScreenProps = NativeStackScreenProps<LoggedInParamList, 'Main'>;
+function Main({navigation}: MainScreenProps) {
   const isAlarm = true;
   const userName = '여민수';
   const myPoint = 1000;
@@ -63,9 +67,13 @@ function Main() {
   const toUsePoint = () => {
     Alert.alert('알림', '포인트 사용내역 이동');
   };
-  const toUsePointShop = () => {
-    Alert.alert('알림', '포인트 상점으로 이동');
-  };
+  // const toUsePointShop = () => {
+  //   Alert.alert('알림', '포인트 상점으로 이동');
+  // };
+
+  const toUsePointShop = useCallback(() => {
+    navigation.navigate('CustomerShop');
+  }, [navigation]);
   const toCouponList = () => {
     Alert.alert('알림', '쿠폰 리스트 화면으로 이동');
   };
