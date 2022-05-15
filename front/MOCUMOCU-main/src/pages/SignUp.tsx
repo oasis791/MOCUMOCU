@@ -12,6 +12,7 @@ import {
   StatusBar,
   TouchableHighlight,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
@@ -35,6 +36,12 @@ function SignUp({navigation}: SignUpScreenProps) {
   const passwordRef = useRef<TextInput | null>(null);
   const checkPasswordRef = useRef<TextInput | null>(null);
   const telephoneNumberRef = useRef<TextInput | null>(null);
+  const toCertification = () => {
+    if (!email || !email.trim()) {
+      return Alert.alert('알림', '이메일을 입력해주세요.');
+    }
+    Alert.alert('알림', '인증번호를 입력해주세요');
+  };
   const onChangeEmail = useCallback(text => {
     setEmail(text.trim());
   }, []);
@@ -99,7 +106,7 @@ function SignUp({navigation}: SignUpScreenProps) {
       Alert.alert('알림', '회원가입 되었습니다.');
       navigation.navigate('SignIn');
     } catch (error) {
-      const errorResponse = (error as AxiosError).response;
+      const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
         Alert.alert('알림', errorResponse.data.message);
         setLoading(false);
@@ -242,23 +249,28 @@ function SignUp({navigation}: SignUpScreenProps) {
             onSubmitEditing={() => emailRef.current?.focus()}
             blurOnSubmit={false}
           />
-          {/* <Text style={styles.label}>이름</Text> */}
         </View>
         <View style={styles.inputWrapper}>
-          {/* <Text style={styles.label}>이메일</Text> */}
-          <TextInput
-            style={styles.textInput}
-            onChangeText={onChangeEmail}
-            placeholder="이메일"
-            placeholderTextColor="#c4c4c4"
-            textContentType="emailAddress"
-            value={email}
-            returnKeyType="next"
-            clearButtonMode="while-editing"
-            ref={emailRef}
-            onSubmitEditing={() => passwordRef.current?.focus()}
-            blurOnSubmit={false}
-          />
+          <View style={styles.emailWrapper}>
+            <TextInput
+              style={styles.textInputEmail}
+              onChangeText={onChangeEmail}
+              placeholder="이메일"
+              placeholderTextColor="#c4c4c4"
+              textContentType="emailAddress"
+              value={email}
+              returnKeyType="next"
+              clearButtonMode="while-editing"
+              ref={emailRef}
+              onSubmitEditing={() => passwordRef.current?.focus()}
+              blurOnSubmit={false}
+            />
+            <TouchableOpacity
+              style={styles.certificationButton}
+              onPress={toCertification}>
+              <Text style={styles.certificationButtonText}>인증</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.inputWrapper}>
           {/* <Text style={styles.label}>비밀번호</Text> */}
@@ -307,25 +319,27 @@ function SignUp({navigation}: SignUpScreenProps) {
             returnKeyType="next"
             clearButtonMode="while-editing"
             ref={telephoneNumberRef}
-            onSubmitEditing={onSubmit}
+            onSubmitEditing={() => dRef.current?.focus()}
             blurOnSubmit={false}
           />
           {/* <Text style={styles.label}>이름</Text> */}
         </View>
         {/* <View style={styles.inputWrapper}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="성별"
-            placeholderTextColor="#c4c4c4"
-            onChangeText={onChangeName}
-            value={name}
-            textContentType="name"
-            returnKeyType="next"
-            clearButtonMode="while-editing"
-            ref={nameRef}
-            onSubmitEditing={() => passwordRef.current?.focus()}
-            blurOnSubmit={false}
-          />
+          <View style={styles.genderWrapper}>
+            <TextInput
+              style={styles.textInputGender}
+              placeholder="성별"
+              placeholderTextColor="#c4c4c4"
+              onChangeText={onChangeName}
+              value={gender}
+              textContentType="name"
+              returnKeyType="next"
+              clearButtonMode="while-editing"
+              ref={genderRef}
+              onSubmitEditing={() => passwordRef.current?.focus()}
+              blurOnSubmit={false}
+            />
+          </View>
         </View> */}
         {/* <View style={styles.inputWrapper}>
           <TextInput
@@ -371,9 +385,7 @@ function SignUp({navigation}: SignUpScreenProps) {
 const styles = StyleSheet.create({
   textInput: {
     padding: 5,
-    // borderBottomWidth: StyleSheet.hairlicheckidth,
     marginTop: 1,
-    borderStyle: 'solid',
     borderRadius: 8,
     elevation: 10,
     backgroundColor: 'white',
@@ -383,14 +395,51 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
+  emailWrapper: {
+    borderStyle: 'solid',
+    borderRadius: 8,
+    elevation: 10,
+    backgroundColor: 'white',
+    paddingHorizontal: 15,
+    width: 280,
+    fontWeight: 'bold',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textInputEmail: {
+    fontWeight: 'bold',
+    height: 40,
+  },
+  certificationButton: {
+    // backgroundColor: 'black',
+    justifyContent: 'center',
+  },
+  certificationButtonText: {
+    color: '#c4c4c4',
+    fontWeight: 'bold',
+    fontSize: 14,
+    // fontFamily: 'NotoSansCJKkr-Black (TTF)',
+  },
   inputWrapper: {
     padding: 5,
     alignItems: 'center',
   },
-  label: {
+  genderWrapper: {
+    borderStyle: 'solid',
+    borderRadius: 8,
+    elevation: 10,
+    backgroundColor: 'white',
+    paddingHorizontal: 15,
+    width: 280,
     fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textInputGender: {
+    fontWeight: 'bold',
+    height: 40,
   },
   buttonZone: {
     // position: 'absolute',

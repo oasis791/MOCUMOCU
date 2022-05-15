@@ -19,7 +19,10 @@ import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
-type SignInOwnerScreenProps = NativeStackScreenProps<RootStackParamList, 'SignInOwner'>;
+type SignInOwnerScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'SignInOwner'
+>;
 
 function SignInOwner({navigation}: SignInOwnerScreenProps) {
   const dispatch = useAppDispatch();
@@ -78,6 +81,12 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
   }, []);
   const toSignInOwner = useCallback(() => {
     navigation.navigate('SignUpOwner');
+  }, [navigation]);
+  const toFindIdOwner = useCallback(() => {
+    navigation.navigate('findIdOwner');
+  }, [navigation]);
+  const toFindPasswordOwner = useCallback(() => {
+    navigation.navigate('findPasswordOwner');
   }, [navigation]);
   const canGoNext = email && password;
   return (
@@ -167,11 +176,19 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
             <Text style={styles.signUpButtonText}>회원가입</Text>
           </TouchableHighlight>
           <View style={styles.zZone}>
+<<<<<<< HEAD
             <Pressable onPress={toSignInOwner}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
             <Text style={{marginLeft: 5}}>/</Text>
             <Pressable onPress={toSignInOwner}>
+=======
+            <Pressable onPress={toFindIdOwner}>
+              <Text style={styles.zZoneText}>아이디 찾기</Text>
+            </Pressable>
+            <Text style={{marginLeft: 5}}>/</Text>
+            <Pressable onPress={toFindPasswordOwner}>
+>>>>>>> su
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
             </Pressable>
           </View>

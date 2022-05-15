@@ -20,6 +20,10 @@ export type RootStackParamList = {
   SignUp: undefined;
   SignUpOwner: undefined;
   InitScreen: undefined;
+  findId: undefined;
+  findIdOwner: undefined;
+  findPassword: undefined;
+  findPasswordOwner: undefined;
 }; // -> 이 타입은 로그인 안 했을 때 보이는 페이지들
 
 function App() {

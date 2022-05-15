@@ -2,7 +2,7 @@ import * as React from 'react';
 // import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Settings from './src/pages/Settings';
+import More from './src/pages/More';
 import saveUp from './src/pages/saveUp';
 import Main from './src/pages/Main';
 import SignIn from './src/pages/SignIn';
@@ -20,6 +20,7 @@ import SplashScreen from 'react-native-splash-screen';
 import axios, {AxiosError} from 'axios';
 import userSlice from './src/slices/user';
 import Config from 'react-native-config';
+<<<<<<< HEAD
 import MainOwner from './src/pages/MainOwner';
 // export type LoggedInParamList = {
 //   Orders: undefined;
@@ -32,12 +33,18 @@ import MainOwner from './src/pages/MainOwner';
 //   SignIn: undefined;
 //   SignUp: undefined;
 // };
+=======
+import findPassword from './src/pages/FindPassword';
+import findPasswordOwner from './src/pages/FindPasswordOwner';
+import findIdOwner from './src/pages/FindIdOwner';
+import findId from './src/pages/FindId';
+>>>>>>> su
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 function AppInner() {
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
-  const isOwner = true;
+  const isOwner = false;
   const dispatch = useAppDispatch();
   // const isLoggedIn = false;
 
@@ -144,7 +151,7 @@ function AppInner() {
                   style={{
                     width: 20,
                     height: 20,
-                    tintColor: focused ? '#414FFD' : 'A5A5A5',
+                    tintColor: focused ? '#414FFD' : '#A5A5A5',
                   }}
                 />
                 <Text
@@ -161,8 +168,8 @@ function AppInner() {
           }}
         />
         <Tab.Screen
-          name="Settings"
-          component={Settings}
+          name="More"
+          component={More}
           options={{
             tabBarLabel: '더보기',
             headerShown: false,
@@ -277,8 +284,8 @@ function AppInner() {
           }}
         />
         <Tab.Screen
-          name="Settings"
-          component={Settings}
+          name="More"
+          component={More}
           options={{
             tabBarLabel: '더보기',
             headerShown: false,
@@ -339,6 +346,26 @@ function AppInner() {
       <Stack.Screen
         name="SignUpOwner"
         component={SignUpOwner}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="findId"
+        component={findId}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="findIdOwner"
+        component={findIdOwner}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="findPassword"
+        component={findPassword}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="findPasswordOwner"
+        component={findPasswordOwner}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
