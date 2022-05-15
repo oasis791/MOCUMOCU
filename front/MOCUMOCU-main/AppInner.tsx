@@ -77,7 +77,7 @@ function AppInner() {
         );
       } catch (error) {
         console.error(error);
-        if ((error as AxiosError).response?.data.code === 'expired') {
+        if ((error as AxiosError<any>).response?.data.code === 'expired') {
           Alert.alert('알림', '다시 로그인 해주세요.');
         }
       } finally {
@@ -187,7 +187,7 @@ function AppInner() {
                   style={{
                     width: 20,
                     height: 20,
-                    tintColor: focused ? '#414FFD' : 'A5A5A5',
+                    tintColor: focused ? '#414FFD' : '#A5A5A5',
                   }}
                 />
                 <Text
@@ -267,7 +267,7 @@ function AppInner() {
                   style={{
                     width: 20,
                     height: 20,
-                    tintColor: focused ? '#414FFD' : 'A5A5A5',
+                    tintColor: focused ? '#414FFD' : '#A5A5A5',
                   }}
                 />
                 <Text
@@ -303,7 +303,7 @@ function AppInner() {
                   style={{
                     width: 20,
                     height: 20,
-                    tintColor: focused ? '#414FFD' : 'A5A5A5',
+                    tintColor: focused ? '#414FFD' : '#A5A5A5',
                   }}
                 />
                 <Text
