@@ -20,6 +20,10 @@ import SplashScreen from 'react-native-splash-screen';
 import axios, {AxiosError} from 'axios';
 import userSlice from './src/slices/user';
 import Config from 'react-native-config';
+import findPassword from './src/pages/FindPassword';
+import findPasswordOwner from './src/pages/FindPasswordOwner';
+import findIdOwner from './src/pages/FindIdOwner';
+import findId from './src/pages/FindId';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -69,7 +73,7 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
-  return !isLoggedIn ? (
+  return isLoggedIn ? (
     isOwner ? (
       <Tab.Navigator
         initialRouteName="main"
@@ -327,6 +331,26 @@ function AppInner() {
       <Stack.Screen
         name="SignUpOwner"
         component={SignUpOwner}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="findId"
+        component={findId}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="findIdOwner"
+        component={findIdOwner}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="findPassword"
+        component={findPassword}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="findPasswordOwner"
+        component={findPasswordOwner}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -63,7 +63,7 @@ function SignIn({navigation}: SignInScreenProps) {
       console.log(EncryptedStorage.getItem('refreshToken'));
     } catch (error) {
       setLoading(false);
-      const errorResponse = (error as AxiosError).response;
+      const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
         Alert.alert('알림', errorResponse.data.message);
       }
@@ -77,6 +77,12 @@ function SignIn({navigation}: SignInScreenProps) {
   }, []);
   const toSignUp = useCallback(() => {
     navigation.navigate('SignUp');
+  }, [navigation]);
+  const toFindId = useCallback(() => {
+    navigation.navigate('findId');
+  }, [navigation]);
+  const toFindPassword = useCallback(() => {
+    navigation.navigate('findPassword');
   }, [navigation]);
   const canGoNext = email && password;
   return (
@@ -165,11 +171,11 @@ function SignIn({navigation}: SignInScreenProps) {
             <Text style={styles.signUpButtonText}>회원가입</Text>
           </TouchableHighlight>
           <View style={styles.zZone}>
-            <Pressable onPress={toSignUp}>
+            <Pressable onPress={toFindId}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
             <Text style={{marginLeft: 5}}>/</Text>
-            <Pressable onPress={toSignUp}>
+            <Pressable onPress={toFindPassword}>
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
             </Pressable>
           </View>
