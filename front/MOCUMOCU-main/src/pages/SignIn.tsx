@@ -79,10 +79,10 @@ function SignIn({navigation}: SignInScreenProps) {
     navigation.navigate('SignUp');
   }, [navigation]);
   const toFindId = useCallback(() => {
-    navigation.navigate('findId');
+    navigation.navigate('FindId');
   }, [navigation]);
   const toFindPassword = useCallback(() => {
-    navigation.navigate('findPassword');
+    navigation.navigate('FindPassword');
   }, [navigation]);
   const canGoNext = email && password;
   return (

@@ -314,12 +314,12 @@ function SignUp({navigation}: SignUpScreenProps) {
             placeholder="전화번호"
             placeholderTextColor="#c4c4c4"
             onChangeText={onChangeTelephoneNumber}
-            value={telephoneNumber}
+            value={telephoneNumber} 
             textContentType="telephoneNumber"
             returnKeyType="next"
             clearButtonMode="while-editing"
             ref={telephoneNumberRef}
-            onSubmitEditing={() => dRef.current?.focus()}
+            onSubmitEditing={() => telePhoneRef.current?.focus()}
             blurOnSubmit={false}
           />
           {/* <Text style={styles.label}>이름</Text> */}
