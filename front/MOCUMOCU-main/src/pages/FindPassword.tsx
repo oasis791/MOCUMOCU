@@ -5,14 +5,14 @@ import {RootStackParamList} from '../../App';
 
 type FindPasswordScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'findPassword'
+  'FindPassword'
 >;
-function findPassword() {
+function FindPassword() {
   return (
     <View>
-      <Text>findPassword</Text>
+      <Text>FindPassword</Text>
     </View>
   );
 }
 
-export default findPassword;
+export default FindPassword;

@@ -5,14 +5,14 @@ import {RootStackParamList} from '../../App';
 
 type FindPasswordOwnerScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'findIdOwner'
+  'FindPasswordOwner'
 >;
-function findPasswordOwner() {
+function FindPasswordOwner() {
   return (
     <View>
-      <Text>findPasswordOwner</Text>
+      <Text>FindPasswordOwner</Text>
     </View>
   );
 }
 
-export default findPasswordOwner;
+export default FindPasswordOwner;

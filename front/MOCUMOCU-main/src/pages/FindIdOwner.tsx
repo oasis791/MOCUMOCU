@@ -5,14 +5,14 @@ import {RootStackParamList} from '../../App';
 
 type FindIdOwnerScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'findIdOwner'
+  'FindIdOwner'
 >;
-function findIdOwner() {
+function FindIdOwner() {
   return (
     <View>
-      <Text>findIdOwner</Text>
+      <Text>FindIdOwner</Text>
     </View>
   );
 }
 
-export default findIdOwner;
+export default FindIdOwner;

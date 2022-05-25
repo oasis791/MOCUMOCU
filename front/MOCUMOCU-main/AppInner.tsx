@@ -16,10 +16,10 @@ import SplashScreen from 'react-native-splash-screen';
 import axios, {AxiosError} from 'axios';
 import userSlice from './src/slices/user';
 import Config from 'react-native-config';
-import findPassword from './src/pages/FindPassword';
-import findPasswordOwner from './src/pages/FindPasswordOwner';
-import findIdOwner from './src/pages/FindIdOwner';
-import findId from './src/pages/FindId';
+import FindPassword from './src/pages/FindPassword';
+import FindPasswordOwner from './src/pages/FindPasswordOwner';
+import FindIdOwner from './src/pages/FindIdOwner';
+import FindId from './src/pages/FindId';
 import MainWrapper from './src/pages/MainWrapper';
 import CustomShop from './src/pages/CustomShop';
 import MainOwnerWrapper from './src/pages/MainOwnerWrapper';
@@ -98,7 +98,7 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
-  return !isLoggedIn ? (
+  return isLoggedIn ? (
     isOwner ? (
       <Stack.Navigator>
         <Stack.Screen
@@ -296,22 +296,22 @@ function AppInner() {
       />
       <Stack.Screen
         name="findId"
-        component={findId}
+        component={FindId}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="findIdOwner"
-        component={findIdOwner}
+        name="FindIdOwner"
+        component={FindIdOwner}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="findPassword"
-        component={findPassword}
+        name="FindPassword"
+        component={FindPassword}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="findPasswordOwner"
-        component={findPasswordOwner}
+        name="FindPasswordOwner"
+        component={FindPasswordOwner}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

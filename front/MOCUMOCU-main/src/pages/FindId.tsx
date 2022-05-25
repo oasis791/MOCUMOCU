@@ -4,12 +4,12 @@ import {View, Text} from 'react-native';
 import {RootStackParamList} from '../../App';
 
 type FindIdScreenProps = NativeStackScreenProps<RootStackParamList, 'findId'>;
-function findId() {
+function FindId() {
   return (
     <View>
-      <Text>findId</Text>
+      <Text>FindId</Text>
     </View>
   );
 }
 
-export default findId;
+export default FindId;
