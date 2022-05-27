@@ -3,7 +3,7 @@ import React from 'react';
 import {Image, Text, View} from 'react-native';
 import Main from './Main';
 import More from './More';
-import saveUp from './SaveUp';
+import SaveUp from './SaveUp';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,8 +16,8 @@ function MainWrapper() {
         tabBarActiveTintColor: '#414FFD',
       }}>
       <Tab.Screen
-        name="saveUp"
-        component={saveUp}
+        name="SaveUp"
+        component={SaveUp}
         options={{
           tabBarLabel: '적립',
           headerShown: false,
