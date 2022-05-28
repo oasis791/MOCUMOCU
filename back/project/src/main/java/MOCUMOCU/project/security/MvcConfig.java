@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Configuration
+//@Configuration
 public class MvcConfig implements WebMvcConfigurer {
 //    @Override
 //    public void addViewControllers(ViewControllerRegistry registry) {
