@@ -17,13 +17,14 @@ import Main from './Main';
 import More from './More';
 // import SaveUp from './SaveUp';
 import {Portal, PortalHost} from '@gorhom/portal';
+import SaveUp from './SaveUp';
 const window = Dimensions.get('screen');
 const Tab = createBottomTabNavigator();
 function MainWrapper() {
   const [isOpen, setIsOpen] = useState(false);
   const [isClickSave, setIsClickSave] = useState(false);
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = React.useMemo(() => [-30, '25%'], []);
+  const snapPoints = React.useMemo(() => [-30, '35%'], []);
   const handleSheetChanges = React.useCallback((index: number) => {
     console.log('handleSheetChanges', index);
   }, []);
@@ -37,7 +38,7 @@ function MainWrapper() {
     setIsOpen(false);
   };
   const toSaveCoupon = () => {
-    Alert.alert('알림', '쿠폰 적립 창');
+    setIsClickSave(true);
   };
   const toUseCoupon = () => {
     Alert.alert('알림', '쿠폰 사용 창');
@@ -121,26 +122,30 @@ function MainWrapper() {
                   onChange={handleSheetChanges}
                   backdropComponent={renderBackDrop}>
                   {/* <BottomSheetScrollView style={{backgroundColor: '#341f97'}}> */}
-                  <Pressable
-                    onPress={closeButtonPress}
-                    style={styles.contentContainer}>
-                    <View style={styles.buttonWrapper}>
-                      <Pressable onPress={toSaveCoupon} style={styles.button}>
-                        <Image
-                          source={require('../assets/icon/couponSaveIcon.png')}
-                          style={styles.couponIcon}
-                        />
-                        <Text style={styles.buttonText}>쿠폰 적립</Text>
-                      </Pressable>
-                      <Pressable onPress={toUseCoupon} style={styles.button}>
-                        <Image
-                          source={require('../assets/icon/couponUseIcon.png')}
-                          style={styles.couponIcon}
-                        />
-                        <Text style={styles.buttonText}>쿠폰 사용</Text>
-                      </Pressable>
-                    </View>
-                  </Pressable>
+                  {!isClickSave ? (
+                    <Pressable
+                      onPress={closeButtonPress}
+                      style={styles.contentContainer}>
+                      <View style={styles.buttonWrapper}>
+                        <Pressable onPress={toSaveCoupon} style={styles.button}>
+                          <Image
+                            source={require('../assets/icon/couponSaveIcon.png')}
+                            style={styles.couponIcon}
+                          />
+                          <Text style={styles.buttonText}>쿠폰 적립</Text>
+                        </Pressable>
+                        <Pressable onPress={toUseCoupon} style={styles.button}>
+                          <Image
+                            source={require('../assets/icon/couponUseIcon.png')}
+                            style={styles.couponIcon}
+                          />
+                          <Text style={styles.buttonText}>쿠폰 사용</Text>
+                        </Pressable>
+                      </View>
+                    </Pressable>
+                  ) : (
+                    <SaveUp qrValue={{id: 1, count: 1, marketId: 1}} />
+                  )}
                   {/* </BottomSheetScrollView> */}
                 </BottomSheet>
               </Portal>
