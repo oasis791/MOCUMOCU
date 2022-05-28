@@ -1,25 +1,23 @@
 import React from 'react';
-import {View, Image, Text} from 'react-native';
+import {Text, StyleSheet, Pressable} from 'react-native';
 
-function Orders() {
-  return (
-    <View
-      style={{
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'white',
-      }}>
-      <Image
-        source={require('../assets/qrcode.png')}
-        style={{height: 200, width: 200}}
-      />
-      <Text style={{color: 'black', fontFamily: 'NotoSansCJKkr-Black (TTF)'}}>
-        QR CODE
-      </Text>
-    </View>
-  );
+function SaveUp() {
+  return;
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: 'grey',
+  },
+  contentContainer: {
+    flex: 1,
+    paddingLeft: 50,
+  },
+  bottomSheetTitle: {
+    fontSize: 24,
+    fontWeight: '500',
+  },
+});
 
-export default Orders;
+export default SaveUp;

@@ -3,6 +3,7 @@ import {Provider} from 'react-redux';
 import store from './src/store';
 import AppInner from './AppInner';
 import {NavigationContainer} from '@react-navigation/native';
+import {PortalProvider} from '@gorhom/portal';
 
 export type LoggedInUserParamList = {
   MainWrapper: undefined;
@@ -59,9 +60,11 @@ function App() {
   // const [isLoggedIn, setLoggedIn] = useState(true);
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <AppInner />
-      </NavigationContainer>
+      <PortalProvider>
+        <NavigationContainer>
+          <AppInner />
+        </NavigationContainer>
+      </PortalProvider>
     </Provider>
   );
 }
