@@ -1,40 +1,18 @@
 package MOCUMOCU.project.service;
 
 import MOCUMOCU.project.domain.Coupon;
-import MOCUMOCU.project.repository.CouponRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@Transactional
-@RequiredArgsConstructor
-public class CouponService {
+public interface CouponService {
 
-    private final CouponRepository couponRepository;
+    Long addCoupon(Coupon coupon);
 
-    private void useStamp(Long id, int num) {
-        Coupon findCoupon = couponRepository.findOne(id);
-        findCoupon.setAmount(findCoupon.getAmount() - num);
-        couponRepository.updateCoupon(findCoupon);
-    }
+    void useStamp(Long id, int num);
 
-    private void earnStamp(Long id, int num) {
-        Coupon findCoupon = couponRepository.findOne(id);
-        findCoupon.setAmount(findCoupon.getAmount() + num);
-        couponRepository.updateCoupon(findCoupon);
-    }
+    void earnStamp(Long id, int num);
 
-    private void remove(Long id){
-        couponRepository.remove(id);
-    }
+    void removeCoupon(Coupon coupon);
 
-    private void changeBoard(Long id) {
+    void changeBoard(Long id);
 
-    }
-
-    private void changeStamp(Long id) {
-
-    }
-
+    void changeStamp(Long id);
 }

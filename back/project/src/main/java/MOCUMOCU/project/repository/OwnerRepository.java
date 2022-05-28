@@ -21,8 +21,8 @@ public class OwnerRepository {
         em.persist(owner);
     }
 
-    public void remove(Long id) {
-        em.remove(id);
+    public void remove(Owner owner) {
+        em.remove(owner);
     }
 
     public Owner findOne(Long id) {

@@ -18,8 +18,8 @@ public class MarketRepository {
         em.persist(market);
     }
 
-    public void remove(Long id) {
-        em.remove(id);
+    public void remove(Market market) {
+        em.remove(market);
     }
 
     public void update(Market market) {
