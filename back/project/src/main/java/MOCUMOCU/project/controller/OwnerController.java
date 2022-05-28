@@ -6,6 +6,7 @@ import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.owner.OwnerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,10 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/owner")
 public class OwnerController {
 
-    private OwnerService ownerService;
+    private final OwnerService ownerService;
+
+    public OwnerController(OwnerService ownerService) {
+        this.ownerService = ownerService;
+    }
 
     @PostMapping("/signup")
-    public HttpStatus signup(OwnerDTO ownerDTO) {
+    public HttpStatus signup(@RequestBody OwnerDTO ownerDTO) {
+
         Privacy newPrivacy = new Privacy();
         newPrivacy.setEmail(ownerDTO.getOwnerEmail());
         newPrivacy.setName(ownerDTO.getOwnerName());
@@ -30,4 +36,5 @@ public class OwnerController {
 
         return HttpStatus.OK;
     }
+
 }

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/security")
+//@RestController
+//@RequestMapping("/security")
 public class SecurityController {
     @Autowired
     private SecurityService securityService;
@@ -33,12 +33,12 @@ public class SecurityController {
     }*/
 
 
-    @GetMapping("/subject")
+    /*@GetMapping("/subject")
     public Map<String, Object> getSubject(@RequestParam(value = "token") String token) {
         String subject = securityService.getSubject(token);
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("result", subject);
 
         return map;
-    }
+    }*/
 }
