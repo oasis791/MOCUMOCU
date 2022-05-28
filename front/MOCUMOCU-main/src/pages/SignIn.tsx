@@ -8,7 +8,6 @@ import {
   Alert,
   StyleSheet,
   Image,
-  TouchableHighlight,
   ActivityIndicator,
 } from 'react-native';
 import {RootStackParamList} from '../../App';
@@ -18,6 +17,7 @@ import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import LinearGradient from 'react-native-linear-gradient';
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
 function SignIn({navigation}: SignInScreenProps) {
@@ -84,6 +84,45 @@ function SignIn({navigation}: SignInScreenProps) {
   const toFindPassword = useCallback(() => {
     navigation.navigate('FindPassword');
   }, [navigation]);
+  const loginButton = () => {
+    return (
+      <Pressable
+        onPress={onSubmit}
+        style={styles.loginButton}
+        disabled={!canGoNext}>
+        {loading ? (
+          <ActivityIndicator style={styles.indicator} color="white" />
+        ) : (
+          <Text style={styles.loginButtonText}>로그인</Text>
+        )}
+      </Pressable>
+    );
+  };
+  const linearGradientButton = () => {
+    return (
+      <Pressable
+        style={{
+          height: '33%',
+        }}>
+        <LinearGradient
+          colors={['#FA6072', '#414FFD']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          locations={[0, 1]}
+          // eslint-disable-next-line react-native/no-inline-styles
+          style={{
+            marginTop: 5,
+            marginBottom: 1,
+            paddingHorizontal: 115,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: '#e5e5e5',
+          }}>
+          <Text style={styles.loginButtonText}>로그인</Text>
+        </LinearGradient>
+      </Pressable>
+    );
+  };
   const canGoNext = email && password;
   return (
     <View>
@@ -92,12 +131,12 @@ function SignIn({navigation}: SignInScreenProps) {
           <Image
             style={{
               marginTop: 30,
-              resizeMode: 'stretch',
-              width: 100,
-              height: 50,
-              marginBottom: 10,
+              resizeMode: 'contain',
+              width: 150,
+              height: 20,
+              marginBottom: 15,
             }}
-            source={require('../assets/logo_blue.png')}
+            source={require('../assets/gradLogo.png')}
           />
         </View>
         <View style={styles.inputBoxWrapper}>
@@ -137,50 +176,27 @@ function SignIn({navigation}: SignInScreenProps) {
           />
         </View>
         <View style={styles.buttonZone}>
-          <Pressable
-            onPress={onSubmit}
-            style={
-              !canGoNext
-                ? styles.loginButton
-                : StyleSheet.compose(
-                    styles.loginButton,
-                    styles.loginButtonActive,
-                  )
-            }
-            disabled={!canGoNext}>
-            {loading ? (
-              <ActivityIndicator style={styles.indicator} color="white" />
-            ) : (
-              <Text
-                style={
-                  !canGoNext
-                    ? styles.loginButtonText
-                    : StyleSheet.compose(
-                        styles.loginButtonText,
-                        styles.loginButtonTextActive,
-                      )
-                }>
-                로그인
-              </Text>
-            )}
-          </Pressable>
-          <TouchableHighlight
-            underlayColor={'#e6e6e6'}
-            onPress={toSignUp}
-            style={styles.signUpButton}>
-            <Text style={styles.signUpButtonText}>회원가입</Text>
-          </TouchableHighlight>
+          {!canGoNext ? <>{loginButton()}</> : <>{linearGradientButton()}</>}
           <View style={styles.zZone}>
             <Pressable onPress={toFindId}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
-            <Text style={{marginLeft: 5}}>/</Text>
+            <Text style={{marginLeft: 5}}>ㅣ</Text>
             <Pressable onPress={toFindPassword}>
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
+            </Pressable>
+            <Text style={{marginLeft: 5}}>ㅣ</Text>
+            <Pressable onPress={toSignUp}>
+              <Text style={styles.zZoneText}>회원가입</Text>
             </Pressable>
           </View>
         </View>
       </DismissKeyboardView>
+      <View style={styles.socialDivider}>
+        <View style={styles.socialDividerLineLeft} />
+        <Text style={{color: '#cecece', fontSize: 12}}>SNS 간편 로그인</Text>
+        <View style={styles.socialDividerLineRight} />
+      </View>
       <View style={styles.socialButtonWrapper}>
         <Pressable style={styles.socialButton}>
           <Image
@@ -230,7 +246,6 @@ const styles = StyleSheet.create({
   textInput: {
     padding: 5,
     // borderBottomWidth: StyleSheet.hairlineWidth,
-    marginTop: 1,
     borderStyle: 'solid',
     borderRadius: 8,
     // elevation: 10,
@@ -243,38 +258,35 @@ const styles = StyleSheet.create({
     borderColor: '#e5e5e5',
   },
   inputWrapper: {padding: 20, alignItems: 'center'},
-  inputBoxWrapper: {padding: 5, alignItems: 'center'},
+  inputBoxWrapper: {padding: 3, alignItems: 'center'},
   label: {
     fontWeight: 'bold',
     fontSize: 16,
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   buttonZone: {
     alignItems: 'center',
     // marginBottom: '10%',
   },
   loginButton: {
+    // textAlign: 'center',
+    marginTop: 5,
+    marginBottom: 1,
     backgroundColor: '#e6e6e6',
     paddingHorizontal: 115,
-    height: '18%',
+    height: '30%',
     borderRadius: 8,
-    marginBottom: 10,
+    // marginBottom: 10,
     borderWidth: 1,
     borderColor: '#e5e5e5',
   },
-  signUpButton: {
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 108,
-    height: '18%',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#e5e5e5',
-  },
+
   loginButtonActive: {backgroundColor: '#414FFD'},
   loginButtonText: {
+    // textAlign: 'center',
     color: 'white',
     fontSize: 14,
-    bottom: '15%',
+    bottom: '5%',
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   loginButtonTextActive: {color: '#ffffff'},
@@ -286,7 +298,7 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   socialButtonWrapper: {
-    marginTop: 90,
+    marginTop: 23,
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -298,11 +310,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     marginHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
     // elevation: 5,
   },
   zZone: {
     flexDirection: 'row',
-    marginTop: '5%',
+    marginTop: 15,
   },
   zZoneText: {
     marginLeft: 5,
@@ -317,6 +331,26 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  socialDivider: {
+    marginTop: 23,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  socialDividerLineLeft: {
+    width: 65,
+    height: 0,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#cecece',
+    marginRight: 5,
+  },
+  socialDividerLineRight: {
+    width: 65,
+    height: 0,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#cecece',
+    marginLeft: 5,
   },
 });
 

@@ -314,7 +314,7 @@ function SignUp({navigation}: SignUpScreenProps) {
             placeholder="전화번호"
             placeholderTextColor="#c4c4c4"
             onChangeText={onChangeTelephoneNumber}
-            value={telephoneNumber} 
+            value={telephoneNumber}
             textContentType="telephoneNumber"
             returnKeyType="next"
             clearButtonMode="while-editing"
@@ -387,7 +387,8 @@ const styles = StyleSheet.create({
     padding: 5,
     marginTop: 1,
     borderRadius: 8,
-    elevation: 10,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
     backgroundColor: 'white',
     paddingVertical: 6,
     paddingHorizontal: 20,
@@ -398,7 +399,8 @@ const styles = StyleSheet.create({
   emailWrapper: {
     borderStyle: 'solid',
     borderRadius: 8,
-    elevation: 10,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
     backgroundColor: 'white',
     paddingHorizontal: 15,
     width: 280,
@@ -428,7 +430,8 @@ const styles = StyleSheet.create({
   genderWrapper: {
     borderStyle: 'solid',
     borderRadius: 8,
-    elevation: 10,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
     backgroundColor: 'white',
     paddingHorizontal: 15,
     width: 280,
@@ -480,7 +483,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '80%',
-    elevation: 10,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
+    // elevation: 10,
     // position: 'relative',
   },
   modalButtonActive: {backgroundColor: '#414FFD'},
