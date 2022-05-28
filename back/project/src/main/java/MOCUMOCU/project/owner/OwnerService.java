@@ -1,16 +1,14 @@
-package MOCUMOCU.project.service;
+package MOCUMOCU.project.owner;
 
 import MOCUMOCU.project.domain.Market;
-import MOCUMOCU.project.domain.Owner;
+import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.domain.Privacy;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface OwnerService {
 
     Long join(Owner owner);
-
 
     void withdrawal(Long id);
 

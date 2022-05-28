@@ -1,12 +1,12 @@
-package MOCUMOCU.project.serviceImpl;
+package MOCUMOCU.project.owner;
 
 import MOCUMOCU.project.domain.Market;
-import MOCUMOCU.project.domain.Owner;
+import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.domain.Privacy;
 import MOCUMOCU.project.repository.MarketRepository;
 import MOCUMOCU.project.repository.OwnerRepository;
-import MOCUMOCU.project.service.OwnerService;
-import lombok.RequiredArgsConstructor;
+import MOCUMOCU.project.owner.OwnerService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +15,16 @@ import java.util.List;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
+@Component
 public class OwnerServiceImpl implements OwnerService {
 
     private final OwnerRepository ownerRepository;
     private final MarketRepository marketRepository;
+
+    public OwnerServiceImpl(OwnerRepository ownerRepository, MarketRepository marketRepository) {
+        this.ownerRepository = ownerRepository;
+        this.marketRepository = marketRepository;
+    }
 
     public Long join(Owner owner) {
         ownerRepository.save(owner);

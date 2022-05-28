@@ -1,5 +1,7 @@
-package MOCUMOCU.project.domain;
+package MOCUMOCU.project.owner;
 
+import MOCUMOCU.project.domain.Market;
+import MOCUMOCU.project.domain.Privacy;
 import lombok.Getter;
 import lombok.Setter;
 

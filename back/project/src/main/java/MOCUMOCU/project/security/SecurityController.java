@@ -22,7 +22,7 @@ public class SecurityController {
         return map;
     }*/
 
-    @PostMapping("/sign-in")
+   /* @PostMapping("/sign-in")
     public Map<String, Object> createToken(String name, String password, String age) {
         TestPerson person = new TestPerson(name, password, age);
         String token = securityService.createToken(person, (2 * 1000 * 60));
@@ -30,7 +30,7 @@ public class SecurityController {
         map.put("result", token);
 
         return map;
-    }
+    }*/
 
 
     @GetMapping("/subject")
