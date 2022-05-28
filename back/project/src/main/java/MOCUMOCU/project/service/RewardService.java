@@ -1,28 +1,12 @@
 package MOCUMOCU.project.service;
 
 import MOCUMOCU.project.domain.Reward;
-import MOCUMOCU.project.repository.RewardRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@Transactional
-@RequiredArgsConstructor
-public class RewardService {
+public interface RewardService {
 
-    private final RewardRepository rewardRepository;
+    Long addReward(Reward reward);
 
-    public Long addReward(Reward reward) {
-        rewardRepository.save(reward);
-        return reward.getId();
-    }
+    void removeReward(Long id);
 
-    public void removeReward(Long id) {
-        rewardRepository.remove(id);
-    }
-
-    public void updateReward(Reward reward) {
-        rewardRepository.update(reward);
-    }
+    void updateReward(Reward reward);
 }

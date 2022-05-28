@@ -14,6 +14,10 @@ public class CouponRepository {
 
     private final EntityManager em;
 
+    public void save(Coupon coupon) {
+        em.persist(coupon);
+    }
+
     public Coupon findOne(Long id) {
         Coupon findCoupon = em.find(Coupon.class, id);
 
@@ -31,7 +35,7 @@ public class CouponRepository {
     }
 
 
-    public void remove(Long id) {
-        em.remove(id);
+    public void remove(Coupon coupon) {
+        em.remove(coupon);
     }
 }

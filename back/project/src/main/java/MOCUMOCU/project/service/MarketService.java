@@ -2,37 +2,17 @@ package MOCUMOCU.project.service;
 
 import MOCUMOCU.project.domain.Market;
 import MOCUMOCU.project.domain.Reward;
-import MOCUMOCU.project.repository.MarketRepository;
-import MOCUMOCU.project.repository.RewardRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
-@Transactional
-@RequiredArgsConstructor
-public class MarketService {
+public interface MarketService {
 
-    private final MarketRepository marketRepository;
-    private final RewardRepository rewardRepository;
+    Long addMarket(Market market);
 
-    public Long addMarket(Market market) {
-        marketRepository.save(market);
-        return market.getId();
-    }
+    void removeMarket(Long id);
 
-    public void removeMarket(Long id) {
-        marketRepository.remove(id);
-    }
+    void updateMarket(Market market);
 
-    public void updateMarket(Market market) {
-        marketRepository.update(market);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Reward> findAllReward(Long marketId) {
-        return rewardRepository.findByMarketId(marketId);
-    }
+    List<Reward> findAllReward(Long id);
 }
