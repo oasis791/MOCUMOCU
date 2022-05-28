@@ -1,33 +1,72 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  Dimensions,
   Image,
   Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  Animated,
+  Alert,
 } from 'react-native';
 import Main from './Main';
 import More from './More';
-import SaveUp from './SaveUp';
+// import SaveUp from './SaveUp';
 import {Portal, PortalHost} from '@gorhom/portal';
-
+const window = Dimensions.get('screen');
 const Tab = createBottomTabNavigator();
-
 function MainWrapper() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isClickSave, setIsClickSave] = useState(false);
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = React.useMemo(() => [-30, '52%'], []);
+  const snapPoints = React.useMemo(() => [-30, '25%'], []);
   const handleSheetChanges = React.useCallback((index: number) => {
     console.log('handleSheetChanges', index);
   }, []);
 
   const expandButtonPress = () => {
     bottomSheetRef?.current?.expand();
+    setIsOpen(true);
   };
   const closeButtonPress = () => {
     bottomSheetRef?.current?.close();
+    setIsOpen(false);
+  };
+  const toSaveCoupon = () => {
+    Alert.alert('알림', '쿠폰 적립 창');
+  };
+  const toUseCoupon = () => {
+    Alert.alert('알림', '쿠폰 사용 창');
+  };
+  const renderBackDrop = () => {
+    return isOpen ? (
+      <Animated.View
+        style={{
+          opacity: 0.5,
+          backgroundColor: '#000',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}>
+        <TouchableOpacity
+          style={{
+            width: window.width,
+            height: window.height,
+            backgroundColor: 'transparent',
+          }}
+          activeOpacity={1}
+          onPress={closeButtonPress}
+        />
+      </Animated.View>
+    ) : (
+      <></>
+    );
   };
   return (
     // 여기서 부터 회원
@@ -38,7 +77,7 @@ function MainWrapper() {
       }}>
       <Tab.Screen
         name="SaveUp"
-        component={SaveUp}
+        component={Main}
         options={{
           tabBarLabel: '적립',
           headerShown: false,
@@ -79,12 +118,30 @@ function MainWrapper() {
                   ref={bottomSheetRef}
                   index={-1}
                   snapPoints={snapPoints}
-                  onChange={handleSheetChanges}>
-                  <View style={styles.contentContainer}>
-                    <Pressable onPress={closeButtonPress}>
-                      <Text style={styles.bottomSheetTitle}>Add Customer</Text>
-                    </Pressable>
-                  </View>
+                  onChange={handleSheetChanges}
+                  backdropComponent={renderBackDrop}>
+                  {/* <BottomSheetScrollView style={{backgroundColor: '#341f97'}}> */}
+                  <Pressable
+                    onPress={closeButtonPress}
+                    style={styles.contentContainer}>
+                    <View style={styles.buttonWrapper}>
+                      <Pressable onPress={toSaveCoupon} style={styles.button}>
+                        <Image
+                          source={require('../assets/icon/couponSaveIcon.png')}
+                          style={styles.couponIcon}
+                        />
+                        <Text style={styles.buttonText}>쿠폰 적립</Text>
+                      </Pressable>
+                      <Pressable onPress={toUseCoupon} style={styles.button}>
+                        <Image
+                          source={require('../assets/icon/couponUseIcon.png')}
+                          style={styles.couponIcon}
+                        />
+                        <Text style={styles.buttonText}>쿠폰 사용</Text>
+                      </Pressable>
+                    </View>
+                  </Pressable>
+                  {/* </BottomSheetScrollView> */}
                 </BottomSheet>
               </Portal>
 
@@ -177,12 +234,42 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
-    paddingLeft: 50,
+    // backgroundColor: 'pink',
+    // paddingLeft: 50,
   },
-  bottomSheetTitle: {
-    fontSize: 24,
+  couponIcon: {
+    // justifyContent: 'center',
+    resizeMode: 'contain',
+    height: 42,
+    width: 37,
+    marginBottom: 15,
+  },
+  buttonWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    // marginHorizontal: 20,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    // backgroundColor: 'green',
+    height: '50%',
+    width: '100%',
+  },
+  button: {
+    marginTop: 30,
+    marginBottom: 48,
+    marginHorizontal: 69,
+    // backgroundColor: 'pink',
+    alignItems: 'center',
+  },
+  buttonText: {
+    textAlign: 'center',
+    fontFamily: 'GmarketSansTTFBold',
+    fontSize: 16,
     fontWeight: '500',
+    color: '#5d5d5d',
   },
 });
 
