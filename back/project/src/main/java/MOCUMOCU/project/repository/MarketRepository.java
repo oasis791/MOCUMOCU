@@ -3,7 +3,6 @@ package MOCUMOCU.project.repository;
 import MOCUMOCU.project.domain.Market;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import sun.jvm.hotspot.oops.Mark;
 
 import javax.persistence.EntityManager;
 import java.util.List;
