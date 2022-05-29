@@ -27,29 +27,34 @@ public class OwnerServiceImpl implements OwnerService {
         this.marketRepository = marketRepository;
     }
 
+    @Override
     public Long join(Owner owner) {
         ownerRepository.save(owner);
         return owner.getId();
     }
 
+    @Override
     public void withdrawal(Long id) {
         Owner findOwner = ownerRepository.findOne(id);
         ownerRepository.remove(findOwner);
     }
 
+    @Override
     public void updatePrivacy(Long id, Privacy privacy) {
         Owner findOwner = ownerRepository.findOne(id);
         findOwner.setPrivacy(privacy);
         ownerRepository.update(findOwner);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<Market> findAllMarket(Long id) {
         return marketRepository.findByOwnerId(id);
     }
 
+    @Override
     @Transactional(readOnly = true)
-    public boolean logIn(OwnerLoginDTO ownerLoginDTO) {
+    public boolean login(OwnerLoginDTO ownerLoginDTO) {
         Owner findOwner = ownerRepository.findByEmail(ownerLoginDTO.getOwnerEmail());
         if (findOwner != null) {
             return findOwner.getPrivacy().getPassword().equals(ownerLoginDTO.getOwnerPassword());
@@ -57,5 +62,4 @@ public class OwnerServiceImpl implements OwnerService {
             return false;
         }
     }
-
 }

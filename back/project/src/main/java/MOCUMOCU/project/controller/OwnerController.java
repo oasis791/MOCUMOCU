@@ -1,7 +1,6 @@
 package MOCUMOCU.project.controller;
 
 import MOCUMOCU.project.domain.Privacy;
-import MOCUMOCU.project.form.OwnerDTO;
 import MOCUMOCU.project.form.OwnerLoginDTO;
 import MOCUMOCU.project.form.OwnerRegisterDTO;
 import MOCUMOCU.project.owner.Owner;
@@ -41,7 +40,10 @@ public class OwnerController {
 
     @PostMapping("/login")
     public HttpStatus login(@RequestBody OwnerLoginDTO ownerLoginDTO) {
-
-
+        if (ownerService.login(ownerLoginDTO)) {
+            return HttpStatus.OK;
+        } else {
+            return HttpStatus.BAD_REQUEST;
+        }
     }
 }
