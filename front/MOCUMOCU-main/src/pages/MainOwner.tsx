@@ -1,3 +1,32 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@yms1789 
+oasis791
+/
+MOCUMOCU
+Public
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+MOCUMOCU/front/MOCUMOCU-main/src/pages/MainOwner.tsx /
+@Narcoker
+Narcoker Update: mainOwner
+Latest commit d3eb915 14 hours ago
+ History
+ 2 contributors
+@Narcoker@yms1789
+533 lines (495 sloc)  13.7 KB
+   
 import React, {useState} from 'react';
 import {
   View,
@@ -11,6 +40,7 @@ import {
   StatusBar,
   ImageBackground,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 import ActivityRings from 'react-native-activity-rings';
@@ -23,31 +53,56 @@ function MainOwner() {
   const userName = '김준서';
   const stores = [
     {
-      name: '캔버스 커피',
+      name: '카페현욱',
       todays: 54,
       male: 42,
       female: 12,
+      activityData: [
+        {
+          label: 'ACTIVITY',
+          value: 0,
+          color: '#FA6072',
+        },
+      ],
     },
-
     {
-      name: '카페현욱',
+      name: '커피맛을 조금 아는 승민',
       todays: 30,
       male: 12,
       female: 18,
+      activityData: [
+        {
+          label: 'ACTIVITY',
+          value: 0,
+          color: '#FA6072',
+        },
+      ],
     },
-
     {
-      name: '라떼는말이야',
+      name: 'INYEONGCAFE',
       todays: 0,
       male: 0,
       female: 0,
+      activityData: [
+        {
+          label: 'ACTIVITY',
+          value: 0,
+          color: '#FA6072',
+        },
+      ],
     },
-
     {
       name: '민수와 아이들',
       todays: 10,
       male: 5,
       female: 5,
+      activityData: [
+        {
+          label: 'ACTIVITY',
+          value: 0,
+          color: '#FA6072',
+        },
+      ],
     },
   ];
 
@@ -60,7 +115,7 @@ function MainOwner() {
   const activityConfig = {
     width: 150,
     height: 150,
-    radius: 50,
+    radius: 45,
     ringSize: 14,
   };
 
@@ -88,244 +143,315 @@ function MainOwner() {
     Alert.alert('알림', '매장 삭제 이동');
   };
   return (
-    <ScrollView>
+    <ScrollView style={styles.mainBackground}>
       <StatusBar hidden={true} />
-      <ImageBackground
-        style={styles.mainBackground}
-        source={require('../assets/mainMyPageBackground.png')}>
-        <View style={[styles.header, {position: 'absolute'}]}>
-          <Image
-            style={styles.headerLogo}
-            source={require('../assets/mainLogo.png')}
-          />
-          <View style={styles.headerButtonWrapper}>
-            <Pressable onPress={onSubmitSetting}>
-              <Image
-                source={require('../assets/icon/mainSetting.png')}
-                style={styles.headerSetting}
-              />
-            </Pressable>
-            <Pressable onPress={onSubmitAlarm}>
-              <Image
-                source={
-                  isAlarm
-                    ? require('../assets/icon/mainAlarmActive.png')
-                    : require('../assets/icon/mainAlarm.png')
-                }
-                style={styles.headerAlarm}
-              />
-            </Pressable>
-          </View>
+      <View style={styles.mainHeader}>
+        <Image
+          source={require('../assets/mainLogoOwner.png')}
+          style={styles.headerLogo}
+        />
+
+        <View style={styles.headerButtonWrapper}>
+          <Pressable onPress={onSubmitSetting}>
+            <Image
+              source={require('../assets/icon/mainSetting.png')}
+              style={styles.headerSetting}
+            />
+          </Pressable>
+          <Pressable onPress={onSubmitAlarm}>
+            <Image
+              source={
+                isAlarm
+                  ? require('../assets/icon/mainAlarmActive.png')
+                  : require('../assets/icon/mainAlarm.png')
+              }
+              style={styles.headerAlarm}
+            />
+          </Pressable>
         </View>
+      </View>
 
-        <View style={styles.myInfo}>
-          <Text style={styles.myInfoText}>
-            {userName} 점주님,{'\n'}오늘도 모쿠하세요!
-          </Text>
+      <View style={styles.ownerInfoWrapper}>
+        <Text style={styles.myInfoText}>
+          <Text style={styles.myInfoNameText}>{userName}</Text> 점주님,{'\n'}
+          오늘도 모쿠하세요!
+        </Text>
+      </View>
 
-          <View style={styles.storeListWrapper}>
-            <Text style={styles.storeListTitle}>매장 리스트</Text>
+      <View style={styles.storeListWrapper}>
+        <Text style={styles.storeListTitle}>매장 리스트</Text>
+
+        {stores.length === 0 ? (
+          <View style={[styles.noneStoreWrapper, {height: 60}]}>
+            <Text style={{top: 5}}>등록된 매장이 없습니다.</Text>
           </View>
-
-          <ScrollView style={styles.storeScrollView}>
-            {stores.map((stores, i) => {
+        ) : (
+          <ScrollView
+            style={[
+              styles.storeScrollView,
+              stores.length < 3 ? {height: 'auto'} : null,
+            ]}
+            nestedScrollEnabled={true}>
+            {stores.map((store, i) => {
               return (
                 <TouchableOpacity
                   key={i}
                   onPress={() => {
-                    Alert.alert('알림', `${stores.name} 세부정보로 이동`);
+                    Alert.alert('알림', `${store.name} 세부정보로 이동`);
                   }}
-                  style={styles.storeTab}>
-                  <Text style={styles.storeTabText}>{stores.name}</Text>
+                  style={[
+                    styles.storeTab,
+                    {borderBottomWidth: stores.length - 1 === i ? 0 : 1},
+                  ]}>
+                  <Text style={styles.storeTabText}>{store.name}</Text>
+                  <Image
+                    source={require('../assets/icon/arrow.png')}
+                    style={styles.storeTabArrow}
+                  />
                   {/* <Text  style={[styles.storeTabText, {alignItems: 'flex-end'}]} > {">"} </Text> */}
                 </TouchableOpacity>
               );
             })}
           </ScrollView>
+        )}
 
-          <View style={styles.storeControlWrapper}>
-            <Pressable style={styles.controlStoreButton}>
-              <Text style={styles.controlStoreButtonText} onPress={toAddStore}>
-                매장 등록
-              </Text>
-            </Pressable>
-            <Text style={styles.pointButtonBar}>|</Text>
-            <Pressable style={styles.controlStoreButton}>
-              <Text
-                style={styles.controlStoreButtonText}
-                onPress={toDeleteStore}>
-                매장 삭제
-              </Text>
-            </Pressable>
-          </View>
+        <View style={styles.storeControlWrapper}>
+          <Pressable style={styles.controlStoreButton}>
+            <Text style={styles.controlStoreButtonText} onPress={toAddStore}>
+              매장 등록
+            </Text>
+          </Pressable>
+          <Text style={styles.pointButtonBar}>|</Text>
+          <Pressable style={styles.controlStoreButton}>
+            <Text style={styles.controlStoreButtonText} onPress={toDeleteStore}>
+              매장 삭제
+            </Text>
+          </Pressable>
         </View>
-      </ImageBackground>
+      </View>
 
-      <View style={styles.divider} />
-
-      <View style={styles.storeAnalysis}>
+      <View style={styles.storeAnalysisWrapper}>
         <Text style={styles.storeAnalysisTitle}>매장 분석</Text>
-        <ScrollView
-          horizontal={true}
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={true}
-          style={styles.storeAnalysisScrollView}>
-          {stores.map((stores, i) => {
-            return (
-              <TouchableOpacity
-                style={styles.analysisCard}
-                onPress={() => {
-                  Alert.alert('알림', `${stores.name} 매장 분석으로 이동`);
-                }}
-                key={stores}>
-                <Text style={styles.analysisStoreNameText}>{stores.name}</Text>
-                <View style={styles.cardChart}>
-                  <View style={styles.todayVistorWrapper}>
-                    <View>
-                      <Text style={[styles.todaysText, {top: 10}]}>
-                        오늘 방문자 수
-                      </Text>
-                      <Text style={[styles.todaysText, {bottom: 10}]}>
-                        {stores.todays}명
-                      </Text>
-                    </View>
 
-                    <View>
-                      <ActivityRings
-                        data={activityData}
-                        config={activityConfig}
-                      />
-                    </View>
+        {stores.length === 0 ? (
+          <View style={[styles.noneStoreWrapper, {height: 200}]}>
+            <Text>등록된 매장이 없습니다.</Text>
+          </View>
+        ) : (
+          <ScrollView
+            horizontal={true}
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={true}
+            style={styles.storeAnalysisScrollView}>
+            {stores.map((store, i) => {
+              store.male === store.female
+                ? ((store.activityData[0].value = 0.5),
+                  (store.activityData[0].color = '#363636'))
+                : store.male > store.female
+                ? ((store.activityData[0].value =
+                    store.male / (store.male + store.female)),
+                  (store.activityData[0].color = '#3F83D3'))
+                : ((store.activityData[0].value =
+                    store.female / (store.male + store.female)),
+                  (store.activityData[0].color = '#DD4435'));
+              return (
+                <TouchableOpacity
+                  style={styles.analysisCard}
+                  onPress={() => {
+                    Alert.alert('알림', `${store.name} 매장 분석으로 이동`);
+                  }}
+                  key={i}>
+                  <Text style={styles.analysisStoreNameText}>{store.name}</Text>
+                  <View style={styles.cardChart}>
+                    <View style={styles.todayVistorWrapper}>
+                      <View style={{left: 15}}>
+                        <Text style={[styles.todaysText, {top: 10}]}>
+                          오늘 방문자 수
+                        </Text>
+                        <Text style={[styles.todaysText, {bottom: 10}]}>
+                          {store.todays}명
+                        </Text>
+                      </View>
 
-                    <View>
-                      {stores.male > stores.female ? (
-                        <>
-                          <Text
-                            style={[
-                              styles.todaysText,
-                              {top: 10, color: 'blue'},
-                            ]}>
-                            남자 {stores.male}
-                          </Text>
-                          <Text
-                            style={[
-                              styles.todaysText,
-                              {bottom: 10, color: 'red'},
-                            ]}>
-                            여자 {stores.female}
-                          </Text>
-                        </>
-                      ) : (
-                        <>
-                          <Text
-                            style={[
-                              styles.todaysText,
-                              {top: 10, color: 'red'},
-                            ]}>
-                            여자 {stores.female}
-                          </Text>
-                          <Text
-                            style={[
-                              styles.todaysText,
-                              {bottom: 10, color: 'blue'},
-                            ]}>
-                            남자 {stores.male}
-                          </Text>
-                        </>
-                      )}
+                      <View>
+                        <ActivityRings
+                          data={store.activityData}
+                          config={activityConfig}
+                        />
+                      </View>
+
+                      <View style={{right: 15}}>
+                        {store.male > store.female ? (
+                          <>
+                            <Text style={[styles.todaysText, {top: 10}]}>
+                              <Text style={{fontSize: 10}}>🔵 </Text>
+                              남자 {store.male}
+                            </Text>
+                            <Text style={[styles.todaysText, {bottom: 10}]}>
+                              &nbsp; &nbsp; &nbsp;여자 {store.female}
+                            </Text>
+                          </>
+                        ) : store.male === store.female ? (
+                          <>
+                            <Text style={[styles.todaysText, {top: 10}]}>
+                              <Text style={{fontSize: 10}}>🔵 </Text>
+                              남자 {store.male}
+                            </Text>
+                            <Text style={[styles.todaysText, {bottom: 10}]}>
+                              <Text style={{fontSize: 10}}>🔴 </Text>
+                              여자 {store.female}
+                            </Text>
+                          </>
+                        ) : (
+                          <>
+                            <Text style={[styles.todaysText, {top: 10}]}>
+                              <Text style={{fontSize: 10}}>🔴 </Text>
+                              여자 {store.female}
+                            </Text>
+                            <Text style={[styles.todaysText, {bottom: 10}]}>
+                              &nbsp; &nbsp; &nbsp;남자 {store.male}
+                            </Text>
+                          </>
+                        )}
+                      </View>
                     </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        )}
+      </View>
+
+      <View style={styles.bottomWrapper}>
+        <TouchableOpacity style={styles.bottomButton}>
+          <Text style={styles.bottomButtonText}>자주묻는질문</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.bottomButton}>
+          <Text style={styles.bottomButtonText}>공지사항</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
 }
 const styles = StyleSheet.create({
   mainBackground: {
-    // height: 450
+    backgroundColor: '#EAEAEA',
   },
-  header: {
-    width: '100%',
-    backgroundColor: 'trasparent',
+
+  mainHeader: {
+    width: screenWidth,
+    paddingVertical: 15,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: 'white',
   },
   headerLogo: {
-    marginTop: 10,
     resizeMode: 'contain',
-    width: 50,
+    width: 100,
     height: 25,
-    marginHorizontal: 10,
-    marginBottom: 10,
+    marginLeft: 27,
+    marginTop: 5,
     // justifyContent: 'flex-start',
   },
   headerButtonWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginRight: 19,
+    marginTop: 5,
     // justifyContent: 'space-around',
   },
   headerSetting: {
-    width: 20,
-    // marginLeft: 10,
-    // backgroundColor: 'black',
     resizeMode: 'contain',
-    height: 18,
-    // left: 225,
-    // float: 'right',
+    width: 20,
+    height: 20,
+    marginRight: 15,
   },
   headerAlarm: {
-    // marginTop: ,
-    // marginLeft: 10,
-    width: 50,
     resizeMode: 'contain',
-    height: 20,
-    // left: 220,
-    alignItems: 'flex-end',
     // backgroundColor: 'black',
+    width: 20,
+    height: 20,
   },
-  eventBanner: {
-    height: 210,
-    width: screenWidth,
-    // elevation: 10,
+
+  ownerInfoWrapper: {
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    backgroundColor: 'white',
+    marginBottom: 9,
   },
-  myInfo: {
-    // backgroundColor: 'pink',
-    // height: 200,
-    // width: ,
-    // elevation:
+
+  myInfoNameText: {
+    fontFamily: 'GmarketSansTTFBold',
   },
   myInfoText: {
+    marginLeft: 27,
     fontSize: 18,
-    // top: -3,
-    top: 50,
-    marginLeft: 25,
-    fontFamily: 'NotoSansCJKkr-Black (TTF)',
-    color: 'white',
-    width: 150,
+    fontFamily: 'GmarketSansTTFMedium',
+    color: '#363636',
+    marginTop: 10,
+    marginBottom: 30,
   },
-  myInfoPoint: {
-    flexDirection: 'row',
+
+  storeListWrapper: {
     backgroundColor: 'white',
-    marginHorizontal: 28,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    // alignItems: 'baseline',
-    width: 300,
-    height: 80,
-    borderRadius: 10,
-    elevation: 10,
-    top: 70,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginBottom: 9,
   },
+
+  storeListTitle: {
+    fontFamily: 'GmarketSansTTFBold',
+    color: '#363636',
+    fontSize: 18,
+    marginLeft: 27,
+    marginTop: 20,
+  },
+
+  noneStoreWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  storeScrollView: {
+    backgroundColor: 'white',
+    marginHorizontal: 34,
+    height: 240,
+    borderRadius: 8,
+  },
+
+  storeTab: {
+    height: 80,
+    width: '100%',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    borderBottomColor: '#D8D8D8',
+    borderBottomWidth: 1,
+    // backgroundColor: 'pink',
+  },
+
+  storeTabText: {
+    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+    fontSize: 14,
+    color: 'black',
+    paddingVertical: 22,
+  },
+
+  storeTabArrow: {
+    width: 18,
+    height: 18,
+    resizeMode: 'contain',
+    top: 30,
+  },
+
   analysisStoreNameText: {
     marginTop: 5,
     fontSize: 15,
     top: -3,
-    marginHorizontal: 25,
+    marginHorizontal: 18,
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: 'black',
   },
@@ -347,12 +473,12 @@ const styles = StyleSheet.create({
   },
   controlStoreButtonText: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
-    color: 'white',
+    color: '#727272',
     paddingLeft: 28,
   },
   pointButtonBar: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
-    color: 'white',
+    color: '#727272',
     // marginLeft: 0,
     // paddingLeft: 1,
   },
@@ -377,53 +503,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
-  eventImage: {
-    height: 210,
-    borderRadius: 10,
-  },
-
-  storeListTitle: {
-    fontFamily: 'NotoSansCJKkr-Black (TTF)',
-    color: 'white',
-    fontSize: 18,
-  },
-
-  storeListWrapper: {
-    marginLeft: 25,
-    marginTop: 55,
-  },
-
-  storeScrollView: {
-    backgroundColor: 'white',
-    marginHorizontal: 25,
-    height: 240,
-    borderRadius: 8,
-  },
-
-  storeTab: {
-    height: 80,
-    width: '100%',
-    alignContent: 'center',
-    flexDirection: 'row',
-    // backgroundColor: "blue"
-  },
-
-  storeTabText: {
-    fontFamily: 'NotoSansCJKkr-Black (TTF)',
-    fontSize: 16,
-    color: 'black',
-    marginLeft: 8,
-    padding: 18,
-  },
-
-  divider: {
-    width: '100%',
-    height: 15,
-    backgroundColor: 'lightgray',
-  },
-
-  storeAnalysis: {
+  storeAnalysisWrapper: {
     padding: 25,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginBottom: 9,
   },
 
   storeAnalysisTitle: {
@@ -438,20 +523,40 @@ const styles = StyleSheet.create({
 
   analysisCard: {
     marginTop: 5,
-    backgroundColor: 'white',
+    backgroundColor: '#EFEFEF',
     marginHorizontal: 10,
+    marginBottom: 10,
     width: 300,
     borderRadius: 10,
-    elevation: 20,
+    elevation: 5,
   },
 
   todayVistorWrapper: {
     flexDirection: 'row',
+    paddingHorizontal: 20,
   },
 
   todaysText: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: 'black',
+  },
+
+  bottomWrapper: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    marginBottom: 9,
+    // paddingVertical: 10,
+  },
+
+  bottomButton: {
+    flex: 1,
+    alignItems: 'center',
+  },
+
+  bottomButtonText: {
+    fontSize: 12,
+    fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+    color: '#A5A5A5',
   },
 });
 export default MainOwner;

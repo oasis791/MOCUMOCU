@@ -2,7 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image, Text, View} from 'react-native';
 import More from './More';
-import saveUp from './SaveUp';
+import SaveUpOwner from './saveUpOwner';
 import MainOwner from './MainOwner';
 
 const Tab = createBottomTabNavigator();
@@ -15,8 +15,8 @@ function MainOwnerWrapper() {
         tabBarActiveTintColor: '#414FFD',
       }}>
       <Tab.Screen
-        name="saveUp"
-        component={saveUp}
+        name="saveUpOwner"
+        component={SaveUpOwner}
         options={{
           tabBarLabel: '적립',
           headerShown: false,
@@ -34,7 +34,7 @@ function MainOwnerWrapper() {
                 style={{
                   width: 20,
                   height: 20,
-                  tintColor: focused ? '#414FFD' : '#A5A5A5',
+                  tintColor: focused ? '#FA6072' : '#A5A5A5',
                 }}
               />
               <Text
@@ -42,7 +42,7 @@ function MainOwnerWrapper() {
                   fontSize: 11,
                   top: -3,
                   fontFamily: 'NotoSansCJKkr-Black (TTF)',
-                  color: focused ? '#414FFD' : '#A5A5A5',
+                  color: focused ? '#FA6072' : '#A5A5A5',
                 }}>
                 적립/사용
               </Text>
@@ -70,7 +70,7 @@ function MainOwnerWrapper() {
                 style={{
                   width: 20,
                   height: 20,
-                  tintColor: focused ? '#414FFD' : '#A5A5A5',
+                  tintColor: focused ? '#FA6072' : '#A5A5A5',
                 }}
               />
               <Text
@@ -78,7 +78,7 @@ function MainOwnerWrapper() {
                   fontSize: 11,
                   top: -3,
                   fontFamily: 'NotoSansCJKkr-Black (TTF)',
-                  color: focused ? '#414FFD' : '#A5A5A5',
+                  color: focused ? '#FA6072' : '#A5A5A5',
                 }}>
                 홈
               </Text>
@@ -106,7 +106,7 @@ function MainOwnerWrapper() {
                 style={{
                   width: 20,
                   height: 20,
-                  tintColor: focused ? '#414FFD' : '#A5A5A5',
+                  tintColor: focused ? '#FA6072' : '#A5A5A5',
                 }}
               />
               <Text
@@ -114,7 +114,7 @@ function MainOwnerWrapper() {
                   fontSize: 11,
                   top: -3,
                   fontFamily: 'NotoSansCJKkr-Black (TTF)',
-                  color: focused ? '#414FFD' : '#A5A5A5',
+                  color: focused ? '#FA6072' : '#A5A5A5',
                 }}>
                 더보기
               </Text>
