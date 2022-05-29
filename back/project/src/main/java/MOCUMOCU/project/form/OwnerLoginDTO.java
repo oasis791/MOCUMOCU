@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class OwnerDTO {
-    private String ownerName;
-    private String ownerPhoneNum;
+public class OwnerLoginDTO {
     private String ownerEmail;
     private String ownerPassword;
-    private String ownerCheckPassword;
 }

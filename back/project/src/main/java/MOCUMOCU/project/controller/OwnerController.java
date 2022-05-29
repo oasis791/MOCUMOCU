@@ -2,6 +2,8 @@ package MOCUMOCU.project.controller;
 
 import MOCUMOCU.project.domain.Privacy;
 import MOCUMOCU.project.form.OwnerDTO;
+import MOCUMOCU.project.form.OwnerLoginDTO;
+import MOCUMOCU.project.form.OwnerRegisterDTO;
 import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.owner.OwnerService;
 import org.springframework.http.HttpStatus;
@@ -21,13 +23,13 @@ public class OwnerController {
     }
 
     @PostMapping("/signup")
-    public HttpStatus signup(@RequestBody OwnerDTO ownerDTO) {
+    public HttpStatus signup(@RequestBody OwnerRegisterDTO ownerRegisterDTO) {
 
         Privacy newPrivacy = new Privacy();
-        newPrivacy.setEmail(ownerDTO.getOwnerEmail());
-        newPrivacy.setName(ownerDTO.getOwnerName());
-        newPrivacy.setPassword(ownerDTO.getOwnerPassword());
-        newPrivacy.setPhoneNum(ownerDTO.getOwnerPhoneNum());
+        newPrivacy.setEmail(ownerRegisterDTO.getOwnerEmail());
+        newPrivacy.setName(ownerRegisterDTO.getOwnerName());
+        newPrivacy.setPassword(ownerRegisterDTO.getOwnerPassword());
+        newPrivacy.setPhoneNum(ownerRegisterDTO.getOwnerPhoneNum());
 
         Owner newOwner = new Owner();
         newOwner.setPrivacy(newPrivacy);
@@ -37,4 +39,9 @@ public class OwnerController {
         return HttpStatus.OK;
     }
 
+    @PostMapping("/login")
+    public HttpStatus login(@RequestBody OwnerLoginDTO ownerLoginDTO) {
+
+
+    }
 }
