@@ -3,6 +3,8 @@ package MOCUMOCU.project.serviceImpl;
 import MOCUMOCU.project.domain.Coupon;
 import MOCUMOCU.project.domain.Customer;
 import MOCUMOCU.project.domain.Privacy;
+import MOCUMOCU.project.form.OwnerLoginDTO;
+import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.repository.CouponRepository;
 import MOCUMOCU.project.repository.CustomerRepository;
 import MOCUMOCU.project.service.CustomerService;

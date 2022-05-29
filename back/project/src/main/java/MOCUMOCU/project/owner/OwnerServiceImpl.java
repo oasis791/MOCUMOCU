@@ -1,6 +1,7 @@
 package MOCUMOCU.project.owner;
 
 import MOCUMOCU.project.domain.Market;
+import MOCUMOCU.project.form.OwnerLoginDTO;
 import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.domain.Privacy;
 import MOCUMOCU.project.repository.MarketRepository;
@@ -45,6 +46,16 @@ public class OwnerServiceImpl implements OwnerService {
     @Transactional(readOnly = true)
     public List<Market> findAllMarket(Long id) {
         return marketRepository.findByOwnerId(id);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean logIn(OwnerLoginDTO ownerLoginDTO) {
+        Owner findOwner = ownerRepository.findByEmail(ownerLoginDTO.getOwnerEmail());
+        if (findOwner != null) {
+            return findOwner.getPrivacy().getPassword().equals(ownerLoginDTO.getOwnerPassword());
+        } else {
+            return false;
+        }
     }
 
 }
