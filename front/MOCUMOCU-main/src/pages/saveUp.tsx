@@ -12,10 +12,6 @@ function SaveUp(props: {qrValue: QrValue | null}) {
   // const [input, setInput] = useState('');
   // const [qrValue, setQrValue] = useState('');
 
-<<<<<<< HEAD
-=======
-function SaveUp() {
->>>>>>> 3c285f8e7b1b08447e087dce46b5b9072ec6b0c7
   return (
     <View style={styles.container}>
       <QRCode
