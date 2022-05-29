@@ -1,13 +1,11 @@
-package MOCUMOCU.project.serviceImpl;
+package MOCUMOCU.project.customer;
 
 import MOCUMOCU.project.domain.Coupon;
-import MOCUMOCU.project.domain.Customer;
 import MOCUMOCU.project.domain.Privacy;
+import MOCUMOCU.project.form.CustomerLoginDTO;
 import MOCUMOCU.project.form.OwnerLoginDTO;
 import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.repository.CouponRepository;
-import MOCUMOCU.project.repository.CustomerRepository;
-import MOCUMOCU.project.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,4 +49,17 @@ public class CustomerServiceImpl implements CustomerService {
     public void updateLastDate() {
 
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean login(CustomerLoginDTO customerLoginDTO) {
+        Customer findCustomer = customerRepository.findByEmail(customerLoginDTO.getCustomerEmail());
+
+        if (findCustomer != null) {
+            return findCustomer.getPrivacy().getPassword().equals(customerLoginDTO.getCustomerPassword());
+        } else {
+            return false;
+        }
+    }
+
 }

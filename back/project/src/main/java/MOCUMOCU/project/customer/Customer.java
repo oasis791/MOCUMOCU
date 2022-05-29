@@ -1,5 +1,9 @@
-package MOCUMOCU.project.domain;
+package MOCUMOCU.project.customer;
 
+import MOCUMOCU.project.domain.BoardCustomer;
+import MOCUMOCU.project.domain.Coupon;
+import MOCUMOCU.project.domain.Privacy;
+import MOCUMOCU.project.domain.StampCustomer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,9 +24,12 @@ public class Customer {
     @Embedded
     private Privacy privacy;
 
-    private boolean sex; // 남 1, 여 0
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     private int attendanceDate; //연속 출석 일수
     private int userPoint; //보유 포인트
+    private String birthDate;
     private boolean enable;
     private LocalDateTime lastDate; //마지막 접속 날짜 저장
 

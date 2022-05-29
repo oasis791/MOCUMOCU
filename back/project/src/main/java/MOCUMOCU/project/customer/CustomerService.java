@@ -1,9 +1,8 @@
-package MOCUMOCU.project.service;
+package MOCUMOCU.project.customer;
 
 import MOCUMOCU.project.domain.Coupon;
-import MOCUMOCU.project.domain.Customer;
 import MOCUMOCU.project.domain.Privacy;
-import org.springframework.transaction.annotation.Transactional;
+import MOCUMOCU.project.form.CustomerLoginDTO;
 
 import java.util.List;
 
@@ -18,4 +17,6 @@ public interface CustomerService {
     List<Coupon> findAllCoupon(Long id);
 
     void updateLastDate();
+
+    boolean login(CustomerLoginDTO customerLoginDTO);
 }

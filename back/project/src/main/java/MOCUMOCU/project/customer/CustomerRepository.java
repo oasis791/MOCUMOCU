@@ -1,7 +1,5 @@
-package MOCUMOCU.project.repository;
+package MOCUMOCU.project.customer;
 
-import MOCUMOCU.project.domain.Customer;
-import MOCUMOCU.project.owner.Owner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

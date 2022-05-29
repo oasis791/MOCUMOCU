@@ -1,5 +1,6 @@
 package MOCUMOCU.project.domain;
 
+import MOCUMOCU.project.customer.Customer;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,7 +1,6 @@
 package MOCUMOCU.project.repository;
 
 import MOCUMOCU.project.domain.Coupon;
-import MOCUMOCU.project.domain.Customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

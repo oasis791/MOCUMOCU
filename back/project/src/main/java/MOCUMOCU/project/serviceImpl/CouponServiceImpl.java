@@ -1,7 +1,6 @@
 package MOCUMOCU.project.serviceImpl;
 
 import MOCUMOCU.project.domain.Coupon;
-import MOCUMOCU.project.domain.Customer;
 import MOCUMOCU.project.repository.CouponRepository;
 import MOCUMOCU.project.service.CouponService;
 import lombok.RequiredArgsConstructor;
