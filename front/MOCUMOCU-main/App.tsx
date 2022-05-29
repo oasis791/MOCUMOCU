@@ -40,6 +40,8 @@ export type LoggedInOwnerParamList = {
   QRcodeScanner: undefined;
   PhoneNumScanner: undefined;
   StampAmount: undefined;
+  SaveUp: undefined;
+
   // orderId : parameter 칸 => 주문에 고유한 ID가 부여되어 있음 이걸 변수처럼 사용하기 위해서 넣어줌
 };
 // 타입을 나눠 놓은 이유 -> 합쳐도 큰 문제는 되지 않지만 화면에 나타내는 조건이 달라서 나눠놓음

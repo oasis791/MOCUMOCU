@@ -11,6 +11,7 @@ export interface QrValue {
 function SaveUp(props: {qrValue: QrValue | null}) {
   // const [input, setInput] = useState('');
   // const [qrValue, setQrValue] = useState('');
+
   return (
     <View style={styles.container}>
       <QRCode

@@ -94,6 +94,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
   const toFindPasswordOwner = useCallback(() => {
     navigation.navigate('findPasswordOwner');
   }, [navigation]);
+
   const loginButton = () => {
     return (
       <Pressable
@@ -133,6 +134,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
       </Pressable>
     );
   };
+
   const canGoNext = ownerEmail && ownerPassword;
   return (
     <View>

@@ -61,7 +61,7 @@ function AppInner() {
   // 앱 실행 시 토큰 있으면 로그인하는 코드
   useEffect(() => {
     const getTokenAndRefresh = async () => {
-      // SplashScreen.hide();
+      SplashScreen.hide(); // 이후 주석처리 하기
       try {
         const token = await EncryptedStorage.getItem('refreshToken');
         if (!token) {
