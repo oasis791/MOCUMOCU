@@ -14,7 +14,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-import {ActivityRings} from 'react-native-activity-rings';
+import ActivityRings from 'react-native-activity-rings';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;

@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import Main from './Main';
 import More from './More';
-// import SaveUp from './SaveUp';
 import {Portal, PortalHost} from '@gorhom/portal';
 import SaveUp from './SaveUp';
 const window = Dimensions.get('screen');
