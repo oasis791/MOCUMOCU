@@ -1,32 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@yms1789 
-oasis791
-/
-MOCUMOCU
-Public
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-MOCUMOCU/front/MOCUMOCU-main/src/pages/MainOwner.tsx /
-@Narcoker
-Narcoker Update: mainOwner
-Latest commit d3eb915 14 hours ago
- History
- 2 contributors
-@Narcoker@yms1789
-533 lines (495 sloc)  13.7 KB
-   
 import React, {useState} from 'react';
 import {
   View,
