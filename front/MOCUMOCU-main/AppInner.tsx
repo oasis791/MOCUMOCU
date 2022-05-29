@@ -98,7 +98,7 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
-  return !isLoggedIn ? (
+  return isLoggedIn ? (
     isOwner ? (
       <Stack.Navigator>
         <Stack.Screen
