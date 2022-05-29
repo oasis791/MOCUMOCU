@@ -23,7 +23,7 @@ public class OwnerController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody OwnerRegisterDTO ownerRegisterDTO) {
+    public ResponseEntity<Void> signup(@RequestBody OwnerRegisterDTO ownerRegisterDTO) {
         Privacy newPrivacy = new Privacy();
         newPrivacy.setEmail(ownerRegisterDTO.getOwnerEmail());
         newPrivacy.setName(ownerRegisterDTO.getOwnerName());
@@ -35,15 +35,15 @@ public class OwnerController {
 
         ownerService.join(newOwner);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody OwnerLoginDTO ownerLoginDTO) {
+    public ResponseEntity<Void> login(@RequestBody OwnerLoginDTO ownerLoginDTO) {
         if (ownerService.login(ownerLoginDTO)) {
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

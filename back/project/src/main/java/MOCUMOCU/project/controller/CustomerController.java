@@ -22,7 +22,7 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody CustomerRegisterDTO customerRegisterDTO) {
+    public ResponseEntity<Void> signup(@RequestBody CustomerRegisterDTO customerRegisterDTO) {
 
         Privacy newPrivacy = new Privacy();
         newPrivacy.setEmail(customerRegisterDTO.getCustomerEmail());
@@ -42,15 +42,15 @@ public class CustomerController {
 
         customerService.join(newCustomer);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody CustomerLoginDTO customerLoginDTO) {
+    public ResponseEntity<Void> login(@RequestBody CustomerLoginDTO customerLoginDTO) {
         if (customerService.login(customerLoginDTO)) {
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }
