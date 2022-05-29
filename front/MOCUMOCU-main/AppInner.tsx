@@ -99,7 +99,7 @@ function AppInner() {
   }, [dispatch]);
 
   return isLoggedIn ? (
-    isOwner ? (
+    !isOwner ? (
       <Stack.Navigator>
         <Stack.Screen
           name="MainOwnerWrapper"
