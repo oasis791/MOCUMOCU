@@ -6,6 +6,7 @@ import MOCUMOCU.project.form.OwnerRegisterDTO;
 import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.owner.OwnerService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +23,7 @@ public class OwnerController {
     }
 
     @PostMapping("/signup")
-    public HttpStatus signup(@RequestBody OwnerRegisterDTO ownerRegisterDTO) {
-
+    public ResponseEntity signup(@RequestBody OwnerRegisterDTO ownerRegisterDTO) {
         Privacy newPrivacy = new Privacy();
         newPrivacy.setEmail(ownerRegisterDTO.getOwnerEmail());
         newPrivacy.setName(ownerRegisterDTO.getOwnerName());
@@ -35,15 +35,15 @@ public class OwnerController {
 
         ownerService.join(newOwner);
 
-        return HttpStatus.OK;
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public HttpStatus login(@RequestBody OwnerLoginDTO ownerLoginDTO) {
+    public ResponseEntity login(@RequestBody OwnerLoginDTO ownerLoginDTO) {
         if (ownerService.login(ownerLoginDTO)) {
-            return HttpStatus.OK;
+            return new ResponseEntity(HttpStatus.OK);
         } else {
-            return HttpStatus.BAD_REQUEST;
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
 }
