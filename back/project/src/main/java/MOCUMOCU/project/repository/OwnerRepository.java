@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 
 @Repository
@@ -17,10 +18,6 @@ public class OwnerRepository {
         em.persist(owner);
     }
 
-    public void update(Owner owner) {
-        em.persist(owner);
-    }
-
     public void remove(Owner owner) {
         em.remove(owner);
     }
@@ -29,10 +26,10 @@ public class OwnerRepository {
         return em.find(Owner.class, id);
     }
 
-    public Owner findByEmail(String email){
+    public List<Owner> findByEmail(String email){
         return em.createQuery("select o from Owner o where o.privacy.email = :email", Owner.class)
                 .setParameter("email", email)
-                .getSingleResult();
+                .getResultList();
     }
 
 }

@@ -21,10 +21,6 @@ public class MarketRepository {
         em.remove(market);
     }
 
-    public void update(Market market) {
-        em.persist(market);
-    }
-
     public Market findOne(Long id) {
         return em.find(Market.class, id);
     }

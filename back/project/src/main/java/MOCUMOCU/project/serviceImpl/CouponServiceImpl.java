@@ -25,14 +25,12 @@ public class CouponServiceImpl implements CouponService {
     public void useStamp(Long id, int num) {
         Coupon findCoupon = couponRepository.findOne(id);
         findCoupon.setAmount(findCoupon.getAmount() - num);
-        couponRepository.updateCoupon(findCoupon);
     }
 
     @Override
     public void earnStamp(Long id, int num) {
         Coupon findCoupon = couponRepository.findOne(id);
         findCoupon.setAmount(findCoupon.getAmount() + num);
-        couponRepository.updateCoupon(findCoupon);
     }
 
     @Override

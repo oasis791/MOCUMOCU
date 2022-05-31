@@ -28,6 +28,8 @@ public class RewardServiceImpl implements RewardService {
 
     @Override
     public void updateReward(Reward reward) {
-        rewardRepository.update(reward);
+        Reward updateReward = rewardRepository.findOne(reward.getId());
+        updateReward.setRewardContent(reward.getRewardContent());
+        updateReward.setNeedAmount(reward.getNeedAmount());
     }
 }

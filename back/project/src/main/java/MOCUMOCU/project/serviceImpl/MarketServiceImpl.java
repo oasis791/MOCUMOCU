@@ -31,9 +31,14 @@ public class MarketServiceImpl implements MarketService {
         marketRepository.remove(findMarket);
     }
 
+    /**
+     *
+     * 수정 데이터만 수정 할거 정해야함
+     */
     @Override
     public void updateMarket(Market market) {
-        marketRepository.update(market);
+        marketRepository.findOne(market.getId());
+
     }
 
     @Override

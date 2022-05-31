@@ -23,9 +23,6 @@ public class CouponRepository {
         return findCoupon;
     }
 
-    public void updateCoupon(Coupon coupon) {
-        em.persist(coupon);
-    }
 
     public List<Coupon> findByCustomerId(Long customerId) {
         return em.createQuery("select c from Coupon c where c.customer.id = : customerId", Coupon.class)

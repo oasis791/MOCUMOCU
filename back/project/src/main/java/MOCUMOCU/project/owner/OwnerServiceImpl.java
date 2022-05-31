@@ -1,5 +1,6 @@
 package MOCUMOCU.project.owner;
 
+import MOCUMOCU.project.customer.Customer;
 import MOCUMOCU.project.domain.Market;
 import MOCUMOCU.project.form.OwnerLoginDTO;
 import MOCUMOCU.project.owner.Owner;
@@ -43,7 +44,6 @@ public class OwnerServiceImpl implements OwnerService {
     public void updatePrivacy(Long id, Privacy privacy) {
         Owner findOwner = ownerRepository.findOne(id);
         findOwner.setPrivacy(privacy);
-        ownerRepository.update(findOwner);
     }
 
     @Override
@@ -55,11 +55,12 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     @Transactional(readOnly = true)
     public boolean login(OwnerLoginDTO ownerLoginDTO) {
-        Owner findOwner = ownerRepository.findByEmail(ownerLoginDTO.getOwnerEmail());
-        if (findOwner != null) {
-            return findOwner.getPrivacy().getPassword().equals(ownerLoginDTO.getOwnerPassword());
-        } else {
+        List<Owner> findOwner = ownerRepository.findByEmail(ownerLoginDTO.getOwnerEmail());
+
+        if (findOwner.isEmpty()) {
             return false;
+        } else {
+            return findOwner.get(0).getPrivacy().getPassword().equals(ownerLoginDTO.getOwnerPassword());
         }
     }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,18 +20,14 @@ public class CustomerRepository {
         em.remove(customer);
     }
 
-    public void update(Customer customer) {
-        em.persist(customer);
-    }
-
     public Customer findOne(Long id) {
         return em.find(Customer.class, id);
     }
 
-    public Customer findByEmail(String email){
+    public List<Customer> findByEmail(String email){
         return em.createQuery("select c from Customer c where c.privacy.email = :email", Customer.class)
                 .setParameter("email", email)
-                .getSingleResult();
+                .getResultList();
     }
 
 

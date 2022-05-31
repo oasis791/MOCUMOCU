@@ -36,7 +36,6 @@ public class CustomerServiceImpl implements CustomerService {
     public void updatePrivacy(Long id, Privacy privacy) {
         Customer findCustomer = customerRepository.findOne(id);
         findCustomer.setPrivacy(privacy);
-        customerRepository.update(findCustomer);
     }
 
     @Override
@@ -53,12 +52,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional(readOnly = true)
     public boolean login(CustomerLoginDTO customerLoginDTO) {
-        Customer findCustomer = customerRepository.findByEmail(customerLoginDTO.getCustomerEmail());
 
-        if (findCustomer != null) {
-            return findCustomer.getPrivacy().getPassword().equals(customerLoginDTO.getCustomerPassword());
-        } else {
+        List<Customer> findCustomer = customerRepository.findByEmail(customerLoginDTO.getCustomerEmail());
+
+        if (findCustomer.isEmpty()) {
             return false;
+        } else {
+            return findCustomer.get(0).getPrivacy().getPassword().equals(customerLoginDTO.getCustomerPassword());
         }
     }
 

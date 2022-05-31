@@ -22,10 +22,6 @@ public class RewardRepository {
         em.remove(reward);
     }
 
-    public void update(Reward reward) {
-        em.persist(reward);
-    }
-
     public Reward findOne(Long id) {
         return em.find(Reward.class, id);
     }
