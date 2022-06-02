@@ -19,6 +19,7 @@ import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import LinearGradient from 'react-native-linear-gradient';
 type SignInOwnerScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SignInOwner'
@@ -27,8 +28,10 @@ type SignInOwnerScreenProps = NativeStackScreenProps<
 function SignInOwner({navigation}: SignInOwnerScreenProps) {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [ownerEmail, setOwnerEmail] = useState('');
+  const [age, setAge] = useState(9999);
+  const [username, setusername] = useState('');
+  const [ownerPassword, setOwnerPassword] = useState('');
   // const canGoNext = email && password;
   const emailRef = useRef<TextInput | null>(null); //< > => generic
   const passwordRef = useRef<TextInput | null>(null);
@@ -36,19 +39,22 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
     if (loading) {
       return;
     }
-    if (!email || !email.trim()) {
+    if (!ownerEmail || !ownerEmail.trim()) {
       //trim은 좌우 공백 없애는 함수
       return Alert.alert('알림', '이메일을 입력해주세요');
     }
-    if (!password || !password.trim()) {
+    if (!ownerPassword || !ownerPassword.trim()) {
       return Alert.alert('알림', '비밀번호를 입력해주세요');
     }
     try {
-      setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/login`, {
-        email,
-        password,
-      });
+      // setLoading(true); `${Config.API_URL}/login`
+      const response = await axios.post(
+        'http://54.180.91.167:8080/owner/login',
+        {
+          ownerEmail,
+          ownerPassword,
+        },
+      );
       console.log(response.data);
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
@@ -72,14 +78,14 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
         Alert.alert('알림', errorResponse.data.message);
       }
     }
-  }, [loading, dispatch, email, password]);
+  }, [loading, dispatch, ownerEmail, ownerPassword]);
   const onChangeEmail = useCallback(text => {
-    setEmail(text);
+    setOwnerEmail(text);
   }, []);
   const onChangePassword = useCallback(text => {
-    setPassword(text);
+    setOwnerPassword(text);
   }, []);
-  const toSignInOwner = useCallback(() => {
+  const toSignUpOwner = useCallback(() => {
     navigation.navigate('SignUpOwner');
   }, [navigation]);
   const toFindIdOwner = useCallback(() => {
@@ -88,7 +94,48 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
   const toFindPasswordOwner = useCallback(() => {
     navigation.navigate('findPasswordOwner');
   }, [navigation]);
-  const canGoNext = email && password;
+
+  const loginButton = () => {
+    return (
+      <Pressable
+        onPress={onSubmit}
+        style={styles.loginButton}
+        disabled={!canGoNext}>
+        {loading ? (
+          <ActivityIndicator style={styles.indicator} color="white" />
+        ) : (
+          <Text style={styles.loginButtonText}>로그인</Text>
+        )}
+      </Pressable>
+    );
+  };
+  const linearGradientButton = () => {
+    return (
+      <Pressable
+        style={{
+          height: '33%',
+        }}>
+        <LinearGradient
+          colors={['#FA6072', '#414FFD']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          locations={[0, 1]}
+          // eslint-disable-next-line react-native/no-inline-styles
+          style={{
+            marginTop: 5,
+            marginBottom: 1,
+            paddingHorizontal: 115,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: '#e5e5e5',
+          }}>
+          <Text style={styles.loginButtonText}>로그인</Text>
+        </LinearGradient>
+      </Pressable>
+    );
+  };
+
+  const canGoNext = ownerEmail && ownerPassword;
   return (
     <View>
       <StatusBar hidden={true} />
@@ -97,12 +144,12 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
           <Image
             style={{
               marginTop: 30,
-              resizeMode: 'stretch',
-              width: 100,
-              height: 50,
-              marginBottom: 10,
+              resizeMode: 'contain',
+              width: 150,
+              height: 20,
+              marginBottom: 15,
             }}
-            source={require('../assets/logo_black.png')}
+            source={require('../assets/gradLogo.png')}
           />
         </View>
         <View style={styles.inputBoxWrapper}>
@@ -110,7 +157,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
           <TextInput
             style={styles.textInput}
             placeholder="이메일"
-            value={email}
+            value={ownerEmail}
             onChangeText={onChangeEmail}
             importantForAutofill="yes"
             autoComplete="email"
@@ -129,7 +176,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
           <TextInput
             style={styles.textInput}
             placeholder="비밀번호"
-            value={password}
+            value={ownerPassword}
             onChangeText={onChangePassword}
             secureTextEntry
             importantForAutofill="yes"
@@ -142,47 +189,18 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
           />
         </View>
         <View style={styles.buttonZone}>
-          <Pressable
-            onPress={onSubmit}
-            style={
-              !canGoNext
-                ? styles.loginButton
-                : StyleSheet.compose(
-                    styles.loginButton,
-                    styles.loginButtonActive,
-                  )
-            }
-            disabled={!canGoNext}>
-            {loading ? (
-              <ActivityIndicator style={styles.indicator} color="white" />
-            ) : (
-              <Text
-                style={
-                  !canGoNext
-                    ? styles.loginButtonText
-                    : StyleSheet.compose(
-                        styles.loginButtonText,
-                        styles.loginButtonTextActive,
-                      )
-                }>
-                로그인
-              </Text>
-            )}
-          </Pressable>
-          <TouchableHighlight
-            underlayColor={'#e6e6e6'}
-            onPress={toSignInOwner}
-            style={styles.signUpButton}>
-            <Text style={styles.signUpButtonText}>회원가입</Text>
-          </TouchableHighlight>
+          {!canGoNext ? <>{loginButton()}</> : <>{linearGradientButton()}</>}
           <View style={styles.zZone}>
             <Pressable onPress={toFindIdOwner}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
-            <Text style={{marginLeft: 5}}>/</Text>
+            <Text style={{marginLeft: 5}}>ㅣ</Text>
             <Pressable onPress={toFindPasswordOwner}>
-
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
+            </Pressable>
+            <Text style={{marginLeft: 5}}>ㅣ</Text>
+            <Pressable onPress={toSignUpOwner}>
+              <Text style={styles.zZoneText}>회원가입</Text>
             </Pressable>
           </View>
         </View>
@@ -215,12 +233,16 @@ const styles = StyleSheet.create({
     // marginBottom: '10%',
   },
   loginButton: {
+    // textAlign: 'center',
+    marginTop: 5,
+    marginBottom: 1,
     backgroundColor: '#e6e6e6',
     paddingHorizontal: 115,
-    height: '18%',
+    height: '30%',
     borderRadius: 8,
-    marginBottom: 10,
-    elevation: 10,
+    // marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
   },
   signUpButton: {
     backgroundColor: '#ffffff',
@@ -229,11 +251,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 10,
   },
-  loginButtonActive: {backgroundColor: '#363636'},
+  loginButtonActive: {backgroundColor: '#414FFD'},
   loginButtonText: {
     color: 'white',
     fontSize: 14,
-    bottom: '15%',
+    bottom: '5%',
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   loginButtonTextActive: {color: '#ffffff'},

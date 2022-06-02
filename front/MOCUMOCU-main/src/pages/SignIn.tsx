@@ -13,7 +13,6 @@ import {
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
-import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -41,10 +40,13 @@ function SignIn({navigation}: SignInScreenProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        'http://54.180.91.167:8080/user/login',
+        {
+          customerEmail: email,
+          customerPassword: password,
+        },
+      );
       console.log(response.data);
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
@@ -103,7 +105,8 @@ function SignIn({navigation}: SignInScreenProps) {
       <Pressable
         style={{
           height: '33%',
-        }}>
+        }}
+        onPress={onSubmit}>
         <LinearGradient
           colors={['#FA6072', '#414FFD']}
           start={{x: 0, y: 0}}
@@ -118,7 +121,11 @@ function SignIn({navigation}: SignInScreenProps) {
             borderWidth: 1,
             borderColor: '#e5e5e5',
           }}>
-          <Text style={styles.loginButtonText}>로그인</Text>
+          {!loading ? (
+            <ActivityIndicator style={styles.indicator} color="white" />
+          ) : (
+            <Text style={styles.loginButtonText}>로그인</Text>
+          )}
         </LinearGradient>
       </Pressable>
     );
@@ -324,11 +331,12 @@ const styles = StyleSheet.create({
   },
   indicator: {
     // backgroundColor: 'gray',
-    paddingHorizontal: '7%',
+    // paddingHorizontal: '7%',
     // paddingVertical: 10,
     borderRadius: 5,
     // marginTop: '4%',
     height: 40,
+    paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },

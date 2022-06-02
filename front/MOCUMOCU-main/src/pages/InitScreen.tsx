@@ -3,6 +3,7 @@ import {
   Image,
   ImageBackground,
   Pressable,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -12,6 +13,7 @@ import {RootStackParamList} from '../../App';
 const image = require('../assets/initScreen.png');
 const logo_kor = require('../assets/logo_kor.png');
 const logo_eng = require('../assets/logo_eng.png');
+
 type InitScreenProps = NativeStackScreenProps<RootStackParamList, 'InitScreen'>;
 
 function InitScreen({navigation}: InitScreenProps) {
@@ -23,6 +25,7 @@ function InitScreen({navigation}: InitScreenProps) {
   }, [navigation]);
   return (
     <View>
+      <StatusBar hidden={true} />
       <ImageBackground style={styles.background} source={image}>
         <View style={styles.logoWrapper}>
           <Image style={styles.logoImage} source={logo_kor} />
