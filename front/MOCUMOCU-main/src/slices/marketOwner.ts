@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface Reward {
+  reward: string;
+  couponRequire: number;
+}
+
 export interface ActivityData {
   label: string;
   value: number;
@@ -8,8 +13,9 @@ export interface ActivityData {
 
 export interface Market {
   id: number;
-  phoneNum: String;
+  phoneNum: string;
   name: string;
+  rewardList: Array<Reward>;
   todays: number;
   male: number;
   female: number;
@@ -26,6 +32,16 @@ const initialState: InitialState = {
       id: 0,
       phoneNum: '010-1111-2222',
       name: '카페현욱',
+      rewardList: [
+        {
+          reward: '츄러스',
+          couponRequire: 5,
+        },
+        {
+          reward: '아메리카노',
+          couponRequire: 10,
+        },
+      ],
       todays: 54,
       male: 42,
       female: 12,
@@ -41,6 +57,16 @@ const initialState: InitialState = {
       id: 1,
       phoneNum: '010-1111-2222',
       name: '커피맛을 조금 아는 승민',
+      rewardList: [
+        {
+          reward: '리워드1',
+          couponRequire: 5,
+        },
+        {
+          reward: '리워드2',
+          couponRequire: 3,
+        },
+      ],
       todays: 30,
       male: 12,
       female: 18,
@@ -56,6 +82,16 @@ const initialState: InitialState = {
       id: 2,
       phoneNum: '010-1111-2222',
       name: 'INYEONGCAFE',
+      rewardList: [
+        {
+          reward: '리워드A',
+          couponRequire: 5,
+        },
+        {
+          reward: '리워드B',
+          couponRequire: 7,
+        },
+      ],
       todays: 0,
       male: 0,
       female: 0,
@@ -71,6 +107,16 @@ const initialState: InitialState = {
       id: 3,
       phoneNum: '010-1111-2222',
       name: '민수와 아이들',
+      rewardList: [
+        {
+          reward: '초코마카롱',
+          couponRequire: 10,
+        },
+        {
+          reward: '딸기마카롱',
+          couponRequire: 10,
+        },
+      ],
       todays: 10,
       male: 5,
       female: 5,
@@ -86,7 +132,7 @@ const initialState: InitialState = {
 };
 
 const userSlice = createSlice({
-  name: 'storeOwner',
+  name: 'marketOwner',
   initialState,
   reducers: {
     setName(state, action) {
@@ -94,6 +140,9 @@ const userSlice = createSlice({
     },
     setPhoneNum(state, action) {
       state.markets[action.payload.index].phoneNum = action.payload.phoneNum;
+    },
+    setMarket(state, action) {
+      state.markets = action.payload.markets;
     },
   },
   extraReducers: builder => { }, // 비동기 action 만들 때 사용

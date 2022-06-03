@@ -1,7 +1,7 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import AddStore from './AddStore';
+import AddMarket from './AddMarket';
 import MainOwner from './MainOwner';
 import SettingsOwner from './SettingsOwner';
 
@@ -17,19 +17,19 @@ function MainOwnerWrapper() {
       <Stack.Screen
         name="MainOwner"
         component={MainOwner}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
         name="SettingsOwner"
         component={SettingsOwner}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
-        name="AddStore"
-        component={AddStore}
-        options={{headerShown: false}}
+        name="AddMarket"
+        component={AddMarket}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

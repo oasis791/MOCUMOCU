@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import { Text, View } from 'react-native';
 
-function ModifiyStore() {
+function ModifyMarket() {
   return (
     <View>
       <Text>점주 정보 수정</Text>
@@ -9,4 +9,4 @@ function ModifiyStore() {
   );
 }
 
-export default ModifiyStore;
+export default ModifyMarket;

@@ -21,7 +21,7 @@ type AddStoreProps = NativeStackScreenProps<LoggedInOwnerParamList, 'AddStore'>;
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
-function AddStore({ navigation }: AddStoreProps) {
+function AddMarket({ navigation }: AddStoreProps) {
   const [loading, setLoading] = useState(false);
   const [buttonActive, setButtonActive] = useState(false);
   const [businessNum, setBusinessNum] = useState('');
@@ -185,4 +185,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddStore;
+export default AddMarket;

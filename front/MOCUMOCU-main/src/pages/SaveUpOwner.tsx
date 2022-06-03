@@ -40,7 +40,7 @@ type SaveUpOwnerProps = NativeStackScreenProps<
 >;
 
 function SaveUpOwner({ navigation }: SaveUpOwnerProps) {
-  const stores = useSelector((state: RootState) => state.storeOwner.markets);
+  const markets = useSelector((state: RootState) => state.marketOwner.markets);
   const isAlarm = false;
 
   const onSubmitSetting = () => {
@@ -75,28 +75,27 @@ function SaveUpOwner({ navigation }: SaveUpOwnerProps) {
           </Pressable>
         </View>
       </View>
-      <View style={styles.selectStoreListTitle}>
-        <Text style={styles.selectStoreListTitleText}>
+      <View style={styles.selectMarketListTitle}>
+        <Text style={styles.selectMarketListTitleText}>
           매장을 선택해 주세요
         </Text>
       </View>
 
       <ScrollView>
-        {stores.map(store => {
+        {markets.map(market => {
           return (
             <TouchableOpacity
-              style={styles.storeTabWrapper}
-              key={store.id}
+              style={styles.marketTabWrapper}
+              key={market.id}
               onPress={() => {
                 navigation.navigate('StampControl', {
-                  storeId: store.id,
-                  test: 'test',
+                  marketId: market.id,
                 });
               }}>
-              <Text style={styles.storeTabNameText}>{store.name}</Text>
+              <Text style={styles.marketTabNameText}>{market.name}</Text>
               <Image
                 source={require('../assets/icon/arrowGray.png')}
-                style={styles.storeTabArrow}
+                style={styles.marketTabArrow}
               />
             </TouchableOpacity>
           );
@@ -146,7 +145,7 @@ const styles = StyleSheet.create({
     height: 20,
   },
 
-  selectStoreListTitle: {
+  selectMarketListTitle: {
     // backgroundColor: 'pink',
     alignItems: 'center',
     justifyContent: 'center',
@@ -154,13 +153,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  selectStoreListTitleText: {
+  selectMarketListTitleText: {
     fontSize: 23,
     fontFamily: 'GmarketSansTTFMedium',
     color: '#363636',
   },
 
-  storeTabWrapper: {
+  marketTabWrapper: {
     width: screenWidth,
     height: 80,
     alignItems: 'center',
@@ -175,12 +174,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
   },
 
-  storeTabNameText: {
+  marketTabNameText: {
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
     fontSize: 15,
   },
 
-  storeTabArrow: {
+  marketTabArrow: {
     resizeMode: 'contain',
     width: 20,
     height: 20,

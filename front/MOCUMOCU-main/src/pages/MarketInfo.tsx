@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import { Text, View } from 'react-native';
 
-function StoreInfo() {
+function MarketInfo() {
   return (
     <View>
       <Text>매장 상세보기</Text>
@@ -9,4 +9,4 @@ function StoreInfo() {
   );
 }
 
-export default StoreInfo;
+export default MarketInfo;

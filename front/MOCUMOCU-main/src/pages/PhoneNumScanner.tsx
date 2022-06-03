@@ -30,7 +30,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
 
   const passfunc = useCallback(() => { }, []);
 
-  const [storeId, setStoreId] = useState(route.params.storeId);
+  const [marketId, setMarketId] = useState(route.params.marketId);
 
   const onSubmit = useCallback(async () => {
     if (loading) {
@@ -48,7 +48,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
           text: '확인',
           onPress: () => {
             navigation.navigate('StampAmount', {
-              storeId: storeId,
+              marketId: marketId,
               phoneNumber: phoneNumber,
             });
           },
@@ -71,7 +71,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
                 text: '확인',
                 onPress: () => {
                   navigation.navigate('StampAmount', {
-                    storeId: storeId,
+                    marketId: marketId,
                     phoneNumber: phoneNumber,
                   });
                 },
@@ -86,7 +86,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
         setLoading(false);
       }
     }
-  }, [loading, navigation, phoneNumber, storeId]);
+  }, [loading, navigation, phoneNumber, marketId]);
 
   useEffect(() => {
     setPhoneNumber(phoneNumber.trim());

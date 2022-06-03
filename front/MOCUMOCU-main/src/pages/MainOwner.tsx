@@ -12,9 +12,6 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
-
-import { useAppDispatch } from '../store';
-import storeOwnerSlice from '../slices/storeOwner';
 import { useSelector } from 'react-redux';
 
 import ActivityRings from 'react-native-activity-rings';
@@ -35,7 +32,7 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
   const isAlarm = false;
   const ownerName = '김준서';
   const [deleteButtonAcitive, setDeleteButtonActive] = useState(false);
-  const markets = useSelector((state: RootState) => state.storeOwner.markets);
+  const markets = useSelector((state: RootState) => state.marketOwner.markets);
 
   const activityConfig = {
     width: 150,
@@ -51,15 +48,15 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
   const onSubmitAlarm = () => {
     Alert.alert('알림', '알람');
   };
-  const toAddStore = () => {
+  const toAddMarket = () => {
     // Alert.alert('알림', '매장 등록으로 이동');
-    navigation.navigate('AddStore');
+    navigation.navigate('AddMarket');
   };
-  const toDeleteStore = () => {
+  const toDeleteMarket = () => {
     setDeleteButtonActive(!deleteButtonAcitive);
   };
 
-  const onDeleteSubmit = useCallback(async (storeId: string) => {
+  const onDeleteSubmit = useCallback(async storeId => {
     try {
       const response = await axios.delete(`${Config.API_URL}/store/${storeId}`);
       Alert.alert('알림', '매장이 삭제되었습니다.');
@@ -174,12 +171,14 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
 
         <View style={styles.marektControlWrapper}>
           <Pressable style={styles.controlMarketButton}>
-            <Text style={styles.controlMarketButtonText} onPress={toAddStore}>
+            <Text style={styles.controlMarketButtonText} onPress={toAddMarket}>
               매장 등록
             </Text>
           </Pressable>
           <Text style={styles.pointButtonBar}>|</Text>
-          <Pressable style={styles.controlMarketButton} onPress={toDeleteStore}>
+          <Pressable
+            style={styles.controlMarketButton}
+            onPress={toDeleteMarket}>
             <Text style={styles.controlMarketButtonText}>매장 삭제</Text>
           </Pressable>
         </View>

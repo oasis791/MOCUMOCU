@@ -1,5 +1,5 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useState } from 'react';
 import {
   Alert,
   Dimensions,
@@ -11,7 +11,7 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import {LoggedInOwnerParamList} from '../../App';
+import { LoggedInOwnerParamList } from '../../App';
 
 type StampControlProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
@@ -20,8 +20,8 @@ type StampControlProps = NativeStackScreenProps<
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
-function StampControl({navigation, route}: StampControlProps) {
-  const [storeId, setStoreId] = useState(route.params.storeId);
+function StampControl({ navigation, route }: StampControlProps) {
+  const [marketId, setMarketId] = useState(route.params.marketId);
   const [isAlarm, setIsAlarm] = useState(false);
 
   const onSubmitSetting = () => {
@@ -33,7 +33,6 @@ function StampControl({navigation, route}: StampControlProps) {
 
   return (
     <View style={styles.screen}>
-      <Text>{storeId}</Text>
       <StatusBar hidden={true} />
       <View style={styles.mainHeader}>
         <View style={styles.headerButtonWrapper}>
@@ -60,7 +59,7 @@ function StampControl({navigation, route}: StampControlProps) {
         <TouchableOpacity
           style={styles.buttonWrapper}
           onPress={() => {
-            navigation.navigate('StampAmount', {storeId: storeId});
+            navigation.navigate('StampAmount', { marketId });
           }}>
           <View style={styles.buttonTextWapper}>
             <Image
@@ -78,7 +77,7 @@ function StampControl({navigation, route}: StampControlProps) {
         <TouchableOpacity
           style={styles.buttonWrapper}
           onPress={() => {
-            navigation.navigate('PhoneNumScanner', {storeId: storeId});
+            navigation.navigate('PhoneNumScanner', { marketId: marketId });
           }}>
           <View style={styles.buttonTextWapper}>
             <Image
@@ -96,7 +95,7 @@ function StampControl({navigation, route}: StampControlProps) {
         <TouchableOpacity
           style={styles.buttonWrapper}
           onPress={() => {
-            navigation.navigate('QRcodeScanner', {storeId: storeId});
+            navigation.navigate('QRcodeScanner', { marketId: marketId });
           }}>
           <View style={styles.buttonTextWapper}>
             <Image

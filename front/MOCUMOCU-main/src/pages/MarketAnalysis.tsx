@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import { Text, View } from 'react-native';
 
-function StoreAnalysis() {
+function MarketAnalysis() {
   return (
     <View>
       <Text>매장 분석</Text>
@@ -9,4 +9,4 @@ function StoreAnalysis() {
   );
 }
 
-export default StoreAnalysis;
+export default MarketAnalysis;

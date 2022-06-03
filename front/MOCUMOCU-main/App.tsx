@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import store from './src/store';
 import AppInner from './AppInner';
-import {NavigationContainer} from '@react-navigation/native';
-import {PortalProvider} from '@gorhom/portal';
+import { NavigationContainer } from '@react-navigation/native';
+import { PortalProvider } from '@gorhom/portal';
 
 export type LoggedInUserParamList = {
   MainWrapper: undefined;
@@ -31,13 +31,13 @@ export type LoggedInOwnerParamList = {
   SaveUpOwner: undefined;
   StampControl: undefined;
   SettingsOwner: undefined;
-  AddStore: undefined;
+  AddMarket: undefined;
 
   NoticeOwner: undefined;
-  StoreInfo: undefined;
+  MarketInfo: undefined;
   ModifyStore: undefined;
   AddEvent: undefined;
-  StoreAnalysis: undefined;
+  MarektAnalysis: undefined;
   PrivacyOwner: undefined;
   HelpOwner: undefined;
   ModifyInfoOwner: undefined;
@@ -46,7 +46,7 @@ export type LoggedInOwnerParamList = {
   PhoneNumScanner: undefined;
   StampAmount: undefined;
   SaveUp: undefined;
-  StoreFunc: undefined;
+  MarketFunc: undefined;
   // orderId : parameter 칸 => 주문에 고유한 ID가 부여되어 있음 이걸 변수처럼 사용하기 위해서 넣어줌
 };
 

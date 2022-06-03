@@ -1,11 +1,11 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 
 import userSlice from '../slices/user';
-import storeOwnerSlice from '../slices/storeOwner';
+import storeOwnerSlice from '../slices/marketOwner';
 
 const rootReducer = combineReducers({
   user: userSlice.reducer,
-  storeOwner: storeOwnerSlice.reducer,
+  marketOwner: storeOwnerSlice.reducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
