@@ -1,25 +1,189 @@
-import React from 'react';
-import {View, Image, Text} from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-function SaveUpOwner() {
+import React, { useCallback } from 'react';
+import {
+  View,
+  Image,
+  Text,
+  StatusBar,
+  StyleSheet,
+  Dimensions,
+  Pressable,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import { useSelector } from 'react-redux';
+import { LoggedInOwnerParamList } from '../../App';
+import { RootState } from '../store/reducer';
+
+export interface AcitivityData {
+  label: string;
+  value: string;
+  color: string;
+}
+
+export interface Store {
+  id: number;
+  name: number;
+  male: number;
+  female: number;
+  activityData: Array<AcitivityData>;
+}
+
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
+
+type SaveUpOwnerProps = NativeStackScreenProps<
+  LoggedInOwnerParamList,
+  'SaveUpOwner'
+>;
+
+function SaveUpOwner({ navigation }: SaveUpOwnerProps) {
+  const stores = useSelector((state: RootState) => state.storeOwner.markets);
+  const isAlarm = false;
+
+  const onSubmitSetting = () => {
+    // Alert.alert('알림', '설정');
+    navigation.navigate('SettingsOwner');
+  };
+
+  const onSubmitAlarm = () => {
+    Alert.alert('알림', '알람');
+  };
+
   return (
-    <View
-      style={{
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'white',
-      }}>
-      <Image
-        source={require('../assets/qrcode.png')}
-        style={{height: 200, width: 200}}
-      />
-      <Text style={{color: 'black', fontFamily: 'NotoSansCJKkr-Black (TTF)'}}>
-        QR CODE 점주
-      </Text>
+    <View style={styles.screen}>
+      <StatusBar hidden={true} />
+      <View style={styles.mainHeader}>
+        <View style={styles.headerButtonWrapper}>
+          <Pressable onPress={onSubmitSetting}>
+            <Image
+              source={require('../assets/icon/mainSetting.png')}
+              style={styles.headerSetting}
+            />
+          </Pressable>
+          <Pressable onPress={onSubmitAlarm}>
+            <Image
+              source={
+                isAlarm
+                  ? require('../assets/icon/mainAlarmActive.png')
+                  : require('../assets/icon/mainAlarm.png')
+              }
+              style={styles.headerAlarm}
+            />
+          </Pressable>
+        </View>
+      </View>
+      <View style={styles.selectStoreListTitle}>
+        <Text style={styles.selectStoreListTitleText}>
+          매장을 선택해 주세요
+        </Text>
+      </View>
+
+      <ScrollView>
+        {stores.map(store => {
+          return (
+            <TouchableOpacity
+              style={styles.storeTabWrapper}
+              key={store.id}
+              onPress={() => {
+                navigation.navigate('StampControl', {
+                  storeId: store.id,
+                  test: 'test',
+                });
+              }}>
+              <Text style={styles.storeTabNameText}>{store.name}</Text>
+              <Image
+                source={require('../assets/icon/arrowGray.png')}
+                style={styles.storeTabArrow}
+              />
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
     </View>
   );
 }
+const styles = StyleSheet.create({
+  screen: {
+    width: screenWidth,
+    height: screenHeight,
+    backgroundColor: '#F7F7F7',
+  },
 
+  mainHeader: {
+    width: screenWidth,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  headerLogo: {
+    resizeMode: 'contain',
+    width: 100,
+    height: 25,
+    marginLeft: 27,
+    marginTop: 5,
+    // justifyContent: 'flex-start',
+  },
+  headerButtonWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 19,
+    marginTop: 5,
+    // justifyContent: 'space-around',
+  },
+  headerSetting: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+    marginRight: 15,
+  },
+  headerAlarm: {
+    resizeMode: 'contain',
+    // backgroundColor: 'black',
+    width: 20,
+    height: 20,
+  },
+
+  selectStoreListTitle: {
+    // backgroundColor: 'pink',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    marginBottom: 20,
+  },
+
+  selectStoreListTitleText: {
+    fontSize: 23,
+    fontFamily: 'GmarketSansTTFMedium',
+    color: '#363636',
+  },
+
+  storeTabWrapper: {
+    width: screenWidth,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    marginBottom: 9,
+    paddingHorizontal: 30,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+
+  storeTabNameText: {
+    fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+    fontSize: 15,
+  },
+
+  storeTabArrow: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+  },
+});
 export default SaveUpOwner;

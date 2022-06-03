@@ -20,36 +20,8 @@ import FindPassword from './src/pages/FindPassword';
 import FindPasswordOwner from './src/pages/FindPasswordOwner';
 import FindIdOwner from './src/pages/FindIdOwner';
 import FindId from './src/pages/FindId';
-import MainWrapper from './src/pages/MainWrapper';
-import CustomShop from './src/pages/CustomShop';
-import MainOwnerWrapper from './src/pages/MainOwnerWrapper';
-import PointLog from './src/pages/PointLog';
-import SettingsOwner from './src/pages/SettingsOwner';
-import NoticeOwner from './src/pages/NoticeOwner';
-import AddStore from './src/pages/AddStore';
-import StoreInfo from './src/pages/StoreInfo';
-import ModifyStore from './src/pages/ModifyStore';
-import AddEvent from './src/pages/AddEvent';
-import StoreAnalysis from './src/pages/StoreAnalysis';
-import PrivacyOwner from './src/pages/PrivacyOwner';
-import HelpOwner from './src/pages/HelpOwner';
-import ModifyInfoOwner from './src/pages/ModifyInfoOwner';
-import DevInfoOwner from './src/pages/DevInfoOwner';
-import StampControl from './src/pages/StampControl';
-import QRcodeScanner from './src/pages/QRcodeScanner';
-import PhoneNumScanner from './src/pages/PhoneNumScanner';
-import StampAmount from './src/pages/StampAmount';
-import EventInfo from './src/pages/EventInfo';
-import Settings from './src/pages/Settings';
-import Notice from './src/pages/Notice';
-import CouponList from './src/pages/CouponList';
-import CouponInfo from './src/pages/CouponInfo';
-import Privacy from './src/pages/Privacy';
-import Help from './src/pages/Help';
-import ModifyInfo from './src/pages/ModifyInfo';
-import UsageHistory from './src/pages/UsageHistory';
-import DevInfo from './src/pages/DevInfo';
-import RewardList from './src/pages/RewardList';
+import CustomerWrapper from './src/pages/CustomerWrapper';
+import OwnerWrapper from './src/pages/OwnerWrapper';
 
 const Stack = createNativeStackNavigator();
 function AppInner() {
@@ -61,7 +33,7 @@ function AppInner() {
   // 앱 실행 시 토큰 있으면 로그인하는 코드
   useEffect(() => {
     const getTokenAndRefresh = async () => {
-      SplashScreen.hide(); // 이후 주석처리 하기
+      // SplashScreen.hide();
       try {
         const token = await EncryptedStorage.getItem('refreshToken');
         if (!token) {
@@ -98,174 +70,11 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
-  return isLoggedIn ? (
+  return !isLoggedIn ? (
     !isOwner ? (
-      <Stack.Navigator>
-        <Stack.Screen
-          name="MainOwnerWrapper"
-          component={MainOwnerWrapper}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SettingsOwner"
-          component={SettingsOwner}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="NoticeOwner"
-          component={NoticeOwner}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="AddStore"
-          component={AddStore}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="StoreInfo"
-          component={StoreInfo}
-          options={{headerShown: false}}
-        />
-        {/* 매장 상세보기 탭 */}
-        <Stack.Screen
-          name="ModifyStore"
-          component={ModifyStore}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="AddEvent"
-          component={AddEvent}
-          options={{headerShown: false}}
-        />
-        {/* 매장 상세보기 탭 */}
-        <Stack.Screen
-          name="StoreAnalysis"
-          component={StoreAnalysis}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="PrivacyOwner"
-          component={PrivacyOwner}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="HelpOwner"
-          component={HelpOwner}
-          options={{headerShown: false}}
-        />
-        {/* 점주 홈 화면 탭 */}
-        <Stack.Screen
-          name="ModifyInfoOwner"
-          component={ModifyInfoOwner}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="DevInfoOwner"
-          component={DevInfoOwner}
-          options={{headerShown: false}}
-        />
-        {/* 점주 더보기 탭 */}
-        <Stack.Screen
-          name="StampControl"
-          component={StampControl}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="QRcodeScanner"
-          component={QRcodeScanner}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="PhoneNumScanner"
-          component={PhoneNumScanner}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="StampAmount"
-          component={StampAmount}
-          options={{headerShown: false}}
-        />
-        {/* 점주 적립/사용 탭 */}
-      </Stack.Navigator>
+      <OwnerWrapper />
     ) : (
-      //회원 파트
-      <Stack.Navigator>
-        <Stack.Screen
-          name="MainWrapper"
-          component={MainWrapper}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="EventInfo"
-          component={EventInfo}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Settings"
-          component={Settings}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Notice"
-          component={Notice}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CustomShop"
-          component={CustomShop}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="PointLog"
-          component={PointLog}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CouponList"
-          component={CouponList}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CouponInfo"
-          component={CouponInfo}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Privacy"
-          component={Privacy}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Help"
-          component={Help}
-          options={{headerShown: false}}
-        />
-        {/* 홈 탭 */}
-
-        <Stack.Screen
-          name="ModifyUserInfo"
-          component={ModifyInfo}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="UsageHistory"
-          component={UsageHistory}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="DevInfo"
-          component={DevInfo}
-          options={{headerShown: false}}
-        />
-        {/* 더보기 탭 */}
-
-        <Stack.Screen
-          name="RewardList"
-          component={RewardList}
-          options={{headerShown: false}}
-        />
-        {/* 쿠폰 사용 및 적립 탭 */}
-      </Stack.Navigator>
+      <CustomerWrapper />
     )
   ) : (
     <Stack.Navigator>

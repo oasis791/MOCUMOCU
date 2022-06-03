@@ -1,12 +1,210 @@
-import React from 'react';
-import {Text, View} from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React, {useState} from 'react';
+import {
+  Alert,
+  Dimensions,
+  Image,
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
+import {LoggedInOwnerParamList} from '../../App';
 
-function StampControl() {
+type StampControlProps = NativeStackScreenProps<
+  LoggedInOwnerParamList,
+  'StampControl'
+>;
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
+
+function StampControl({navigation, route}: StampControlProps) {
+  const [storeId, setStoreId] = useState(route.params.storeId);
+  const [isAlarm, setIsAlarm] = useState(false);
+
+  const onSubmitSetting = () => {
+    Alert.alert('알림', '설정');
+  };
+  const onSubmitAlarm = () => {
+    Alert.alert('알림', '알람');
+  };
+
   return (
-    <View>
-      <Text>도장 사용 적립 방법 선택화면</Text>
+    <View style={styles.screen}>
+      <Text>{storeId}</Text>
+      <StatusBar hidden={true} />
+      <View style={styles.mainHeader}>
+        <View style={styles.headerButtonWrapper}>
+          <Pressable onPress={onSubmitSetting}>
+            <Image
+              source={require('../assets/icon/mainSetting.png')}
+              style={styles.headerSetting}
+            />
+          </Pressable>
+          <Pressable onPress={onSubmitAlarm}>
+            <Image
+              source={
+                isAlarm
+                  ? require('../assets/icon/mainAlarmActive.png')
+                  : require('../assets/icon/mainAlarm.png')
+              }
+              style={styles.buttonIcon}
+            />
+          </Pressable>
+        </View>
+      </View>
+
+      <View>
+        <TouchableOpacity
+          style={styles.buttonWrapper}
+          onPress={() => {
+            navigation.navigate('StampAmount', {storeId: storeId});
+          }}>
+          <View style={styles.buttonTextWapper}>
+            <Image
+              source={require('../assets/icon/QRcodeIconRed.png')}
+              style={styles.buttonIcon}
+            />
+            <Text style={styles.buttonText}>QR코드로 적립</Text>
+          </View>
+          <Image
+            source={require('../assets/icon/arrowGray.png')}
+            style={styles.storeTabArrow}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.buttonWrapper}
+          onPress={() => {
+            navigation.navigate('PhoneNumScanner', {storeId: storeId});
+          }}>
+          <View style={styles.buttonTextWapper}>
+            <Image
+              source={require('../assets/icon/phoneIconRed.png')}
+              style={styles.buttonIcon}
+            />
+            <Text style={styles.buttonText}>전화번호로 적립</Text>
+          </View>
+          <Image
+            source={require('../assets/icon/arrowGray.png')}
+            style={styles.storeTabArrow}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.buttonWrapper}
+          onPress={() => {
+            navigation.navigate('QRcodeScanner', {storeId: storeId});
+          }}>
+          <View style={styles.buttonTextWapper}>
+            <Image
+              source={require('../assets/icon/couponIconRed.png')}
+              style={styles.buttonIcon}
+            />
+            <Text style={styles.buttonText}>쿠폰 사용하기</Text>
+          </View>
+
+          <Image
+            source={require('../assets/icon/arrowGray.png')}
+            style={styles.storeTabArrow}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    width: screenWidth,
+    height: screenHeight,
+    backgroundColor: '#F7F7F7',
+  },
+  mainHeader: {
+    width: screenWidth,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 85,
+    left: 15,
+  },
+  headerLogo: {
+    resizeMode: 'contain',
+    width: 100,
+    height: 25,
+    marginLeft: 27,
+    marginTop: 5,
+    // justifyContent: 'flex-start',
+  },
+  headerButtonWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 19,
+    marginTop: 5,
+    // justifyContent: 'space-around',
+  },
+  headerSetting: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+    marginRight: 15,
+  },
+
+  selectStoreListTitle: {
+    backgroundColor: 'pink',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    marginBottom: 20,
+  },
+
+  selectStoreListTitleText: {
+    fontSize: 23,
+    fontFamily: 'GmarketSansTTFMedium',
+    color: '#363636',
+  },
+
+  buttonWrapper: {
+    width: screenWidth,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    marginBottom: 9,
+    paddingHorizontal: 33,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+
+  buttonTextWapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  buttonIcon: {
+    resizeMode: 'contain',
+    // backgroundColor: 'black',
+    width: 20,
+    height: 20,
+    marginRight: 15,
+  },
+
+  buttonText: {
+    fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+    fontSize: 15,
+  },
+
+  storeTabArrow: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+  },
+});
 
 export default StampControl;

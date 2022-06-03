@@ -120,7 +120,6 @@ function MainWrapper() {
                   snapPoints={snapPoints}
                   onChange={handleSheetChanges}
                   backdropComponent={renderBackDrop}>
-                  {/* <BottomSheetScrollView style={{backgroundColor: '#341f97'}}> */}
                   {!isClickSave ? (
                     <Pressable
                       onPress={closeButtonPress}

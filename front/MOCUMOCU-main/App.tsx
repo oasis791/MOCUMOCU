@@ -25,9 +25,15 @@ export type LoggedInUserParamList = {
 
 export type LoggedInOwnerParamList = {
   MainOwnerWrapper: undefined;
+  SaveUpOwnerWrapper: undefined;
+
+  MainOwner: undefined;
+  SaveUpOwner: undefined;
+  StampControl: undefined;
   SettingsOwner: undefined;
-  NoticeOwner: undefined;
   AddStore: undefined;
+
+  NoticeOwner: undefined;
   StoreInfo: undefined;
   ModifyStore: undefined;
   AddEvent: undefined;
@@ -36,14 +42,14 @@ export type LoggedInOwnerParamList = {
   HelpOwner: undefined;
   ModifyInfoOwner: undefined;
   DevInfoOwner: undefined;
-  StampControl: undefined;
   QRcodeScanner: undefined;
   PhoneNumScanner: undefined;
   StampAmount: undefined;
   SaveUp: undefined;
-
+  StoreFunc: undefined;
   // orderId : parameter 칸 => 주문에 고유한 ID가 부여되어 있음 이걸 변수처럼 사용하기 위해서 넣어줌
 };
+
 // 타입을 나눠 놓은 이유 -> 합쳐도 큰 문제는 되지 않지만 화면에 나타내는 조건이 달라서 나눠놓음
 //export -> 다른 파일에서 import 가능 => 타입도 다른 파일로 export, import 가능
 export type RootStackParamList = {

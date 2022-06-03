@@ -3,6 +3,7 @@ import {
   Image,
   ImageBackground,
   Pressable,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -23,6 +24,7 @@ function InitScreen({navigation}: InitScreenProps) {
   }, [navigation]);
   return (
     <View>
+      <StatusBar hidden={true} />
       <ImageBackground style={styles.background} source={image}>
         <View style={styles.logoWrapper}>
           <Image style={styles.logoImage} source={logo_kor} />
