@@ -13,7 +13,7 @@ import java.util.Date;
 
 @Service
 public class SecurityServiceImpl implements SecurityService {
-    private static final String SECRET_KEY = "asdfasdfasdfaasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdsdfsadfasdfsdfasdfasdfasdfasdf";
+    private static final String SECRET_KEY = "JWT_KEY";
 
     //로그인 서비스 던질 때 같이
     /*public String createToken(String subject, long expTime) {

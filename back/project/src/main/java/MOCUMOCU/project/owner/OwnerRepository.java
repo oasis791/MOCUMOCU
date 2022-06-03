@@ -1,4 +1,4 @@
-package MOCUMOCU.project.repository;
+package MOCUMOCU.project.owner;
 
 import MOCUMOCU.project.owner.Owner;
 import lombok.RequiredArgsConstructor;

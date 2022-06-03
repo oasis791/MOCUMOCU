@@ -1,13 +1,9 @@
 package MOCUMOCU.project.owner;
 
-import MOCUMOCU.project.customer.Customer;
 import MOCUMOCU.project.domain.Market;
 import MOCUMOCU.project.form.OwnerLoginDTO;
-import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.domain.Privacy;
 import MOCUMOCU.project.repository.MarketRepository;
-import MOCUMOCU.project.repository.OwnerRepository;
-import MOCUMOCU.project.owner.OwnerService;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
