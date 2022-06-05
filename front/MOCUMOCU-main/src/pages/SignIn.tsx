@@ -13,9 +13,8 @@ import {
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
-import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
-import userSlice from '../slices/user';
+import userSlice, {UserInfo} from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import LinearGradient from 'react-native-linear-gradient';
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
@@ -41,25 +40,29 @@ function SignIn({navigation}: SignInScreenProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post<{data: UserInfo}>(
+        'http://54.180.91.167:8080/customer/login',
+        {
+          customerEmail: email,
+          customerPassword: password,
+        },
+      );
       console.log(response.data);
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
       dispatch(
-        userSlice.actions.setUser({
+        userSlice.actions.setUserInfo({
           // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
           name: response.data.data.name,
+          id: response.data.data.id,
           email: response.data.data.email,
           accessToken: response.data.data.accessToken,
         }),
       );
-      await EncryptedStorage.setItem(
-        'refreshToken',
-        response.data.data.refreshToken,
-      );
+      // await EncryptedStorage.setItem(
+      //   'refreshToken',
+      //   response.data.data.refreshToken,
+      // );
       console.log(EncryptedStorage.getItem('refreshToken'));
     } catch (error) {
       setLoading(false);
@@ -103,7 +106,8 @@ function SignIn({navigation}: SignInScreenProps) {
       <Pressable
         style={{
           height: '33%',
-        }}>
+        }}
+        onPress={onSubmit}>
         <LinearGradient
           colors={['#FA6072', '#414FFD']}
           start={{x: 0, y: 0}}
@@ -118,7 +122,11 @@ function SignIn({navigation}: SignInScreenProps) {
             borderWidth: 1,
             borderColor: '#e5e5e5',
           }}>
-          <Text style={styles.loginButtonText}>로그인</Text>
+          {!loading ? (
+            <ActivityIndicator style={styles.indicator} color="white" />
+          ) : (
+            <Text style={styles.loginButtonText}>로그인</Text>
+          )}
         </LinearGradient>
       </Pressable>
     );
@@ -324,11 +332,12 @@ const styles = StyleSheet.create({
   },
   indicator: {
     // backgroundColor: 'gray',
-    paddingHorizontal: '7%',
+    // paddingHorizontal: '7%',
     // paddingVertical: 10,
     borderRadius: 5,
     // marginTop: '4%',
     height: 40,
+    paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },

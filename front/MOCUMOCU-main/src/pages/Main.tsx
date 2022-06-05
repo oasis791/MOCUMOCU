@@ -1,5 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useCallback, useRef} from 'react';
+import axios from 'axios';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -14,16 +15,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
 import Carousel from 'react-native-snap-carousel';
 import {LoggedInUserParamList} from '../../App';
-// import LinearGradient from 'react-native-linear-gradient';
-// import InsetShadow from 'react-native-inset-shadow';
-// import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import Ing from './Ing';
-// import Complete from './Complete';
-// import { SafeAreaView } from 'react-native-safe-area-context';
-// const Stack = createNativeStackNavigator();
+import couponSlice, {Coupon} from '../slices/coupon';
+import {useAppDispatch} from '../store';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store/reducer';
+
 const screenWidth = Dimensions.get('screen').width;
 const data = [
   {
@@ -35,51 +33,58 @@ const data = [
     url: 'https://i.ibb.co/x7jBdVh/222222.png',
   },
 ];
-const couponList = [
-  {
-    couponId: '쿠폰 1',
-    market: 'A 가게',
-  },
-  {
-    couponId: '쿠폰 2',
-    market: 'B 가게',
-  },
-  {
-    couponId: '쿠폰 3',
-    market: 'C 가게',
-  },
-];
 
 type MainScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'Main'>;
 function Main({navigation}: MainScreenProps) {
+  const customerId = useSelector((state: RootState) => state.user.id);
+  const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    async function getCouponInfo() {
+      const response = await axios.get<{data: Coupon[]}>(
+        `http://54.180.91.167:8080/customer/${customerId}/coupon`,
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      dispatch(couponSlice.actions.setCouponInfo(response.data.data));
+    }
+    getCouponInfo();
+    return () => {};
+  }, [accessToken, customerId, dispatch]);
+
   const isAlarm = true;
-  const userName = '여민수';
+  const userName = useSelector((state: RootState) => state.user.name);
+  const coupons = useSelector((state: RootState) => state.coupon.coupons);
   const myPoint = 1000;
-  const onSubmitSetting = () => {
-    Alert.alert('알림', '설정');
-  };
+  const toSettings = useCallback(() => {
+    navigation.navigate('Settings');
+  }, [navigation]);
   const onSubmitAlarm = () => {
     Alert.alert('알림', '알람');
+  };
+  const onSubmitAttendance = () => {
+    Alert.alert('알림', '출석체크 완료');
   };
   const onSubmitEvent = () => {
     Alert.alert('알림', '이벤트');
   };
-  const toPointLog = useCallback(() => {
-    navigation.navigate('PointLog');
-  }, [navigation]);
-  const toCustomShop = useCallback(() => {
-    navigation.navigate('CustomShop');
-  }, [navigation]);
+
+  // 쿠폰 등록 관련 로직
+
   const toCouponList = () => {
     Alert.alert('알림', '쿠폰 리스트 화면으로 이동');
   };
-  const renderCoupon = couponList.map(coupon => {
+  const renderCoupon = coupons.map(coupon => {
     return (
       <>
         <View style={styles.scrollItem}>
           <Text style={styles.scrollItemText}>{coupon.couponId}</Text>
           <Text style={[styles.scrollItemText, {color: '#414FFD'}]}>
-            {coupon.market}
+            {coupon.marketName}
           </Text>
         </View>
       </>
@@ -102,111 +107,119 @@ function Main({navigation}: MainScreenProps) {
   };
   const isCarousel = useRef(null);
   return (
-    <SafeAreaView style={styles.scrollView}>
-      <ScrollView fadingEdgeLength={10}>
-        <StatusBar hidden={true} />
-        <View style={[styles.header, {position: 'absolute'}]}>
-          <Image
-            style={styles.headerLogo}
-            source={require('../assets/blueLogo.png')}
+    <>
+      <SafeAreaView style={styles.scrollView}>
+        <ScrollView fadingEdgeLength={10}>
+          <StatusBar hidden={true} />
+          <View style={[styles.header, {position: 'absolute'}]}>
+            <Image
+              style={styles.headerLogo}
+              source={require('../assets/blueLogo.png')}
+            />
+            <View style={styles.headerButtonWrapper}>
+              <Pressable onPress={onSubmitAttendance}>
+                <Image
+                  source={require('../assets/icon/attendanceIcon.png')}
+                  style={styles.headerAttendance}
+                />
+              </Pressable>
+              <Pressable
+                onPress={toSettings}
+                style={{width: 20, marginHorizontal: 15}}>
+                <Image
+                  source={require('../assets/icon/mainSetting.png')}
+                  style={styles.headerSetting}
+                />
+              </Pressable>
+              <Pressable onPress={onSubmitAlarm}>
+                <Image
+                  source={
+                    isAlarm
+                      ? require('../assets/icon/mainAlarmActive.png')
+                      : require('../assets/icon/mainAlarm.png')
+                  }
+                  style={styles.headerAlarm}
+                />
+              </Pressable>
+            </View>
+          </View>
+          <View style={styles.myInfo}>
+            <Text style={styles.myInfoText}>
+              <Text
+                style={[styles.myInfoText, {fontFamily: 'GmarketSansTTFBold'}]}>
+                {userName}
+              </Text>{' '}
+              님,{'\n'}오늘도 모쿠하세요!
+            </Text>
+            <View style={styles.myInfoPoint}>
+              <Text style={styles.myInfoPointText}>
+                내 포인트 {'\n'}
+                <Text style={{color: '#414FFD', fontSize: 24}}>
+                  {myPoint} P
+                </Text>
+              </Text>
+            </View>
+          </View>
+          <Carousel
+            ref={isCarousel}
+            layout={'default'}
+            data={data}
+            renderItem={renderItem}
+            sliderWidth={screenWidth}
+            itemWidth={screenWidth}
+            autoplay
+            loop
+            autoplayInterval={4000}
+            enableSnap
+            activeAnimationType="decay"
+            inactiveSlideScale={1}
           />
-          <View style={styles.headerButtonWrapper}>
-            <Pressable onPress={onSubmitSetting}>
-              <Image
-                source={require('../assets/icon/attendanceIcon.png')}
-                style={styles.headerAttendance}
-              />
-            </Pressable>
-            <Pressable onPress={onSubmitSetting}>
-              <Image
-                source={require('../assets/icon/mainSetting.png')}
-                style={styles.headerSetting}
-              />
-            </Pressable>
-            <Pressable onPress={onSubmitAlarm}>
-              <Image
-                source={
-                  isAlarm
-                    ? require('../assets/icon/mainAlarmActive.png')
-                    : require('../assets/icon/mainAlarm.png')
-                }
-                style={styles.headerAlarm}
-              />
-            </Pressable>
+          <View style={styles.myCoupon}>
+            <View style={styles.myCouponTextWrapper}>
+              <Text style={styles.myCouponText}>내 쿠폰함</Text>
+              <Pressable
+                style={styles.myCouponboxButton}
+                onPress={toCouponList}>
+                <Text style={styles.myCouponboxButtonText}>전체 +</Text>
+              </Pressable>
+            </View>
+            <ScrollView
+              horizontal={true}
+              pagingEnabled={true}
+              showsHorizontalScrollIndicator={true}
+              contentContainerStyle={styles.scrollViewHorizontal}>
+              {renderCoupon}
+            </ScrollView>
           </View>
-        </View>
-        <View style={styles.myInfo}>
-          <Text style={styles.myInfoText}>
-            <Text
-              style={[styles.myInfoText, {fontFamily: 'GmarketSansTTFBold'}]}>
-              {userName}
-            </Text>{' '}
-            님,{'\n'}오늘도 모쿠하세요!
-          </Text>
-          <View style={styles.myInfoPoint}>
-            <Text style={styles.myInfoPointText}>
-              내 포인트 {'\n'}
-              <Text style={{color: '#414FFD', fontSize: 24}}>{myPoint} P</Text>
-            </Text>
+          <View style={styles.footer}>
+            <View style={styles.footerButtonWrapper}>
+              <TouchableOpacity
+                style={styles.footerButtonLeft}
+                activeOpacity={0.7}>
+                <Text style={styles.footerButtonText}>Q&A</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.footerButtonRight}
+                activeOpacity={0.7}>
+                <Text style={styles.footerButtonText}>공지사항</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.footerTextWrapper}>
+              <Text style={styles.footerText}>
+                멤버십 모쿠모쿠 관련 문의 : 1234 - 5678
+              </Text>
+              <Text style={styles.footerText}>
+                쿠폰 및 기타 문의 : 8765-4321
+              </Text>
+              <Text style={styles.footerText}>
+                이용약관 {'\t'}| {'\t'}
+                개인정보 처리 방침
+              </Text>
+            </View>
           </View>
-        </View>
-        <Carousel
-          ref={isCarousel}
-          layout={'default'}
-          data={data}
-          renderItem={renderItem}
-          sliderWidth={screenWidth}
-          itemWidth={screenWidth}
-          autoplay
-          loop
-          autoplayInterval={4000}
-          enableSnap
-          activeAnimationType="decay"
-          inactiveSlideScale={1}
-          // sliderHeight={11}
-          // itemHeight={20}
-        />
-        <View style={styles.myCoupon}>
-          <View style={styles.myCouponTextWrapper}>
-            <Text style={styles.myCouponText}>내 쿠폰함</Text>
-            <Pressable style={styles.myCouponboxButton} onPress={toCouponList}>
-              <Text style={styles.myCouponboxButtonText}>전체 +</Text>
-            </Pressable>
-          </View>
-          <ScrollView
-            horizontal={true}
-            pagingEnabled={true}
-            showsHorizontalScrollIndicator={true}
-            contentContainerStyle={styles.scrollViewHorizontal}>
-            {renderCoupon}
-          </ScrollView>
-        </View>
-        <View style={styles.footer}>
-          <View style={styles.footerButtonWrapper}>
-            <TouchableOpacity
-              style={styles.footerButtonLeft}
-              activeOpacity={0.7}>
-              <Text style={styles.footerButtonText}>Q&A</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.footerButtonRight}
-              activeOpacity={0.7}>
-              <Text style={styles.footerButtonText}>공지사항</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.footerTextWrapper}>
-            <Text style={styles.footerText}>
-              멤버십 모쿠모쿠 관련 문의 : 1234 - 5678
-            </Text>
-            <Text style={styles.footerText}>쿠폰 및 기타 문의 : 8765-4321</Text>
-            <Text style={styles.footerText}>
-              이용약관 {'\t'}| {'\t'}
-              개인정보 처리 방침
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 }
 const styles = StyleSheet.create({
@@ -217,7 +230,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    // elevation: 10,
   },
   headerLogo: {
     marginTop: 22,
@@ -226,18 +238,11 @@ const styles = StyleSheet.create({
     height: 25,
     marginLeft: 23,
     marginBottom: 10,
-    // backgroundColor: 'green',
-    // elevation: 10,
-    // justifyContent: 'flex-start',
   },
   headerButtonWrapper: {
     marginTop: 10,
     flexDirection: 'row',
-    // alignItems: 'center',
     justifyContent: 'space-around',
-    // left: 100,
-    // flex: 1,
-    // backgroundColor: 'green',
     marginHorizontal: 21,
   },
   headerAttendance: {
@@ -251,9 +256,8 @@ const styles = StyleSheet.create({
     // flex: 1,
     width: 20,
     resizeMode: 'contain',
-    // backgroundColor: 'yellow',
     // flex: 1 / 3,
-    marginHorizontal: 15,
+    // marginHorizontal: 15,
     height: 20,
   },
   headerAlarm: {
@@ -331,7 +335,7 @@ const styles = StyleSheet.create({
   },
   myCoupon: {
     // flex: 1,
-    backgroundColor: 'cyan',
+    backgroundColor: 'white',
     height: 266,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -367,7 +371,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     // backgroundColor: 'pink',
   },
-
   scrollItem: {
     // marginTop: 8,
     flexDirection: 'row',

@@ -1,6 +1,6 @@
 import * as React from 'react';
-// import {NavigationContainer} from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import SignIn from './src/pages/SignIn';
 import SignInOwner from './src/pages/SignInOwner';
 import SignUp from './src/pages/SignUp';
@@ -25,7 +25,9 @@ import OwnerWrapper from './src/pages/OwnerWrapper';
 
 const Stack = createNativeStackNavigator();
 function AppInner() {
-  const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
+  const isLoggedIn = useSelector(
+    (state: RootState) => !!state.user.accessToken,
+  );
   const isOwner = false;
   const dispatch = useAppDispatch();
   // const isLoggedIn = false;
@@ -51,8 +53,9 @@ function AppInner() {
           },
         );
         dispatch(
-          userSlice.actions.setUser({
+          userSlice.actions.setUserInfo({
             name: response.data.data.name,
+            id: response.data.data.id,
             email: response.data.data.email,
             accessToken: response.data.data.accessToken,
           }),
@@ -70,7 +73,11 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
+<<<<<<< HEAD
   return isLoggedIn ? (
+=======
+  return !isLoggedIn ? (
+>>>>>>> su
     isOwner ? (
       <OwnerWrapper />
     ) : (

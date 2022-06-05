@@ -1,25 +1,29 @@
 import * as React from 'react';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import store from './src/store';
 import AppInner from './AppInner';
-import { NavigationContainer } from '@react-navigation/native';
-import { PortalProvider } from '@gorhom/portal';
-
+import {NavigationContainer} from '@react-navigation/native';
+import {PortalProvider} from '@gorhom/portal';
+import {Coupon} from './src/pages/RewardList';
+import {Select} from './src/pages/UseCoupon';
 export type LoggedInUserParamList = {
-  MainWrapper: undefined;
-  EventInfo: undefined;
+  CustomerWrapper: undefined;
+  Main: undefined;
+  SaveUseCoupon: undefined;
+  UseCoupon: undefined;
+  RewardList: Select;
+  UseQR: Coupon;
   Settings: undefined;
-  Notice: undefined;
-  CustomShop: undefined;
-  PointLog: undefined;
-  CouponList: undefined;
-  CouponInfo: undefined;
-  Privacy: undefined;
-  Help: undefined;
-  ModifyInfo: undefined;
-  UsageHistory: undefined;
-  DevInfo: undefined;
-  RewardList: undefined;
+  // EventInfo: undefined;
+  // Notice: undefined;
+  // CustomShop: undefined;
+  // PointLog: undefined;
+  // CouponInfo: undefined;
+  // Privacy: undefined;
+  // Help: undefined;
+  // ModifyInfo: undefined;
+  // UsageHistory: undefined;
+  // DevInfo: undefined;
   // orderId : parameter 칸 => 주문에 고유한 ID가 부여되어 있음 이걸 변수처럼 사용하기 위해서 넣어줌
 }; // -> 로그인 했을 때 보이는 페이지들
 
