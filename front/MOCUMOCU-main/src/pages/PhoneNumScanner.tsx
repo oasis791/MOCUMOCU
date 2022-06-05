@@ -121,7 +121,6 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
           value={phoneNumber}
           placeholder="전화번호를 입력해주세요"
           maxLength={13}
-          returnKeyType="send"
           keyboardType="decimal-pad"
           returnKeyType="next"
           onSubmitEditing={onSubmit}
