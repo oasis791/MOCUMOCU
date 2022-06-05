@@ -37,9 +37,10 @@ function More() {
       );
       Alert.alert('알림', '로그아웃 되었습니다.');
       dispatch(
-        userSlice.actions.setUser({
+        userSlice.actions.setUserInfo({
           name: '',
           email: '',
+          id: null,
           accessToken: '',
         }),
       );
@@ -69,7 +70,7 @@ function More() {
                     styles.myPointBoxText,
                     {color: '#414FFD', fontSize: 20},
                   ]}>
-                  500 P
+                  1000 P
                 </Text>
               </View>
               <View style={styles.pointButtonZone}>
@@ -153,9 +154,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     borderColor: '#414FFD',
-    height: 50,
+    height: 60,
     alignItems: 'center',
-    // backgroundColor: 'yellow',
+    backgroundColor: 'white',
   },
   myPointBoxText: {fontFamily: 'GmarketSansTTFBold', color: '#363636'},
   pointButtonZone: {

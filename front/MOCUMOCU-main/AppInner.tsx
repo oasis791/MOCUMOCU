@@ -24,7 +24,9 @@ import OwnerWrapper from './src/pages/OwnerWrapper';
 
 const Stack = createNativeStackNavigator();
 function AppInner() {
-  const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
+  const isLoggedIn = useSelector(
+    (state: RootState) => !!state.user.accessToken,
+  );
   const isOwner = false;
   const dispatch = useAppDispatch();
   // const isLoggedIn = false;
@@ -50,8 +52,9 @@ function AppInner() {
           },
         );
         dispatch(
-          userSlice.actions.setUser({
+          userSlice.actions.setUserInfo({
             name: response.data.data.name,
+            id: response.data.data.id,
             email: response.data.data.email,
             accessToken: response.data.data.accessToken,
           }),

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
+import userSlice from '../slices/user';
 const image = require('../assets/initScreen.png');
 const logo_kor = require('../assets/logo_kor.png');
 const logo_eng = require('../assets/logo_eng.png');
@@ -18,10 +19,12 @@ type InitScreenProps = NativeStackScreenProps<RootStackParamList, 'InitScreen'>;
 
 function InitScreen({navigation}: InitScreenProps) {
   const toSignInUser = useCallback(() => {
+    // userSlice.actions.setUserAuthority({authority: 'customer'});
     navigation.navigate('SignIn');
   }, [navigation]);
   const toSignInOwner = useCallback(() => {
     navigation.navigate('SignInOwner');
+    // userSlice.actions.setUserAuthority({authority: 'owner'});
   }, [navigation]);
   return (
     <View>

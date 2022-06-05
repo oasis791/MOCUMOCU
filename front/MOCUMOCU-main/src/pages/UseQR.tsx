@@ -2,20 +2,17 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {Text, StyleSheet, View, Dimensions} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import {useSelector} from 'react-redux';
 import {LoggedInUserParamList} from '../../App';
-import {RootState} from '../store/reducer';
 
 type UseQRScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'UseQR'>;
 const screenHeight = Dimensions.get('screen').height;
 function UseQR({route}: UseQRScreenProps) {
-  const customerId = useSelector((state: RootState) => state.user.id);
   return (
     <View style={styles.container}>
       <View style={styles.QRCodeContainer}>
         <QRCode
           value={JSON.stringify({
-            id: customerId,
+            couponId: route.params.couponId,
             couponRequire: route.params.couponRequire,
           })}
           size={170}

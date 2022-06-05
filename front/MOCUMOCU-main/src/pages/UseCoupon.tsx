@@ -1,5 +1,5 @@
 // import axios, {AxiosError} from 'axios';
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useMemo} from 'react';
 import {LoggedInUserParamList} from '../../App';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
@@ -24,7 +24,7 @@ export type Select = {
 
 const screenWidth = Dimensions.get('screen').width;
 function UseCoupon({navigation}: UseCouponScreenProps) {
-  const coupons = useSelector((state: RootState) => state.user.coupons); // 사용자 쿠폰 리스트 가져오기
+  const coupons = useSelector((state: RootState) => state.coupon.coupons); // 사용자 쿠폰 리스트 가져오기
   const couponList = useMemo(() => {
     return [
       {couponId: 0, marketName: 'market 1'},

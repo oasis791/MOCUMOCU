@@ -17,7 +17,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Carousel from 'react-native-snap-carousel';
 import {LoggedInUserParamList} from '../../App';
-import userSlice, {Coupon} from '../slices/user';
+import couponSlice, {Coupon} from '../slices/coupon';
 import {useAppDispatch} from '../store';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
@@ -33,28 +33,32 @@ const data = [
     url: 'https://i.ibb.co/x7jBdVh/222222.png',
   },
 ];
-// const couponList = [
-//   {
-//     couponId: '쿠폰 1',
-//     market: 'A 가게',
-//   },
-//   {
-//     couponId: '쿠폰 2',
-//     market: 'B 가게',
-//   },
-//   {
-//     couponId: '쿠폰 3',
-//     market: 'C 가게',
-//   },
-// ];
 
 type MainScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'Main'>;
 function Main({navigation}: MainScreenProps) {
+  const customerId = useSelector((state: RootState) => state.user.id);
+  const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    async function getCouponInfo() {
+      const response = await axios.get<{data: Coupon[]}>(
+        `http://54.180.91.167:8080/customer/${customerId}/coupon`,
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      dispatch(couponSlice.actions.setCouponInfo(response.data.data));
+    }
+    getCouponInfo();
+    return () => {};
+  }, [accessToken, customerId, dispatch]);
+
   const isAlarm = true;
   const userName = useSelector((state: RootState) => state.user.name);
-  const coupons = useSelector((state: RootState) => state.user.coupons);
-  const customerId = useSelector((state: RootState) => state.user.id);
+  const coupons = useSelector((state: RootState) => state.coupon.coupons);
   const myPoint = 1000;
   const toSettings = useCallback(() => {
     navigation.navigate('Settings');
@@ -69,33 +73,7 @@ function Main({navigation}: MainScreenProps) {
     Alert.alert('알림', '이벤트');
   };
 
-  useEffect(() => {
-    async function getCoupon() {
-      const response = await axios.post<{data: Coupon}>(
-        'http://54.180.91.167:8080/customer/main',
-        {
-          customerId: customerId,
-        },
-      );
-      dispatch(userSlice.actions.setCoupon(response.data.data));
-    }
-    getCoupon();
-    return () => {};
-  }, [customerId, dispatch]);
   // 쿠폰 등록 관련 로직
-  useEffect(() => {
-    async function getCustomerId() {
-      const response = await axios.post<{data: number}>(
-        'http://54.180.91.167:8080/customer/main',
-        {
-          customerId: customerId,
-        },
-      );
-      dispatch(userSlice.actions.setUserId(response.data.data));
-    }
-    getCustomerId();
-    return () => {};
-  }, [customerId, dispatch]);
 
   const toCouponList = () => {
     Alert.alert('알림', '쿠폰 리스트 화면으로 이동');

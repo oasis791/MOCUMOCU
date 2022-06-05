@@ -18,8 +18,8 @@ type RewardListScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
   'RewardList'
 >;
-export type Customer = {
-  customerId: number;
+export type Coupon = {
+  couponId: number;
   couponRequire: number;
 };
 export type Reward = {
@@ -29,8 +29,7 @@ export type Reward = {
 function RewardList({navigation, route}: RewardListScreenProps) {
   const selectedCouponId = route.params.selectCouponId;
   const selectedMarket = route.params.selectMarket;
-  const customerIdTest = 1;
-  const customerId = useSelector((state: RootState) => state.user.id);
+  const accessToken = useSelector((state: RootState) => state.user.accessToken);
   // const [selectReward, setSelectReward] = useState('');
   // const [loading, setLoading] = useState(false);
   const rewardListTest = useMemo(() => {
@@ -53,24 +52,27 @@ function RewardList({navigation, route}: RewardListScreenProps) {
   }, []);
   useEffect(() => {
     async function getCustomerId() {
-      const response = await axios.post<{data: Reward}>(
+      const response = await axios.get<{data: Reward}>(
         'http://54.180.91.167:8080/customer/reward-list',
         {
-          couponId: selectedCouponId,
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+          params: {couponId: selectedCouponId},
         },
       );
-      const rewardList = response.data.data;
+      const rewardList = response.data;
       return rewardList;
     }
     getCustomerId();
-  }, [selectedCouponId]);
+  }, [accessToken, selectedCouponId]);
   const toUseQRTest = (idx: number) => {
     const couponRequire = rewardListTest[selectedCouponId][idx].couponRequire;
     console.log(
-      `고객 번호: ${customerIdTest} / 선택한 리워드의 쿠폰 차감 개수: ${couponRequire}`,
+      `쿠폰 번호: ${selectedCouponId} / 선택한 리워드의 쿠폰 차감 개수: ${couponRequire}`,
     );
     navigation.navigate('UseQR', {
-      customerId: customerIdTest,
+      couponId: selectedCouponId,
       couponRequire: couponRequire,
     });
   };

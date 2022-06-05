@@ -7,7 +7,7 @@ export interface SaveQRProps {
 }
 
 // const logoFile = require('../assets/icon/arrow.png');
-function SaveUpQR(props: {qrValue: SaveQRProps | null}) {
+function SaveUpQR(props: {qrValue: SaveQRProps}) {
   // const [input, setInput] = useState('');
   // const [qrValue, setQrValue] = useState('');
   return (
@@ -15,7 +15,7 @@ function SaveUpQR(props: {qrValue: SaveQRProps | null}) {
       <View style={styles.QRCodeContainer}>
         <QRCode
           value={JSON.stringify({
-            id: props.qrValue?.customerId,
+            customerId: props.qrValue?.customerId,
           })}
           size={150}
           color="black"
