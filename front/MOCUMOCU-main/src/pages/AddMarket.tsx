@@ -1,6 +1,6 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import axios, { AxiosError } from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import axios, {AxiosError} from 'axios';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -12,16 +12,16 @@ import {
   TextInput,
 } from 'react-native';
 import Config from 'react-native-config';
-import { useSelector } from 'react-redux';
-import { LoggedInOwnerParamList } from '../../App';
-import { RootState } from '../store/reducer';
+import {useSelector} from 'react-redux';
+import {LoggedInOwnerParamList} from '../../App';
+import {RootState} from '../store/reducer';
 
 type AddStoreProps = NativeStackScreenProps<LoggedInOwnerParamList, 'AddStore'>;
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
-function AddMarket({ navigation }: AddStoreProps) {
+function AddMarket({navigation}: AddStoreProps) {
   const [loading, setLoading] = useState(false);
   const [buttonActive, setButtonActive] = useState(false);
   const [businessNum, setBusinessNum] = useState('');

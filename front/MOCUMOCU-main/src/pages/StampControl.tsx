@@ -1,5 +1,5 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React, {useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -11,7 +11,7 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import { LoggedInOwnerParamList } from '../../App';
+import {LoggedInOwnerParamList} from '../../App';
 
 type StampControlProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
@@ -20,7 +20,7 @@ type StampControlProps = NativeStackScreenProps<
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
-function StampControl({ navigation, route }: StampControlProps) {
+function StampControl({navigation, route}: StampControlProps) {
   const [marketId, setMarketId] = useState(route.params.marketId);
   const [isAlarm, setIsAlarm] = useState(false);
 
@@ -80,7 +80,7 @@ function StampControl({ navigation, route }: StampControlProps) {
         <TouchableOpacity
           style={styles.buttonWrapper}
           onPress={() => {
-            navigation.navigate('PhoneNumScanner', { marketId: marketId });
+            navigation.navigate('PhoneNumScanner', {marketId: marketId});
           }}>
           <View style={styles.buttonTextWapper}>
             <Image

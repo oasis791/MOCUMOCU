@@ -11,15 +11,11 @@ import SaveUpOwnerWrapper from './SaveUpOwnerWrapper';
 
 const Tab = createBottomTabNavigator();
 
-type MainOwnerScreenProps = NativeStackScreenProps<
-  LoggedInOwnerParamList,
-  'MainOwnerWrapper'
->;
-
-function OwnerWrapper({navigation}: MainOwnerScreenProps) {
+function OwnerWrapper() {
   return (
     <Tab.Navigator
       initialRouteName="Main"
+      backBehavior="initialRoute"
       screenOptions={{
         tabBarActiveTintColor: '#414FFD',
         tabBarStyle: {
