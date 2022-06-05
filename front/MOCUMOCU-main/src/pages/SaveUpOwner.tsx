@@ -1,6 +1,6 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 import {
   View,
   Image,
@@ -13,9 +13,9 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useSelector } from 'react-redux';
-import { LoggedInOwnerParamList } from '../../App';
-import { RootState } from '../store/reducer';
+import {useSelector} from 'react-redux';
+import {LoggedInOwnerParamList} from '../../App';
+import {RootState} from '../store/reducer';
 
 export interface AcitivityData {
   label: string;
@@ -39,7 +39,7 @@ type SaveUpOwnerProps = NativeStackScreenProps<
   'SaveUpOwner'
 >;
 
-function SaveUpOwner({ navigation }: SaveUpOwnerProps) {
+function SaveUpOwner({navigation}: SaveUpOwnerProps) {
   const markets = useSelector((state: RootState) => state.marketOwner.markets);
   const isAlarm = false;
 
