@@ -19,34 +19,33 @@ function MainOwnerWrapper() {
       <Stack.Screen
         name="MainOwner"
         component={MainOwner}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="SettingsOwner"
         component={SettingsOwner}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="AddMarket"
         component={AddMarket}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="MarketInfo"
         component={MarketInfo}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="MarketReward"
         component={MarketReward}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
 }
 
 export default MainOwnerWrapper;
->>>>>>> su

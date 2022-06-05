@@ -1,8 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React, {useState} from 'react';
+import React from 'react';
 import {Image, Text, View} from 'react-native';
 import MainWrapper from './MainWrapper';
-import More from './More';
 import MoreWrapper from './MoreWrapper';
 import SaveUseWrapper from './SaveUseWrapper';
 
@@ -133,4 +132,3 @@ function CustomerWrapper() {
 }
 
 export default CustomerWrapper;
->>>>>>> su

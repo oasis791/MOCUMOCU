@@ -8,14 +8,12 @@ import {
   Alert,
   StyleSheet,
   Image,
-  TouchableHighlight,
   ActivityIndicator,
   StatusBar,
 } from 'react-native';
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
-import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -29,8 +27,6 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [ownerEmail, setOwnerEmail] = useState('');
-  const [age, setAge] = useState(9999);
-  const [username, setusername] = useState('');
   const [ownerPassword, setOwnerPassword] = useState('');
   // const canGoNext = email && password;
   const emailRef = useRef<TextInput | null>(null); //< > => generic
@@ -59,9 +55,10 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
       dispatch(
-        userSlice.actions.setUser({
+        userSlice.actions.setUserInfo({
           // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
           name: response.data.data.name,
+          id: response.data.data.id,
           email: response.data.data.email,
           accessToken: response.data.data.accessToken,
         }),
@@ -89,10 +86,10 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
     navigation.navigate('SignUpOwner');
   }, [navigation]);
   const toFindIdOwner = useCallback(() => {
-    navigation.navigate('findIdOwner');
+    navigation.navigate('FindIdOwner');
   }, [navigation]);
   const toFindPasswordOwner = useCallback(() => {
-    navigation.navigate('findPasswordOwner');
+    navigation.navigate('FindPasswordOwner');
   }, [navigation]);
 
   const loginButton = () => {

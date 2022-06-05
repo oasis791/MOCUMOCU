@@ -23,8 +23,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {RadioButton} from 'react-native-paper';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
-
-import Config from 'react-native-config';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {Portal, PortalHost} from '@gorhom/portal';
 import DatePicker from 'react-native-date-picker';
