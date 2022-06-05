@@ -22,10 +22,10 @@ type StampAmountOwnerProps = NativeStackScreenProps<
 >;
 
 function StampAmount({ navigation, route }: StampAmountOwnerProps) {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(1);
   const [loading, setLoading] = useState(false);
-  const storeId = route.params.storeId;
-  const phoneNumber = route.params.phoneNumber;
+  const marketId = route.params.marketId;
+  const customerId = route.params.customerId;
 
   const onSubmit = useCallback(async () => {
     if (loading) {
@@ -34,8 +34,8 @@ function StampAmount({ navigation, route }: StampAmountOwnerProps) {
     try {
       setLoading(true);
       const response = await axios.post(`${Config.API_URL}/Stamp`, {
-        storeId,
-        phoneNumber,
+        marketId,
+        customerId,
         amount,
       });
       Alert.alert('알림', '적립되었습니다');
@@ -47,10 +47,10 @@ function StampAmount({ navigation, route }: StampAmountOwnerProps) {
         setLoading(false);
       }
     }
-  }, [amount, loading, phoneNumber, storeId]);
+  }, [amount, customerId, loading, marketId]);
   return (
     <View style={styles.stampAmountWrapper}>
-      {/* <Text>{phoneNumber}</Text> */}
+      <Text>{customerId}</Text>
       <View style={styles.stampAmountTitleWrapper}>
         <Text style={styles.stampAmountTitleText}>
           적립할 개수를 입력해 주세요
@@ -69,7 +69,7 @@ function StampAmount({ navigation, route }: StampAmountOwnerProps) {
 
         <TouchableOpacity
           onPress={() => {
-            amount > 0 ? setAmount(x => x - 1) : null;
+            amount > 1 ? setAmount(x => x - 1) : null;
           }}>
           <Text style={styles.controlIcon}>-</Text>
         </TouchableOpacity>

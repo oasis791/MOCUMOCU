@@ -49,7 +49,8 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
           onPress: () => {
             navigation.navigate('StampAmount', {
               marketId: marketId,
-              phoneNumber: phoneNumber,
+              // customerId: response.data.customerId,
+              customerId: '11',
             });
           },
         },
@@ -72,7 +73,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
                 onPress: () => {
                   navigation.navigate('StampAmount', {
                     marketId: marketId,
-                    phoneNumber: phoneNumber,
+                    customerId: '11',
                   });
                 },
               },

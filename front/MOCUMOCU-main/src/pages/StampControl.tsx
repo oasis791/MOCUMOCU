@@ -59,7 +59,10 @@ function StampControl({ navigation, route }: StampControlProps) {
         <TouchableOpacity
           style={styles.buttonWrapper}
           onPress={() => {
-            navigation.navigate('StampAmount', { marketId });
+            navigation.navigate('QRCodeScanner', {
+              marketId: marketId,
+              type: 'saveUp',
+            });
           }}>
           <View style={styles.buttonTextWapper}>
             <Image
@@ -95,7 +98,10 @@ function StampControl({ navigation, route }: StampControlProps) {
         <TouchableOpacity
           style={styles.buttonWrapper}
           onPress={() => {
-            navigation.navigate('QRcodeScanner', { marketId: marketId });
+            navigation.navigate('QRCodeScanner', {
+              marketId: marketId,
+              type: 'use',
+            });
           }}>
           <View style={styles.buttonTextWapper}>
             <Image
@@ -197,6 +203,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
     fontSize: 15,
+    color: 'black',
   },
 
   storeTabArrow: {

@@ -5050,7 +5050,7 @@
   "resolved" "https://registry.npmjs.org/lodash.truncate/-/lodash.truncate-4.4.2.tgz"
   "version" "4.4.2"
 
-"lodash@^4.17.10", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.21", "lodash@^4.7.0":
+"lodash@^4.14.2", "lodash@^4.17.10", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.21", "lodash@^4.7.0":
   "integrity" "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
   "resolved" "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   "version" "4.17.21"
@@ -6227,6 +6227,13 @@
   "version" "1.1.2"
   dependencies:
     "paths-js" "^0.4.10"
+
+"react-native-camera-kit@^12.1.0":
+  "integrity" "sha512-iysY3YN8i1BWE7qRiLVgjanrGPtVUsczYDY89yqHbZHKWt2iZ5AiVyijTkHTmKXiK+GpclTvYnA415RgO06C3g=="
+  "resolved" "https://registry.npmjs.org/react-native-camera-kit/-/react-native-camera-kit-12.1.0.tgz"
+  "version" "12.1.0"
+  dependencies:
+    "lodash" "^4.14.2"
 
 "react-native-codegen@^0.0.13":
   "integrity" "sha512-rCh1P+s0Q4N6vNgS97ckafbhJRztz22+0l0VZoyQC06F07J98kI5cUByH0ATypPRIdpkMbAZc59DoPdDFc01bg=="

@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,8 @@ import { LoggedInOwnerParamList } from '../../App';
 import { RootState } from '../store/reducer';
 import Config from 'react-native-config';
 import axios, { AxiosError } from 'axios';
+import { useAppDispatch } from '../store';
+import marketOwnerSlice from '../slices/marketOwner';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -31,7 +33,10 @@ type MainOwnerScreenProps = NativeStackScreenProps<
 function MainOwner({ navigation }: MainOwnerScreenProps) {
   const isAlarm = false;
   const ownerName = '김준서';
+  const ownerId = 111;
   const [deleteButtonAcitive, setDeleteButtonActive] = useState(false);
+
+  const dispatch = useAppDispatch();
   const markets = useSelector((state: RootState) => state.marketOwner.markets);
 
   const activityConfig = {
@@ -48,13 +53,37 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
   const onSubmitAlarm = () => {
     Alert.alert('알림', '알람');
   };
+
   const toAddMarket = () => {
     // Alert.alert('알림', '매장 등록으로 이동');
     navigation.navigate('AddMarket');
   };
+
+  const toMarketInfo = marketIndex => {
+    navigation.navigate('MarketInfo', { marketIndex });
+  };
+
   const toDeleteMarket = () => {
     setDeleteButtonActive(!deleteButtonAcitive);
   };
+
+  const onGetMarkets = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `${Config.API_URL}/owner/${ownerId}/store-list/`,
+      );
+      dispatch(
+        marketOwnerSlice.actions.setMarket({
+          markets: response.data.markets,
+        }),
+      );
+    } catch (error) {
+      const errorResponse = (error as AxiosError).response;
+      if (errorResponse) {
+        Alert.alert('알림', '매장 목록을 불러오는데 실패하였습니다.');
+      }
+    }
+  }, []);
 
   const onDeleteSubmit = useCallback(async storeId => {
     try {
@@ -68,6 +97,11 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
       }
     }
   }, []);
+
+  useEffect(() => {
+    onGetMarkets();
+  }, [onGetMarkets]);
+
   return (
     <ScrollView style={styles.mainBackground}>
       <StatusBar hidden={true} />
@@ -78,12 +112,6 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
         />
 
         <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
-              style={styles.headerSetting}
-            />
-          </Pressable>
           <Pressable onPress={onSubmitAlarm}>
             <Image
               source={
@@ -92,6 +120,13 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
                   : require('../assets/icon/mainAlarm.png')
               }
               style={styles.headerAlarm}
+            />
+          </Pressable>
+
+          <Pressable onPress={onSubmitSetting}>
+            <Image
+              source={require('../assets/icon/mainSetting.png')}
+              style={styles.headerSetting}
             />
           </Pressable>
         </View>
@@ -143,7 +178,7 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
                         ],
                       );
                     } else {
-                      Alert.alert('알림', `${market.name} 세부정보로 이동`);
+                      toMarketInfo(i);
                     }
                   }}
                   style={[
@@ -322,13 +357,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: 20,
     height: 20,
-    marginRight: 15,
   },
   headerAlarm: {
     resizeMode: 'contain',
-    // backgroundColor: 'black',
     width: 20,
     height: 20,
+    marginRight: 15,
   },
 
   ownerInfoWrapper: {
@@ -352,10 +386,7 @@ const styles = StyleSheet.create({
 
   storeListWrapper: {
     backgroundColor: 'white',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderRadius: 20,
     marginBottom: 9,
   },
 

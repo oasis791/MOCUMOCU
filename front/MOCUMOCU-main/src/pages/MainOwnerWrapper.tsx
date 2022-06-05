@@ -3,6 +3,8 @@ import React from 'react';
 
 import AddMarket from './AddMarket';
 import MainOwner from './MainOwner';
+import MarketInfo from './MarketInfo';
+import MarketReward from './MarketReward';
 import SettingsOwner from './SettingsOwner';
 
 // type MainOwnerWrapperScreenProps = NativeStackScreenProps<
@@ -29,6 +31,17 @@ function MainOwnerWrapper() {
       <Stack.Screen
         name="AddMarket"
         component={AddMarket}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="MarketInfo"
+        component={MarketInfo}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MarketReward"
+        component={MarketReward}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -1,19 +1,19 @@
 import * as React from 'react';
 // import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignIn from './src/pages/SignIn';
 import SignInOwner from './src/pages/SignInOwner';
 import SignUp from './src/pages/SignUp';
 import SignUpOwner from './src/pages/SignUpOwner';
 import InitScreen from './src/pages/InitScreen';
-import {Alert} from 'react-native';
-import {useSelector} from 'react-redux';
-import {RootState} from './src/store/reducer';
-import {useAppDispatch} from './src/store';
-import {useEffect} from 'react';
+import { Alert } from 'react-native';
+import { useSelector } from 'react-redux';
+import { RootState } from './src/store/reducer';
+import { useAppDispatch } from './src/store';
+import { useEffect } from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from 'react-native-splash-screen';
-import axios, {AxiosError} from 'axios';
+import axios, { AxiosError } from 'axios';
 import userSlice from './src/slices/user';
 import Config from 'react-native-config';
 import FindPassword from './src/pages/FindPassword';
@@ -33,7 +33,7 @@ function AppInner() {
   // 앱 실행 시 토큰 있으면 로그인하는 코드
   useEffect(() => {
     const getTokenAndRefresh = async () => {
-      // SplashScreen.hide();
+      SplashScreen.hide();
       try {
         const token = await EncryptedStorage.getItem('refreshToken');
         if (!token) {
@@ -70,8 +70,8 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
-  return !isLoggedIn ? (
-    !isOwner ? (
+  return isLoggedIn ? (
+    isOwner ? (
       <OwnerWrapper />
     ) : (
       <CustomerWrapper />
@@ -81,47 +81,47 @@ function AppInner() {
       <Stack.Screen
         name="InitScreen"
         component={InitScreen}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="SignIn"
         component={SignIn}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="SignInOwner"
         component={SignInOwner}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="SignUp"
         component={SignUp}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="SignUpOwner"
         component={SignUpOwner}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="findId"
         component={FindId}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="FindIdOwner"
         component={FindIdOwner}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="FindPassword"
         component={FindPassword}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="FindPasswordOwner"
         component={FindPasswordOwner}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

@@ -32,6 +32,7 @@ export type LoggedInOwnerParamList = {
   StampControl: undefined;
   SettingsOwner: undefined;
   AddMarket: undefined;
+  MarketReward: undefined;
 
   NoticeOwner: undefined;
   MarketInfo: undefined;
@@ -42,7 +43,7 @@ export type LoggedInOwnerParamList = {
   HelpOwner: undefined;
   ModifyInfoOwner: undefined;
   DevInfoOwner: undefined;
-  QRcodeScanner: undefined;
+  QRCodeScanner: undefined;
   PhoneNumScanner: undefined;
   StampAmount: undefined;
   SaveUp: undefined;

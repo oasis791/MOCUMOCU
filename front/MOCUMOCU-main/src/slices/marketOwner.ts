@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface Reward {
+  id: number;
   reward: string;
   couponRequire: number;
 }
@@ -34,10 +35,12 @@ const initialState: InitialState = {
       name: '카페현욱',
       rewardList: [
         {
+          id: 0,
           reward: '츄러스',
           couponRequire: 5,
         },
         {
+          id: 1,
           reward: '아메리카노',
           couponRequire: 10,
         },
@@ -59,10 +62,12 @@ const initialState: InitialState = {
       name: '커피맛을 조금 아는 승민',
       rewardList: [
         {
+          id: 2,
           reward: '리워드1',
           couponRequire: 5,
         },
         {
+          id: 3,
           reward: '리워드2',
           couponRequire: 3,
         },
@@ -84,10 +89,12 @@ const initialState: InitialState = {
       name: 'INYEONGCAFE',
       rewardList: [
         {
+          id: 3,
           reward: '리워드A',
           couponRequire: 5,
         },
         {
+          id: 4,
           reward: '리워드B',
           couponRequire: 7,
         },
@@ -109,10 +116,12 @@ const initialState: InitialState = {
       name: '민수와 아이들',
       rewardList: [
         {
+          id: 5,
           reward: '초코마카롱',
           couponRequire: 10,
         },
         {
+          id: 6,
           reward: '딸기마카롱',
           couponRequire: 10,
         },
@@ -131,21 +140,25 @@ const initialState: InitialState = {
   ],
 };
 
-const userSlice = createSlice({
+const marketOwnerSlice = createSlice({
   name: 'marketOwner',
   initialState,
   reducers: {
+    setMarket(state, action) {
+      state.markets = action.payload.markets;
+    },
     setName(state, action) {
       state.markets[action.payload.index].name = action.payload.name;
     },
     setPhoneNum(state, action) {
       state.markets[action.payload.index].phoneNum = action.payload.phoneNum;
     },
-    setMarket(state, action) {
-      state.markets = action.payload.markets;
+    setReward(state, action) {
+      state.markets[action.payload.index].rewardList =
+        action.payload.rewardList;
     },
   },
   extraReducers: builder => { }, // 비동기 action 만들 때 사용
 });
 
-export default userSlice;
+export default marketOwnerSlice;
