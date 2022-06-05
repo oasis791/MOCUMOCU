@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { NavigationRouteContext } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NavigationRouteContext} from '@react-navigation/native';
+import { NativeStackScreenProps} from '@react-navigation/native-stack';
 import axios, { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import {

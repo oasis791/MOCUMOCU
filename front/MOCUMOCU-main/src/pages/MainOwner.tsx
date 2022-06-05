@@ -1,5 +1,5 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useCallback, useEffect, useState } from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -12,14 +12,14 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import ActivityRings from 'react-native-activity-rings';
-import { LoggedInOwnerParamList } from '../../App';
-import { RootState } from '../store/reducer';
+import {LoggedInOwnerParamList} from '../../App';
+import {RootState} from '../store/reducer';
 import Config from 'react-native-config';
-import axios, { AxiosError } from 'axios';
-import { useAppDispatch } from '../store';
+import axios, {AxiosError} from 'axios';
+import {useAppDispatch} from '../store';
 import marketOwnerSlice from '../slices/marketOwner';
 
 const screenWidth = Dimensions.get('screen').width;
@@ -30,7 +30,7 @@ type MainOwnerScreenProps = NativeStackScreenProps<
   'MainOwner'
 >;
 
-function MainOwner({ navigation }: MainOwnerScreenProps) {
+function MainOwner({navigation}: MainOwnerScreenProps) {
   const isAlarm = false;
   const ownerName = '김준서';
   const ownerId = 111;
@@ -60,7 +60,7 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
   };
 
   const toMarketInfo = marketIndex => {
-    navigation.navigate('MarketInfo', { marketIndex });
+    navigation.navigate('MarketInfo', {marketIndex});
   };
 
   const toDeleteMarket = () => {
@@ -143,14 +143,14 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
         <Text style={styles.storeListTitle}>매장 리스트</Text>
 
         {markets.length === 0 ? (
-          <View style={[styles.noneMarketWrapper, { height: 60 }]}>
-            <Text style={{ top: 5 }}>등록된 매장이 없습니다.</Text>
+          <View style={[styles.noneMarketWrapper, {height: 60}]}>
+            <Text style={{top: 5}}>등록된 매장이 없습니다.</Text>
           </View>
         ) : (
           <ScrollView
             style={[
               styles.storeScrollView,
-              markets.length < 3 ? { height: 'auto' } : null,
+              markets.length < 3 ? {height: 'auto'} : null,
             ]}
             nestedScrollEnabled={true}>
             {markets.map((market, i) => {
@@ -183,7 +183,7 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
                   }}
                   style={[
                     styles.marketTab,
-                    { borderBottomWidth: markets.length - 1 === i ? 0 : 1 },
+                    {borderBottomWidth: markets.length - 1 === i ? 0 : 1},
                   ]}>
                   <Text style={styles.marketTabText}>{market.name}</Text>
 
@@ -223,7 +223,7 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
         <Text style={styles.marketAnalysisTitle}>매장 분석</Text>
 
         {markets.length === 0 ? (
-          <View style={[styles.noneMarketWrapper, { height: 200 }]}>
+          <View style={[styles.noneMarketWrapper, {height: 200}]}>
             <Text>등록된 매장이 없습니다.</Text>
           </View>
         ) : (
@@ -237,12 +237,12 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
                 ? ((market.activityData[0].value = 0.5),
                   (market.activityData[0].color = '#363636'))
                 : market.male > market.female
-                  ? ((market.activityData[0].value =
+                ? ((market.activityData[0].value =
                     market.male / (market.male + market.female)),
-                    (market.activityData[0].color = '#3F83D3'))
-                  : ((market.activityData[0].value =
+                  (market.activityData[0].color = '#3F83D3'))
+                : ((market.activityData[0].value =
                     market.female / (market.male + market.female)),
-                    (market.activityData[0].color = '#DD4435'));
+                  (market.activityData[0].color = '#DD4435'));
               return (
                 <TouchableOpacity
                   style={styles.analysisCard}
@@ -255,11 +255,11 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
                   </Text>
                   <View style={styles.cardChart}>
                     <View style={styles.todayVistorWrapper}>
-                      <View style={{ left: 15 }}>
-                        <Text style={[styles.todaysText, { top: 10 }]}>
+                      <View style={{left: 15}}>
+                        <Text style={[styles.todaysText, {top: 10}]}>
                           오늘 방문자 수
                         </Text>
-                        <Text style={[styles.todaysText, { bottom: 10 }]}>
+                        <Text style={[styles.todaysText, {bottom: 10}]}>
                           {market.todays}명
                         </Text>
                       </View>
@@ -271,35 +271,35 @@ function MainOwner({ navigation }: MainOwnerScreenProps) {
                         />
                       </View>
 
-                      <View style={{ right: 15 }}>
+                      <View style={{right: 15}}>
                         {market.male > market.female ? (
                           <>
-                            <Text style={[styles.todaysText, { top: 10 }]}>
-                              <Text style={{ fontSize: 10 }}>🔵 </Text>
+                            <Text style={[styles.todaysText, {top: 10}]}>
+                              <Text style={{fontSize: 10}}>🔵 </Text>
                               남자 {market.male}
                             </Text>
-                            <Text style={[styles.todaysText, { bottom: 10 }]}>
+                            <Text style={[styles.todaysText, {bottom: 10}]}>
                               &nbsp; &nbsp; &nbsp;여자 {market.female}
                             </Text>
                           </>
                         ) : market.male === market.female ? (
                           <>
-                            <Text style={[styles.todaysText, { top: 10 }]}>
-                              <Text style={{ fontSize: 10 }}>🔵 </Text>
+                            <Text style={[styles.todaysText, {top: 10}]}>
+                              <Text style={{fontSize: 10}}>🔵 </Text>
                               남자 {market.male}
                             </Text>
-                            <Text style={[styles.todaysText, { bottom: 10 }]}>
-                              <Text style={{ fontSize: 10 }}>🔴 </Text>
+                            <Text style={[styles.todaysText, {bottom: 10}]}>
+                              <Text style={{fontSize: 10}}>🔴 </Text>
                               여자 {market.female}
                             </Text>
                           </>
                         ) : (
                           <>
-                            <Text style={[styles.todaysText, { top: 10 }]}>
-                              <Text style={{ fontSize: 10 }}>🔴 </Text>
+                            <Text style={[styles.todaysText, {top: 10}]}>
+                              <Text style={{fontSize: 10}}>🔴 </Text>
                               여자 {market.female}
                             </Text>
-                            <Text style={[styles.todaysText, { bottom: 10 }]}>
+                            <Text style={[styles.todaysText, {bottom: 10}]}>
                               &nbsp; &nbsp; &nbsp;남자 {market.male}
                             </Text>
                           </>

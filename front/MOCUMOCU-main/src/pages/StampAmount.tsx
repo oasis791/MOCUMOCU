@@ -1,6 +1,6 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import axios, { AxiosError } from 'axios';
-import React, { useCallback, useState } from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import axios, {AxiosError} from 'axios';
+import React, {useCallback, useState} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -11,7 +11,7 @@ import {
   Alert,
 } from 'react-native';
 import Config from 'react-native-config';
-import { LoggedInOwnerParamList } from '../../App';
+import {LoggedInOwnerParamList} from '../../App';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -21,7 +21,7 @@ type StampAmountOwnerProps = NativeStackScreenProps<
   'StampAmount'
 >;
 
-function StampAmount({ navigation, route }: StampAmountOwnerProps) {
+function StampAmount({navigation, route}: StampAmountOwnerProps) {
   const [amount, setAmount] = useState(1);
   const [loading, setLoading] = useState(false);
   const marketId = route.params.marketId;
