@@ -1,4 +1,4 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {
   Alert,
@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useSelector } from 'react-redux';
-import { LoggedInOwnerParamList } from '../../App';
-import { RootState } from '../store/reducer';
+import {useSelector} from 'react-redux';
+import {LoggedInOwnerParamList} from '../../App';
+import {RootState} from '../store/reducer';
 
 type MarketInfoScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
@@ -23,7 +23,7 @@ type MarketInfoScreenProps = NativeStackScreenProps<
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
-function MarketInfo({ navigation, route }: MarketInfoScreenProps) {
+function MarketInfo({navigation, route}: MarketInfoScreenProps) {
   const marketIndex = route.params.marketIndex;
   const marketName = useSelector(
     (state: RootState) => state.marketOwner.markets[marketIndex].name,
@@ -39,7 +39,7 @@ function MarketInfo({ navigation, route }: MarketInfoScreenProps) {
   };
 
   const toMarketReward = () => {
-    navigation.navigate('MarketReward', { marketIndex });
+    navigation.navigate('MarketReward', {marketIndex});
   };
 
   const toMarketEvent = () => {
