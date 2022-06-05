@@ -6,14 +6,14 @@ import SignInOwner from './src/pages/SignInOwner';
 import SignUp from './src/pages/SignUp';
 import SignUpOwner from './src/pages/SignUpOwner';
 import InitScreen from './src/pages/InitScreen';
-import { Alert } from 'react-native';
-import { useSelector } from 'react-redux';
-import { RootState } from './src/store/reducer';
-import { useAppDispatch } from './src/store';
-import { useEffect } from 'react';
+import {Alert} from 'react-native';
+import {useSelector} from 'react-redux';
+import {RootState} from './src/store/reducer';
+import {useAppDispatch} from './src/store';
+import {useEffect} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from 'react-native-splash-screen';
-import axios, { AxiosError } from 'axios';
+import axios, {AxiosError} from 'axios';
 import userSlice from './src/slices/user';
 import Config from 'react-native-config';
 import FindPassword from './src/pages/FindPassword';
@@ -73,11 +73,7 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
-<<<<<<< HEAD
   return isLoggedIn ? (
-=======
-  return !isLoggedIn ? (
->>>>>>> su
     isOwner ? (
       <OwnerWrapper />
     ) : (
@@ -88,47 +84,47 @@ function AppInner() {
       <Stack.Screen
         name="InitScreen"
         component={InitScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SignIn"
         component={SignIn}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SignInOwner"
         component={SignInOwner}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SignUp"
         component={SignUp}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SignUpOwner"
         component={SignUpOwner}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="findId"
         component={FindId}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="FindIdOwner"
         component={FindIdOwner}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="FindPassword"
         component={FindPassword}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="FindPasswordOwner"
         component={FindPasswordOwner}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
