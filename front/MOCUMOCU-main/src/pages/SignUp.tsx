@@ -406,15 +406,28 @@ function SignUp({navigation}: SignUpScreenProps) {
           </View>
           <View style={styles.inputWrapper}>
             <View style={styles.bottomSheetWrapper}>
-              <Text
-                style={{
-                  color: '#c4c4c4',
-                  fontWeight: 'bold',
-                  fontSize: 14,
-                  fontFamily: 'normal',
-                }}>
-                성별
-              </Text>
+              {checkGender ? (
+                <Text
+                  style={{
+                    color: '#414FFD',
+                    fontWeight: 'bold',
+                    fontSize: 14,
+                    fontFamily: 'normal',
+                  }}>
+                  {checkGender}
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: '#c4c4c4',
+                    fontWeight: 'bold',
+                    fontSize: 14,
+                    fontFamily: 'normal',
+                  }}>
+                  성별
+                </Text>
+              )}
+
               <Pressable onPress={expandButtonPress}>
                 <Image
                   source={require('../assets/icon/bottomArrowIcon.png')}
@@ -435,8 +448,8 @@ function SignUp({navigation}: SignUpScreenProps) {
                   <View style={styles.radioWrapper}>
                     <Text style={styles.radioText}>남성</Text>
                     <RadioButton
-                      value="male"
-                      status={checkGender === 'male' ? 'checked' : 'unchecked'}
+                      value="MALE"
+                      status={checkGender === 'MALE' ? 'checked' : 'unchecked'}
                       onPress={() => {
                         setCheckGender('MALE');
                         closeButtonPress();
@@ -447,9 +460,9 @@ function SignUp({navigation}: SignUpScreenProps) {
                   <View style={styles.radioWrapper}>
                     <Text style={styles.radioText}>여성</Text>
                     <RadioButton
-                      value="female"
+                      value="FEMALE"
                       status={
-                        checkGender === 'female' ? 'checked' : 'unchecked'
+                        checkGender === 'FEMALE' ? 'checked' : 'unchecked'
                       }
                       onPress={() => {
                         setCheckGender('FEMALE');
@@ -464,15 +477,27 @@ function SignUp({navigation}: SignUpScreenProps) {
           </View>
           <View style={styles.inputWrapper}>
             <View style={styles.bottomSheetWrapper}>
-              <Text
-                style={{
-                  color: '#c4c4c4',
-                  fontWeight: 'bold',
-                  fontSize: 14,
-                  fontFamily: 'normal',
-                }}>
-                생년월일
-              </Text>
+              {sendDate ? (
+                <Text
+                  style={{
+                    color: '#414FFD',
+                    fontWeight: 'bold',
+                    fontSize: 14,
+                    fontFamily: 'normal',
+                  }}>
+                  {sendDate}
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: '#c4c4c4',
+                    fontWeight: 'bold',
+                    fontSize: 14,
+                    fontFamily: 'normal',
+                  }}>
+                  생년월일
+                </Text>
+              )}
               <Pressable
                 onPress={() => {
                   setIsBirthClick(true);

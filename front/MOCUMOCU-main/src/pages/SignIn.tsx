@@ -122,7 +122,7 @@ function SignIn({navigation}: SignInScreenProps) {
             borderWidth: 1,
             borderColor: '#e5e5e5',
           }}>
-          {!loading ? (
+          {loading ? (
             <ActivityIndicator style={styles.indicator} color="white" />
           ) : (
             <Text style={styles.loginButtonText}>로그인</Text>
