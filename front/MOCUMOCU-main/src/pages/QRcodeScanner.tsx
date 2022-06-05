@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
 
   scanAreaBackground: {
     position: 'absolute',
-    top: 500,
+    top: '70%',
     left: 0,
     width: window.width,
     height: window.height,
@@ -137,7 +137,15 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  scanner: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: 'pink' },
+  scanner: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
 });
 export default QRCodeScanner;

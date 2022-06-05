@@ -86,16 +86,14 @@ function StampAmount({ navigation, route }: StampAmountOwnerProps) {
 
 const styles = StyleSheet.create({
   stampAmountWrapper: {
-    width: screenWidth,
-    height: screenHeight,
+    flex: 1,
     backgroundColor: '#F7F7F7',
   },
 
   stampAmountTitleWrapper: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 80,
-    marginBottom: 40,
+    justifyContent: 'flex-end',
+    flex: 1,
   },
   stampAmountTitleText: {
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    flex: 4,
   },
 
   controlIcon: {
@@ -121,15 +119,15 @@ const styles = StyleSheet.create({
   },
 
   okButtonWrapper: {
-    marginHorizontal: 40,
-    justifyContent: 'flex-end',
+    flex: 1,
+    paddingHorizontal: 30,
   },
 
   okButton: {
     backgroundColor: '#FA6072',
-    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 10,
     paddingVertical: 10,
   },
 
