@@ -73,8 +73,8 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
-  return isLoggedIn ? (
-    isOwner ? (
+  return !isLoggedIn ? (
+    !isOwner ? (
       <OwnerWrapper />
     ) : (
       <CustomerWrapper />
