@@ -107,43 +107,39 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
   }, [phoneNumber]);
 
   return (
-    <View>
-      <View style={styles.stampAmountWrapper}>
-        <View style={styles.stampAmountTitleWrapper}>
-          <Text style={styles.stampAmountTitleText}>
-            전화번호를 입력해주세요
-          </Text>
-        </View>
+    <View style={styles.stampAmountWrapper}>
+      <View style={styles.stampAmountTitleWrapper}>
+        <Text style={styles.stampAmountTitleText}>전화번호를 입력해주세요</Text>
+      </View>
 
-        <View style={styles.inputPhoneNumWrapper}>
-          <TextInput
-            style={styles.inputPhonNumBox}
-            onChangeText={v => {
-              setPhoneNumber(v);
-            }}
-            value={phoneNumber}
-            placeholder="전화번호를 입력해주세요"
-            maxLength={13}
-            returnKeyType="send"
-            keyboardType="decimal-pad"
-            returnKeyType="next"
-            onSubmitEditing={onSubmit}
-            importantForAutofill="yes"
-          />
-        </View>
+      <View style={styles.inputPhoneNumWrapper}>
+        <TextInput
+          style={styles.inputPhonNumBox}
+          onChangeText={v => {
+            setPhoneNumber(v);
+          }}
+          value={phoneNumber}
+          placeholder="전화번호를 입력해주세요"
+          maxLength={13}
+          returnKeyType="send"
+          keyboardType="decimal-pad"
+          returnKeyType="next"
+          onSubmitEditing={onSubmit}
+          importantForAutofill="yes"
+        />
+      </View>
 
-        <View style={styles.okButtonWrapper}>
-          <TouchableOpacity
-            style={buttonActive ? styles.okButtonActive : styles.okButton}
-            disabled={!buttonActive}
-            onPress={onSubmit}>
-            {loading ? (
-              <ActivityIndicator style={styles.indicator} color="white" />
-            ) : (
-              <Text style={styles.okButtonText}>다음</Text>
-            )}
-          </TouchableOpacity>
-        </View>
+      <View style={styles.okButtonWrapper}>
+        <TouchableOpacity
+          style={buttonActive ? styles.okButtonActive : styles.okButton}
+          disabled={!buttonActive}
+          onPress={onSubmit}>
+          {loading ? (
+            <ActivityIndicator style={styles.indicator} color="white" />
+          ) : (
+            <Text style={styles.okButtonText}>다음</Text>
+          )}
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -151,16 +147,15 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
 
 const styles = StyleSheet.create({
   stampAmountWrapper: {
-    width: screenWidth,
-    height: screenHeight,
+    flex: 1,
     backgroundColor: '#F7F7F7',
   },
 
   stampAmountTitleWrapper: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 80,
-    marginBottom: 20,
+    justifyContent: 'flex-end',
+    flex: 1,
+    // backgroundColor: 'red',
   },
   stampAmountTitleText: {
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
@@ -171,15 +166,16 @@ const styles = StyleSheet.create({
   inputPhoneNumWrapper: {
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 40,
+    justifyContent: 'flex-start',
+    flex: 4,
+    // backgroundColor: 'green',
   },
 
   inputPhonNumBox: {
     backgroundColor: 'white',
     borderRadius: 10,
     width: 320,
-    marginBottom: 300,
+    height: 50,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#e5e5e5',
@@ -187,16 +183,14 @@ const styles = StyleSheet.create({
   },
 
   okButtonWrapper: {
-    marginHorizontal: 40,
-    justifyContent: 'flex-end',
+    flex: 1,
+    // backgroundColor: 'blue',
+    paddingHorizontal: 30,
   },
 
   okButtonActive: {
     backgroundColor: '#FA6072',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 10,
@@ -204,10 +198,7 @@ const styles = StyleSheet.create({
 
   okButton: {
     backgroundColor: '#A5A5A5',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 10,
@@ -218,11 +209,8 @@ const styles = StyleSheet.create({
   },
 
   indicator: {
-    // backgroundColor: 'gray',
     paddingHorizontal: '7%',
-    // paddingVertical: 10,
     borderRadius: 5,
-    // marginTop: '4%',
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',

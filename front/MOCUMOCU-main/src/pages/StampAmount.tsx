@@ -50,7 +50,7 @@ function StampAmount({ navigation, route }: StampAmountOwnerProps) {
   }, [amount, customerId, loading, marketId]);
   return (
     <View style={styles.stampAmountWrapper}>
-      <Text>{customerId}</Text>
+      {/* <Text>{customerId}</Text> */}
       <View style={styles.stampAmountTitleWrapper}>
         <Text style={styles.stampAmountTitleText}>
           적립할 개수를 입력해 주세요
