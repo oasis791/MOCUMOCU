@@ -1,7 +1,8 @@
-import {NavigationRouteContext} from '@react-navigation/native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import axios, {AxiosError} from 'axios';
-import React, {useCallback, useEffect, useState} from 'react';
+/* eslint-disable prettier/prettier */
+import { NavigationRouteContext } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import axios, { AxiosError } from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -12,8 +13,8 @@ import {
   View,
 } from 'react-native';
 import Config from 'react-native-config';
-import {TextInput} from 'react-native-gesture-handler';
-import {LoggedInOwnerParamList} from '../../App';
+import { TextInput } from 'react-native-gesture-handler';
+import { LoggedInOwnerParamList } from '../../App';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -23,12 +24,12 @@ type PhoneNumScannerOwnerProps = NativeStackScreenProps<
   'PhoneNumScanner'
 >;
 
-function PhoneNumScanner({navigation, route}: PhoneNumScannerOwnerProps) {
+function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [buttonActive, setButtonActive] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const passfunc = useCallback(() => {}, []);
+  const passfunc = useCallback(() => { }, []);
 
   const [marketId, setMarketId] = useState(route.params.marketId);
 
