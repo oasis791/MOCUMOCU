@@ -40,6 +40,9 @@ const userSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       // state.id = action.payload.id;
     },
+    setAccessToken(state, action) {
+      state.accessToken = action.payload;
+    },
   },
   extraReducers: builder => {}, // 비동기 action 만들 때 사용=======>>>>>>> su
 });

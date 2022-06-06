@@ -37,16 +37,16 @@ function RewardList({navigation, route}: RewardListScreenProps) {
       [
         {
           reward: '츄러스',
-          couponRequire: 5,
+          couponRequireTest: 5,
         },
         {
           reward: '아메리카노',
-          couponRequire: 10,
+          couponRequireTest: 10,
         },
       ],
       [
-        {reward: '복숭아 숭숭', couponRequire: 5},
-        {reward: '광주 보내주기 패키지', couponRequire: 10},
+        {reward: '복숭아 숭숭', couponRequireTest: 5},
+        {reward: '광주 보내주기 패키지', couponRequireTest: 10},
       ],
     ];
   }, []);
@@ -67,13 +67,15 @@ function RewardList({navigation, route}: RewardListScreenProps) {
     getCustomerId();
   }, [accessToken, selectedCouponId]);
   const toUseQRTest = (idx: number) => {
-    const couponRequire = rewardListTest[selectedCouponId][idx].couponRequire;
+    const couponRequireTest =
+      rewardListTest[selectedCouponId][idx].couponRequireTest; //Test
+    const couponRequire = rewardListTest[idx].couponRequire;
     console.log(
-      `쿠폰 번호: ${selectedCouponId} / 선택한 리워드의 쿠폰 차감 개수: ${couponRequire}`,
+      `쿠폰 번호: ${selectedCouponId} / 선택한 리워드의 쿠폰 차감 개수: ${couponRequireTest}`,
     );
     navigation.navigate('UseQR', {
       couponId: selectedCouponId,
-      couponRequire: couponRequire,
+      couponRequire: couponRequireTest,
     });
   };
 
@@ -114,7 +116,7 @@ function RewardList({navigation, route}: RewardListScreenProps) {
           key={reward.reward}>
           <Text style={styles.rewardText}>
             {/* {idx} */}
-            {reward.couponRequire}개 리워드 - {'\t'}
+            {reward.couponRequireTest}개 리워드 - {'\t'}
             {reward.reward}
           </Text>
           <Image
