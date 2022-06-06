@@ -106,8 +106,8 @@ function AppInner() {
     );
   }, [dispatch]);
 
-  return !isLoggedIn ? (
-    !isOwner ? (
+  return isLoggedIn ? (
+    isOwner ? (
       <OwnerWrapper />
     ) : (
       <CustomerWrapper />
