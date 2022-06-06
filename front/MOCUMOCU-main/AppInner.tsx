@@ -73,10 +73,7 @@ function AppInner() {
     };
     getTokenAndRefresh();
   }, [dispatch]);
-<<<<<<< HEAD
-=======
 
->>>>>>> seo
   //Access Token 재발급 interceptor
   useEffect(() => {
     axios.interceptors.response.use(
@@ -110,13 +107,8 @@ function AppInner() {
     );
   }, [dispatch]);
 
-<<<<<<< HEAD
-  return !isLoggedIn ? (
-    !isOwner ? (
-=======
   return isLoggedIn ? (
     isOwner ? (
->>>>>>> seo
       <OwnerWrapper />
     ) : (
       <CustomerWrapper />
