@@ -6,13 +6,12 @@ import MOCUMOCU.project.customer.Gender;
 import MOCUMOCU.project.domain.Privacy;
 import MOCUMOCU.project.form.CustomerLoginDTO;
 import MOCUMOCU.project.form.CustomerRegisterDTO;
+import MOCUMOCU.project.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -20,9 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final CouponService couponService;
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody CustomerRegisterDTO customerRegisterDTO) {
+    public ResponseEntity<Void> signup(@RequestBody CustomerRegisterDTO customerRegisterDTO) {
 
         Privacy newPrivacy = new Privacy();
         newPrivacy.setEmail(customerRegisterDTO.getCustomerEmail());
@@ -42,15 +42,28 @@ public class CustomerController {
 
         customerService.join(newCustomer);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody CustomerLoginDTO customerLoginDTO) {
+    public ResponseEntity<Void> login(@RequestBody CustomerLoginDTO customerLoginDTO, Model model) {
         if (customerService.login(customerLoginDTO)) {
-            return new ResponseEntity(HttpStatus.OK);
+            model.addAttribute(customerService.findCustomerByEmail(customerLoginDTO.getCustomerEmail()));
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/${customerIdTest}/coupon")
+    public ResponseEntity<Void> enterMain(@RequestParam Long customerIdTest, Model model) {
+        model.addAttribute(customerService.findAllCoupon(customerIdTest));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/reward-list")
+    public ResponseEntity<Void> showRewards(@RequestParam Long couponId, Model model) {
+        model.addAttribute(couponService.findAllReward(couponId));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

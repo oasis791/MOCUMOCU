@@ -2,31 +2,28 @@ package MOCUMOCU.project.owner;
 
 import MOCUMOCU.project.customer.Customer;
 import MOCUMOCU.project.domain.Market;
+import MOCUMOCU.project.form.CustomerInfoDTO;
+import MOCUMOCU.project.form.MarketInfoDTO;
+import MOCUMOCU.project.form.OwnerInfoDTO;
 import MOCUMOCU.project.form.OwnerLoginDTO;
-import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.domain.Privacy;
 import MOCUMOCU.project.repository.MarketRepository;
-import MOCUMOCU.project.repository.OwnerRepository;
-import MOCUMOCU.project.owner.OwnerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
 @Transactional
-@Component
+@RequiredArgsConstructor
 public class OwnerServiceImpl implements OwnerService {
 
     private final OwnerRepository ownerRepository;
     private final MarketRepository marketRepository;
-
-    public OwnerServiceImpl(OwnerRepository ownerRepository, MarketRepository marketRepository) {
-        this.ownerRepository = ownerRepository;
-        this.marketRepository = marketRepository;
-    }
 
     @Override
     public Long join(Owner owner) {
@@ -48,8 +45,22 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Market> findAllMarket(Long id) {
-        return marketRepository.findByOwnerId(id);
+    public List<MarketInfoDTO> findAllMarket(Long id) {
+
+        List<Market> findMarkets = marketRepository.findByOwnerId(id);
+        List<MarketInfoDTO> marketInfoDTOList = new ArrayList<>();
+
+        for (Market findMarket : findMarkets) {
+            MarketInfoDTO marketInfoDTO = new MarketInfoDTO();
+
+            marketInfoDTO.setName(findMarket.getMarketName());
+            marketInfoDTO.setPhoneNum(findMarket.getMarketPhoneNum());
+            marketInfoDTO.setId(findMarket.getId());
+
+            marketInfoDTOList.add(marketInfoDTO);
+        }
+
+        return marketInfoDTOList;
     }
 
     @Override
@@ -57,10 +68,24 @@ public class OwnerServiceImpl implements OwnerService {
     public boolean login(OwnerLoginDTO ownerLoginDTO) {
         List<Owner> findOwner = ownerRepository.findByEmail(ownerLoginDTO.getOwnerEmail());
 
+
         if (findOwner.isEmpty()) {
             return false;
         } else {
             return findOwner.get(0).getPrivacy().getPassword().equals(ownerLoginDTO.getOwnerPassword());
         }
+    }
+
+    @Override
+    public OwnerInfoDTO findOwnerByEmail(String email) {
+        List<Owner> findOwners = ownerRepository.findByEmail(email);
+
+        Owner findOwner = findOwners.get(0);
+        OwnerInfoDTO ownerInfoDTO = new OwnerInfoDTO();
+        ownerInfoDTO.setOwnerId(findOwner.getId());
+        ownerInfoDTO.setOwnerName(findOwner.getPrivacy().getName());
+        ownerInfoDTO.setOwnerEmail(findOwner.getPrivacy().getEmail());
+
+        return ownerInfoDTO;
     }
 }

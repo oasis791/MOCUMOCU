@@ -1,29 +1,35 @@
 package MOCUMOCU.project.controller;
 
+import MOCUMOCU.project.customer.Customer;
+import MOCUMOCU.project.customer.CustomerService;
 import MOCUMOCU.project.domain.Privacy;
-import MOCUMOCU.project.form.OwnerLoginDTO;
-import MOCUMOCU.project.form.OwnerRegisterDTO;
+import MOCUMOCU.project.form.*;
 import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.owner.OwnerService;
+import MOCUMOCU.project.service.CouponService;
+import MOCUMOCU.project.service.MarketService;
+import MOCUMOCU.project.service.RewardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/owner")
+@RequiredArgsConstructor
 public class OwnerController {
 
     private final OwnerService ownerService;
-
-    public OwnerController(OwnerService ownerService) {
-        this.ownerService = ownerService;
-    }
+    private final MarketService marketService;
+    private final RewardService rewardService;
+    private final CouponService couponService;
+    private final CustomerService customerService;
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody OwnerRegisterDTO ownerRegisterDTO) {
+    public ResponseEntity<Void> signup(@RequestBody OwnerRegisterDTO ownerRegisterDTO) {
         Privacy newPrivacy = new Privacy();
         newPrivacy.setEmail(ownerRegisterDTO.getOwnerEmail());
         newPrivacy.setName(ownerRegisterDTO.getOwnerName());
@@ -35,15 +41,87 @@ public class OwnerController {
 
         ownerService.join(newOwner);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody OwnerLoginDTO ownerLoginDTO) {
+    public ResponseEntity<Void> login(@RequestBody OwnerLoginDTO ownerLoginDTO, Model model) {
         if (ownerService.login(ownerLoginDTO)) {
-            return new ResponseEntity(HttpStatus.OK);
+            model.addAttribute(ownerService.findOwnerByEmail(ownerLoginDTO.getOwnerEmail()));
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("store")
+    public ResponseEntity<Void> addMarket(@RequestBody MarketAddDTO marketAddDTO) {
+        marketService.addMarket(marketAddDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/${ownerId}/store-list")
+    public ResponseEntity<Void> showMarkets(@RequestBody Long ownerId, Model model) {
+
+        List<MarketInfoDTO> findMarkets = ownerService.findAllMarket(ownerId);
+
+        for (MarketInfoDTO findMarket : findMarkets) {
+            findMarket.setRewardList(marketService.findAllReward(findMarket.getId()));
+        }
+
+        model.addAttribute(findMarkets);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/store/${marketId}")
+    public ResponseEntity<Void> removeMarket(@RequestParam Long storeId) {
+        marketService.removeMarket(storeId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/owner/store/reward")
+    public ResponseEntity<Void> saveReward(@RequestBody RewardAddDTO rewardAddDTO) {
+        rewardService.addReward(rewardAddDTO);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/${owenrId}/store/${marketId}/reward/${rewardId}")
+    public ResponseEntity<Void> removeReward(@RequestParam Long rewardId) {
+        rewardService.removeReward(rewardId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/stamp")
+    public ResponseEntity<Void> saveStamp(@RequestBody SaveStampDTO saveStampDTO) {
+        couponService.earnStamp(saveStampDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/stamp")
+    public ResponseEntity<Void> useStamp(@RequestBody UseStampDTO useStampDTO) {
+        couponService.useStamp(useStampDTO);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/phoneNum")
+    public ResponseEntity<Void> searchCustomerByPhoneNum(@RequestBody String phoneNumber, Model model) {
+
+        if (customerService.isPhoneNumExist(phoneNumber)) {
+            Customer findCustomer = customerService.findByPhoneNum(phoneNumber);
+
+            CustomerSendDTO customerSendDTO = new CustomerSendDTO();
+            customerSendDTO.setCustomerId(findCustomer.getId());
+            customerSendDTO.setName(findCustomer.getPrivacy().getName());
+
+            model.addAttribute(customerSendDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -2,6 +2,9 @@ package MOCUMOCU.project.serviceImpl;
 
 import MOCUMOCU.project.domain.Market;
 import MOCUMOCU.project.domain.Reward;
+import MOCUMOCU.project.form.MarketAddDTO;
+import MOCUMOCU.project.form.RewardOwnerDTO;
+import MOCUMOCU.project.owner.OwnerRepository;
 import MOCUMOCU.project.repository.MarketRepository;
 import MOCUMOCU.project.repository.RewardRepository;
 import MOCUMOCU.project.service.MarketService;
@@ -9,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,13 +20,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MarketServiceImpl implements MarketService {
 
+    private final OwnerRepository ownerRepository;
     private final MarketRepository marketRepository;
     private final RewardRepository rewardRepository;
 
     @Override
-    public Long addMarket(Market market) {
-        marketRepository.save(market);
-        return market.getId();
+    public void addMarket(MarketAddDTO marketAddDTO) {
+
+        Market newMarket = new Market();
+        newMarket.setMarketName(marketAddDTO.getMarketName());
+        newMarket.setBusinessNum(marketAddDTO.getBusinessNum());
+        newMarket.setMarketPhoneNum(marketAddDTO.getMarketPhoneNum());
+        newMarket.setOwner(ownerRepository.findOne(marketAddDTO.getOwnerId()));
+        marketRepository.save(newMarket);
     }
 
     @Override
@@ -43,8 +53,22 @@ public class MarketServiceImpl implements MarketService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Reward> findAllReward(Long id) {
-        return rewardRepository.findByMarketId(id);
+    public List<RewardOwnerDTO> findAllReward(Long id) {
+
+        List<Reward> findRewards = rewardRepository.findByMarketId(id);
+        List<RewardOwnerDTO> rewardOwnerDTOList = new ArrayList<>();
+
+        for (Reward findReward : findRewards) {
+            RewardOwnerDTO rewardOwnerDTO = new RewardOwnerDTO();
+
+            rewardOwnerDTO.setId(findReward.getId());
+            rewardOwnerDTO.setRewardContent(findReward.getRewardContent());
+            rewardOwnerDTO.setNeedAmount(findReward.getNeedAmount());
+
+            rewardOwnerDTOList.add(rewardOwnerDTO);
+        }
+
+        return rewardOwnerDTOList;
     }
 
 }

@@ -2,6 +2,8 @@ package MOCUMOCU.project.customer;
 
 import MOCUMOCU.project.domain.Coupon;
 import MOCUMOCU.project.domain.Privacy;
+import MOCUMOCU.project.form.CouponInfoDTO;
+import MOCUMOCU.project.form.CustomerInfoDTO;
 import MOCUMOCU.project.form.CustomerLoginDTO;
 import MOCUMOCU.project.form.OwnerLoginDTO;
 import MOCUMOCU.project.owner.Owner;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,9 +42,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Coupon> findAllCoupon(Long id) {
+    @Transactional(readOnly = true)
+    public List<CouponInfoDTO> findAllCoupon(Long id) {
         List<Coupon> myCoupons = couponRepository.findByCustomerId(id);
-        return  myCoupons;
+        List<CouponInfoDTO> couponInfoDTOList = new ArrayList<>();
+
+        for (Coupon myCoupon : myCoupons) {
+            CouponInfoDTO couponInfoDTO = new CouponInfoDTO();
+
+            couponInfoDTO.setCouponId(myCoupon.getId());
+            couponInfoDTO.setMarketName(myCoupon.getMarket().getMarketName());
+            couponInfoDTO.setStampAmount(myCoupon.getAmount());
+
+            couponInfoDTOList.add(couponInfoDTO);
+        }
+        return  couponInfoDTOList;
     }
 
     @Override
@@ -60,6 +75,42 @@ public class CustomerServiceImpl implements CustomerService {
         } else {
             return findCustomer.get(0).getPrivacy().getPassword().equals(customerLoginDTO.getCustomerPassword());
         }
+    }
+
+    @Override
+    public Customer findCustomer(Long id) {
+        customerRepository.findOne(id);
+        return customerRepository.findOne(id);
+    }
+
+    @Override
+    public CustomerInfoDTO findCustomerByEmail(String email) {
+
+        List<Customer> findCustomers = customerRepository.findByEmail(email);
+        Customer findCustomer = findCustomers.get(0);
+        CustomerInfoDTO customerInfoDTO = new CustomerInfoDTO();
+        customerInfoDTO.setCustomerId(findCustomer.getId());
+        customerInfoDTO.setCustomerName(findCustomer.getPrivacy().getName());
+        customerInfoDTO.setCustomerEmail(findCustomer.getPrivacy().getEmail());
+        return customerInfoDTO;
+    }
+
+    @Override
+    public Customer findByPhoneNum(String phoneNum) {
+        return customerRepository.findByPhoneNum(phoneNum).get(0);
+
+    }
+
+    @Override
+    public boolean isPhoneNumExist(String phoneNum) {
+        List<Customer> findCustomer = customerRepository.findByPhoneNum(phoneNum);
+
+        if (findCustomer.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
 }

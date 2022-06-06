@@ -2,6 +2,8 @@ package MOCUMOCU.project.customer;
 
 import MOCUMOCU.project.domain.Coupon;
 import MOCUMOCU.project.domain.Privacy;
+import MOCUMOCU.project.form.CouponInfoDTO;
+import MOCUMOCU.project.form.CustomerInfoDTO;
 import MOCUMOCU.project.form.CustomerLoginDTO;
 
 import java.util.List;
@@ -14,9 +16,19 @@ public interface CustomerService {
 
     void updatePrivacy(Long id, Privacy privacy);
 
-    List<Coupon> findAllCoupon(Long id);
+    List<CouponInfoDTO> findAllCoupon(Long id);
 
     void updateLastDate();
 
     boolean login(CustomerLoginDTO customerLoginDTO);
+
+    Customer findCustomer(Long id);
+
+    CustomerInfoDTO findCustomerByEmail(String email);
+
+    Customer findByPhoneNum(String phoneNum);
+
+    boolean isPhoneNumExist(String phoneNum);
+
+
 }

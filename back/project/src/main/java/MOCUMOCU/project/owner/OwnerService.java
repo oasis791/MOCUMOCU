@@ -1,6 +1,8 @@
 package MOCUMOCU.project.owner;
 
 import MOCUMOCU.project.domain.Market;
+import MOCUMOCU.project.form.MarketInfoDTO;
+import MOCUMOCU.project.form.OwnerInfoDTO;
 import MOCUMOCU.project.form.OwnerLoginDTO;
 import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.domain.Privacy;
@@ -15,7 +17,9 @@ public interface OwnerService {
 
     void updatePrivacy(Long id, Privacy privacy);
 
-    List<Market> findAllMarket(Long id);
+    List<MarketInfoDTO> findAllMarket(Long id);
 
     boolean login(OwnerLoginDTO ownerLoginDTO);
+
+    OwnerInfoDTO findOwnerByEmail(String email);
 }

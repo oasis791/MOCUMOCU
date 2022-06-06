@@ -30,6 +30,12 @@ public class CouponRepository {
                 .getResultList();
     }
 
+    public Coupon findByCustomerIdAndMarketId(Long customerId, Long marketId) {
+        return em.createQuery("select c from Coupon c where c.customer.id = :customerId and c.market.id = :marketId", Coupon.class)
+                .setParameter("customerId", customerId).setParameter("marketId", marketId)
+                .getSingleResult();
+    }
+
 
     public void remove(Coupon coupon) {
         em.remove(coupon);

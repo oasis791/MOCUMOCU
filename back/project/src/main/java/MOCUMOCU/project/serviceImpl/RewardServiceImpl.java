@@ -1,6 +1,8 @@
 package MOCUMOCU.project.serviceImpl;
 
 import MOCUMOCU.project.domain.Reward;
+import MOCUMOCU.project.form.RewardAddDTO;
+import MOCUMOCU.project.repository.MarketRepository;
 import MOCUMOCU.project.repository.RewardRepository;
 import MOCUMOCU.project.service.RewardService;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RewardServiceImpl implements RewardService {
 
+    private final MarketRepository marketRepository;
     private final RewardRepository rewardRepository;
 
     @Override
-    public Long addReward(Reward reward) {
-        rewardRepository.save(reward);
-        return reward.getId();
+    public void addReward(RewardAddDTO rewardAddDTO) {
+        Reward newReward = new Reward();
+        newReward.setMarket(marketRepository.findOne(rewardAddDTO.getMarketId()));
+        newReward.setRewardContent(rewardAddDTO.getRewardName());
+        newReward.setNeedAmount(rewardAddDTO.getCouponRequire());
+
+        rewardRepository.save(newReward);
     }
 
     @Override

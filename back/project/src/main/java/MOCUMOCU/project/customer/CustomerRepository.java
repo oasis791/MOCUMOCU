@@ -30,5 +30,11 @@ public class CustomerRepository {
                 .getResultList();
     }
 
+    public List<Customer> findByPhoneNum(String phoneNum) {
+        return em.createQuery("select c from Customer c where c.privacy.phoneNum = :phoneNum", Customer.class)
+                .setParameter("phoneNum", phoneNum)
+                .getResultList();
+    }
+
 
 }

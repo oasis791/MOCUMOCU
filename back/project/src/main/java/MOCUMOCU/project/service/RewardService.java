@@ -1,10 +1,11 @@
 package MOCUMOCU.project.service;
 
 import MOCUMOCU.project.domain.Reward;
+import MOCUMOCU.project.form.RewardAddDTO;
 
 public interface RewardService {
 
-    Long addReward(Reward reward);
+    void addReward(RewardAddDTO rewardAddDTO);
 
     void removeReward(Long id);
 
