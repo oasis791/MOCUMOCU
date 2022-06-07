@@ -15,6 +15,7 @@ import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
+import userSliceTest from '../slices/userTest';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -22,7 +23,10 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 const screenWidth = Dimensions.get('screen').width;
 
 function More() {
-  const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  // const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  const isLoggedIn = useSelector(
+    (state: RootState) => state.userTest.isLoggedIn,
+  );
   const dispatch = useAppDispatch();
   const onLogout = useCallback(async () => {
     try {
@@ -31,17 +35,17 @@ function More() {
         {},
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            // Authorization: `Bearer ${accessToken}`,
           },
         },
       );
       Alert.alert('알림', '로그아웃 되었습니다.');
       dispatch(
-        userSlice.actions.setUserInfo({
+        userSliceTest.actions.setUserInfoTest({
           name: '',
           email: '',
           id: null,
-          accessToken: '',
+          isLoggedIn: false,
         }),
       );
       await EncryptedStorage.removeItem('refreshToken');
@@ -49,7 +53,7 @@ function More() {
       const errorResponse = (error as AxiosError).response;
       console.error(errorResponse);
     }
-  }, [accessToken, dispatch]);
+  }, [dispatch]);
   const toPointUseInfo = () => {
     Alert.alert('알림', '포인트 사용 상세 내역으로 이동');
   };

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -24,58 +24,66 @@ export type Coupon = {
 };
 export type Reward = {
   rewardName: String;
-  requireCoupon: number;
+  needAmount: number;
 };
+
 function RewardList({navigation, route}: RewardListScreenProps) {
   const selectedCouponId = route.params.selectCouponId;
   const selectedMarket = route.params.selectMarket;
-  const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  // const accessToken = useSelector((state: RootState) => state.user.accessToken);
   // const [selectReward, setSelectReward] = useState('');
   // const [loading, setLoading] = useState(false);
-  const rewardListTest = useMemo(() => {
-    return [
-      [
-        {
-          reward: '츄러스',
-          couponRequireTest: 5,
-        },
-        {
-          reward: '아메리카노',
-          couponRequireTest: 10,
-        },
-      ],
-      [
-        {reward: '복숭아 숭숭', couponRequireTest: 5},
-        {reward: '광주 보내주기 패키지', couponRequireTest: 10},
-      ],
-    ];
-  }, []);
+  const [rewardList, setRewardList] = useState<Reward[]>([
+    {
+      rewardName: '',
+      needAmount: 0,
+    },
+  ]);
+  // const rewardListTest = useMemo(() => {
+  //   return [
+  //     [
+  //       {
+  //         reward: '츄러스',
+  //         couponRequireTest: 5,
+  //       },
+  //       {
+  //         reward: '아메리카노',
+  //         couponRequireTest: 10,
+  //       },
+  //     ],
+  //     [
+  //       {reward: '복숭아 숭숭', couponRequireTest: 5},
+  //       {reward: '광주 보내주기 패키지', couponRequireTest: 10},
+  //     ],
+  //   ];
+  // }, []);
   useEffect(() => {
     async function getCustomerId() {
-      const response = await axios.get<{data: Reward}>(
+      const response = await axios.get<{data: Reward[]}>(
         'http://54.180.91.167:8080/customer/reward-list',
         {
           headers: {
-            authorization: `Bearer ${accessToken}`,
+            // authorization: `Bearer ${accessToken}`,
           },
           params: {couponId: selectedCouponId},
         },
       );
-      const rewardList = response.data;
-      return rewardList;
+      console.log(response.data.data);
+      setRewardList(response.data.data);
     }
     getCustomerId();
-  }, [accessToken, selectedCouponId]);
+  }, [rewardList, selectedCouponId]);
   const toUseQRTest = (idx: number) => {
-    const couponRequireTest =
-      rewardListTest[selectedCouponId][idx].couponRequireTest; //Test
-    const couponRequire = rewardListTest[idx].couponRequire;
+    // const couponRequireTest =
+    //   rewardListTest[selectedCouponId][idx].couponRequireTest; //Test
+    const couponRequire = rewardList[idx].needAmount;
     console.log(
-      `쿠폰 번호: ${selectedCouponId} / 선택한 리워드의 쿠폰 차감 개수: ${couponRequireTest}`,
+      `쿠폰 번호: ${selectedCouponId} / 선택한 리워드의 쿠폰 차감 개수: ${couponRequire}`,
     );
     navigation.navigate('UseQR', {
       couponId: selectedCouponId,
-      couponRequire: couponRequireTest,
+      // couponRequire: couponRequireTest,
+      couponRequire: couponRequire,
     });
   };
 
@@ -105,35 +113,33 @@ function RewardList({navigation, route}: RewardListScreenProps) {
   //     }
   //   }
   // }, [loading, navigation]);
-  const renderRewardTest = rewardListTest[selectedCouponId].map(
-    (reward, idx) => {
-      return (
-        <Pressable
-          style={styles.rewardContainer}
-          onPress={() => {
-            toUseQRTest(idx);
-          }}
-          key={reward.reward}>
-          <Text style={styles.rewardText}>
-            {/* {idx} */}
-            {reward.couponRequireTest}개 리워드 - {'\t'}
-            {reward.reward}
-          </Text>
-          <Image
-            style={styles.arrowButton}
-            source={require('../assets/icon/arrowNormal.png')}
-          />
-        </Pressable>
-      );
-    },
-  );
+  const renderReward = rewardList.map((reward, idx: number) => {
+    return (
+      <Pressable
+        style={styles.rewardContainer}
+        onPress={() => {
+          toUseQRTest(idx);
+        }}
+        key={reward.rewardName}>
+        <Text style={styles.rewardText}>
+          {/* {idx} */}
+          {reward.needAmount}개 리워드 - {'\t'}
+          {reward.rewardName}
+        </Text>
+        <Image
+          style={styles.arrowButton}
+          source={require('../assets/icon/arrowNormal.png')}
+        />
+      </Pressable>
+    );
+  });
 
   return (
     <View>
       <View style={styles.titleContiner}>
         <Text style={styles.titleText}>{selectedMarket}</Text>
       </View>
-      <>{renderRewardTest}</>
+      <>{renderReward}</>
     </View>
   );
 }
