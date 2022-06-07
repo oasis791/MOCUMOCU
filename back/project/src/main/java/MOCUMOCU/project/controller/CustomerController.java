@@ -48,6 +48,7 @@ public class CustomerController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody CustomerLoginDTO customerLoginDTO, Model model) {
         if (customerService.login(customerLoginDTO)) {
+
             model.addAttribute(customerService.findCustomerByEmail(customerLoginDTO.getCustomerEmail()));
             return new ResponseEntity<>(HttpStatus.OK);
         } else {

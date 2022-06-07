@@ -92,6 +92,8 @@ public class CustomerServiceImpl implements CustomerService {
         customerInfoDTO.setCustomerId(findCustomer.getId());
         customerInfoDTO.setCustomerName(findCustomer.getPrivacy().getName());
         customerInfoDTO.setCustomerEmail(findCustomer.getPrivacy().getEmail());
+        customerInfoDTO.setLogIn(true);
+        customerInfoDTO.setUserType("Customer");
         return customerInfoDTO;
     }
 

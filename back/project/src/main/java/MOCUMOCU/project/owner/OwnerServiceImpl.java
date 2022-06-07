@@ -85,7 +85,8 @@ public class OwnerServiceImpl implements OwnerService {
         ownerInfoDTO.setOwnerId(findOwner.getId());
         ownerInfoDTO.setOwnerName(findOwner.getPrivacy().getName());
         ownerInfoDTO.setOwnerEmail(findOwner.getPrivacy().getEmail());
-
+        ownerInfoDTO.setLogIn(true);
+        ownerInfoDTO.setUserType("Owner");
         return ownerInfoDTO;
     }
 }
