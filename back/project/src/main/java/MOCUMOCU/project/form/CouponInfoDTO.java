@@ -9,4 +9,6 @@ public class CouponInfoDTO {
     private String marketName;
     private Long couponId;
     private int stampAmount;
+
+
 }

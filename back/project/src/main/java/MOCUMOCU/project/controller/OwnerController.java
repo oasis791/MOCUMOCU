@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -54,19 +55,24 @@ public class OwnerController {
         }
     }
 
-    @PostMapping("store")
+    @PostMapping("/store")
     public ResponseEntity<Void> addMarket(@RequestBody MarketAddDTO marketAddDTO) {
         marketService.addMarket(marketAddDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/${ownerId}/store-list")
-    public ResponseEntity<Void> showMarkets(@RequestBody Long ownerId, Model model) {
+    @GetMapping("/${ownerId}/market-list")
+    public ResponseEntity<Void> showMarkets(@RequestParam Long ownerId, Model model) {
 
         List<MarketInfoDTO> findMarkets = ownerService.findAllMarket(ownerId);
+        List<ActivityData> activityData = new ArrayList<>();
+        ActivityData newActivityData = new ActivityData();
+        activityData.add(newActivityData);
+
 
         for (MarketInfoDTO findMarket : findMarkets) {
             findMarket.setRewardList(marketService.findAllReward(findMarket.getId()));
+            findMarket.setActivityData(activityData);
         }
 
         model.addAttribute(findMarkets);
@@ -74,13 +80,13 @@ public class OwnerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/store/${marketId}")
+    @DeleteMapping("/store/${storeId}")
     public ResponseEntity<Void> removeMarket(@RequestParam Long storeId) {
         marketService.removeMarket(storeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/owner/store/reward")
+    @PostMapping("/store/reward")
     public ResponseEntity<Void> saveReward(@RequestBody RewardAddDTO rewardAddDTO) {
         rewardService.addReward(rewardAddDTO);
 
@@ -88,7 +94,7 @@ public class OwnerController {
 
     }
 
-    @DeleteMapping("/${owenrId}/store/${marketId}/reward/${rewardId}")
+    @DeleteMapping("/${ownerId}/store/${marketId}/reward/${rewardId}")
     public ResponseEntity<Void> removeReward(@RequestParam Long rewardId) {
         rewardService.removeReward(rewardId);
 
