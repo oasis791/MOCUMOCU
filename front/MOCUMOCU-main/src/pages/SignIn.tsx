@@ -14,7 +14,8 @@ import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
 import {useAppDispatch} from '../store';
-import userSlice, {UserInfo} from '../slices/user';
+// import userSlice, { UserInfo } from '../slices/user';
+import userSliceTest, {UserInfoTest} from '../slices/userTest';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import LinearGradient from 'react-native-linear-gradient';
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
@@ -40,7 +41,7 @@ function SignIn({navigation}: SignInScreenProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post<{data: UserInfo}>(
+      const response = await axios.post<{data: UserInfoTest}>(
         'http://54.180.91.167:8080/customer/login',
         {
           customerEmail: email,
@@ -51,12 +52,20 @@ function SignIn({navigation}: SignInScreenProps) {
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
       dispatch(
-        userSlice.actions.setUserInfo({
+        // userSlice.actions.setUserInfo({
+        //   // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
+        //   name: response.data.data.name,
+        //   id: response.data.data.id,
+        //   email: response.data.data.email,
+        //   accessToken: response.data.data.accessToken,
+        // }),
+        userSliceTest.actions.setUserInfoTest({
           // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
           name: response.data.data.name,
           id: response.data.data.id,
           email: response.data.data.email,
-          accessToken: response.data.data.accessToken,
+          userType: response.data.data.userType,
+          isLoggedIn: response.data.data.isLoggedIn,
         }),
       );
       // await EncryptedStorage.setItem(

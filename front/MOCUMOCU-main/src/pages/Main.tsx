@@ -36,28 +36,33 @@ const data = [
 
 type MainScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'Main'>;
 function Main({navigation}: MainScreenProps) {
-  const customerId = useSelector((state: RootState) => state.user.id);
-  const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  // const customerId = useSelector((state: RootState) => state.user.id);
+  // const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  const customerIdTest = useSelector((state: RootState) => state.userTest.id);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     async function getCouponInfo() {
       const response = await axios.get<{data: Coupon[]}>(
-        `http://54.180.91.167:8080/customer/${customerId}/coupon`,
+        `http://54.180.91.167:8080/customer/${customerIdTest}/coupon`,
         {
           headers: {
-            authorization: `Bearer ${accessToken}`,
+            // authorization: `Bearer ${accessToken}`,
           },
         },
       );
+      console.log(response.data.data);
       dispatch(couponSlice.actions.setCouponInfo(response.data.data));
     }
     getCouponInfo();
     return () => {};
-  }, [accessToken, customerId, dispatch]);
+  }, [customerIdTest, dispatch]);
 
   const isAlarm = true;
-  const userName = useSelector((state: RootState) => state.user.name);
+  // const customerName = useSelector((state: RootState) => state.user.name);
+  const customerNameTest = useSelector(
+    (state: RootState) => state.userTest.name,
+  );
   const coupons = useSelector((state: RootState) => state.coupon.coupons);
   const myPoint = 1000;
   const toSettings = useCallback(() => {
@@ -147,7 +152,7 @@ function Main({navigation}: MainScreenProps) {
             <Text style={styles.myInfoText}>
               <Text
                 style={[styles.myInfoText, {fontFamily: 'GmarketSansTTFBold'}]}>
-                {userName}
+                {customerNameTest}
               </Text>{' '}
               님,{'\n'}오늘도 모쿠하세요!
             </Text>
