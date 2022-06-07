@@ -61,7 +61,7 @@ public class OwnerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/${ownerId}/market-list")
+    @GetMapping("/{ownerId}/market-list")
     public ResponseEntity<Void> showMarkets(@RequestParam Long ownerId, Model model) {
 
         List<MarketInfoDTO> findMarkets = ownerService.findAllMarket(ownerId);
@@ -80,7 +80,7 @@ public class OwnerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/store/${storeId}")
+    @DeleteMapping("/store/{storeId}")
     public ResponseEntity<Void> removeMarket(@RequestParam Long storeId) {
         marketService.removeMarket(storeId);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -94,7 +94,7 @@ public class OwnerController {
 
     }
 
-    @DeleteMapping("/${ownerId}/store/${marketId}/reward/${rewardId}")
+    @DeleteMapping("/{ownerId}/store/{marketId}/reward/{rewardId}")
     public ResponseEntity<Void> removeReward(@RequestParam Long rewardId) {
         rewardService.removeReward(rewardId);
 

@@ -55,7 +55,7 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/${customerIdTest}/coupon")
+    @GetMapping("/{customerIdTest}/coupon")
     public ResponseEntity<Void> enterMain(@RequestParam Long customerIdTest, Model model) {
         model.addAttribute(customerService.findAllCoupon(customerIdTest));
         return new ResponseEntity<>(HttpStatus.OK);
