@@ -3,14 +3,20 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 export interface Coupon {
   couponId: number;
   marketName: string;
-  currentStamp: number;
+  stampAmount: number;
 }
 
 interface initialState {
   coupons: Coupon[];
 }
 const initialState: initialState = {
-  coupons: [],
+  coupons: [
+    {
+      couponId: 0,
+      marketName: '',
+      stampAmount: 0,
+    },
+  ],
 };
 
 const couponSlice = createSlice({

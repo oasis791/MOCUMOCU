@@ -23,13 +23,18 @@ import FindIdOwner from './src/pages/FindIdOwner';
 import FindId from './src/pages/FindId';
 import CustomerWrapper from './src/pages/CustomerWrapper';
 import OwnerWrapper from './src/pages/OwnerWrapper';
+import userSliceTest from './src/slices/userTest';
 
 const Stack = createNativeStackNavigator();
 function AppInner() {
-  const isLoggedIn = useSelector(
-    (state: RootState) => !!state.user.accessToken,
+  // const isLoggedIn = useSelector(
+  //   (state: RootState) => !!state.user.accessToken,
+  // );
+  const isLoggedInTest = useSelector(
+    (state: RootState) => state.userTest.isLoggedIn,
   );
-  const isOwner = false;
+  const userType = useSelector((state: RootState) => state.userTest.userType);
+  const userTypeTest = 'Customer';
   const dispatch = useAppDispatch();
   // const isLoggedIn = false;
 
@@ -49,16 +54,25 @@ function AppInner() {
           {},
           {
             headers: {
-              authorization: `Bearer ${token}`,
+              // authorization: `Bearer ${token}`,
             },
           },
         );
+        // dispatch(
+        //   userSlice.actions.setUserInfo({
+        //     name: response.data.data.name,
+        //     id: response.data.data.id,
+        //     email: response.data.data.email,
+        //     accessToken: response.data.data.accessToken,
+        //   }),
+        // );
         dispatch(
-          userSlice.actions.setUserInfo({
+          userSliceTest.actions.setUserInfoTest({
             name: response.data.data.name,
             id: response.data.data.id,
             email: response.data.data.email,
-            accessToken: response.data.data.accessToken,
+            userType: response.data.data.userType,
+            isLoggedInTest: response.data.data.email,
           }),
         );
       } catch (error) {
@@ -74,41 +88,8 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch]);
 
-  //Access Token 재발급 interceptor
-  useEffect(() => {
-    axios.interceptors.response.use(
-      response => {
-        return response;
-      },
-      async error => {
-        const {
-          config,
-          response: {status},
-        } = error;
-        if (status === 419) {
-          if (error.response.data.code === 'expired') {
-            const originalRequest = config;
-            const refreshToken = await EncryptedStorage.getItem('refreshToken');
-            // token refresh 요청
-            const {data} = await axios.post(
-              `${Config.API_URL}/refreshToken`, // token refresh api
-              {},
-              {headers: {authorization: `Bearer ${refreshToken}`}},
-            );
-            // 새로운 토큰 저장
-            dispatch(userSlice.actions.setAccessToken(data.data.accessToken));
-            originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
-            // 419로 요청 실패했던 요청 새로운 토큰으로 재요청
-            return axios(originalRequest);
-          }
-        }
-        return Promise.reject(error);
-      },
-    );
-  }, [dispatch]);
-
-  return isLoggedIn ? (
-    isOwner ? (
+  return isLoggedInTest ? (
+    userTypeTest === 'Owner' ? (
       <OwnerWrapper />
     ) : (
       <CustomerWrapper />
