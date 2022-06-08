@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 export interface UserInfoTest {
+  logIn: any;
   name: String;
   email: String;
   id: number;

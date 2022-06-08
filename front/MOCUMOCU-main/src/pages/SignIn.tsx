@@ -18,9 +18,12 @@ import {useAppDispatch} from '../store';
 import userSliceTest, {UserInfoTest} from '../slices/userTest';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store/reducer';
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
 function SignIn({navigation}: SignInScreenProps) {
+  let test = useSelector((state: RootState) => state.userTest);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
@@ -41,16 +44,17 @@ function SignIn({navigation}: SignInScreenProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post<{data: UserInfoTest}>(
-        'http://54.180.91.167:8080/customer/login',
+      const response = await axios.post(
+        'http://54.180.91.167:8080/user/login',
         {
           customerEmail: email,
           customerPassword: password,
         },
       );
-      console.log(response.data);
+      console.log('response data: ', response.data.customerEmail);
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
+      // dispatch(userSliceTest.actions.setUserInfoTest(response.data.data));
       dispatch(
         // userSlice.actions.setUserInfo({
         //   // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
@@ -61,18 +65,21 @@ function SignIn({navigation}: SignInScreenProps) {
         // }),
         userSliceTest.actions.setUserInfoTest({
           // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
-          name: response.data.data.name,
-          id: response.data.data.id,
-          email: response.data.data.email,
-          userType: response.data.data.userType,
-          isLoggedIn: response.data.data.isLoggedIn,
+          name: response.data.customerName,
+          id: response.data.customerId,
+          email: response.data.customerEmail,
+          userType: response.data.userType,
+          isLogIn: response.data.logIn,
         }),
       );
+      // console.log('알림', 'userInfoTest dispatch완료');
+      // console.log('test', test);
+
       // await EncryptedStorage.setItem(
       //   'refreshToken',
       //   response.data.data.refreshToken,
       // );
-      console.log(EncryptedStorage.getItem('refreshToken'));
+      // console.log(EncryptedStorage.getItem('refreshToken'));
     } catch (error) {
       setLoading(false);
       const errorResponse = (error as AxiosError<any>).response;
@@ -80,7 +87,7 @@ function SignIn({navigation}: SignInScreenProps) {
         Alert.alert('알림', errorResponse.data.message);
       }
     }
-  }, [loading, dispatch, email, password]);
+  }, [loading, email, password, dispatch]);
   const onChangeEmail = useCallback(text => {
     setEmail(text);
   }, []);
