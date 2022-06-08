@@ -87,7 +87,7 @@ function SignIn({navigation}: SignInScreenProps) {
         Alert.alert('알림', errorResponse.data.message);
       }
     }
-  }, [loading, email, password, dispatch, test]);
+  }, [loading, email, password, dispatch]);
   const onChangeEmail = useCallback(text => {
     setEmail(text);
   }, []);
