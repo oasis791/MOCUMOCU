@@ -62,7 +62,7 @@ public class OwnerController {
     }
 
     @GetMapping("/{ownerId}/market-list")
-    public ResponseEntity<Void> showMarkets(@RequestParam Long ownerId, Model model) {
+    public ResponseEntity<List<MarketInfoDTO>> showMarkets(@PathVariable Long ownerId) {
 
         List<MarketInfoDTO> findMarkets = ownerService.findAllMarket(ownerId);
         List<ActivityData> activityData = new ArrayList<>();
@@ -75,13 +75,11 @@ public class OwnerController {
             findMarket.setActivityData(activityData);
         }
 
-        model.addAttribute(findMarkets);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(findMarkets, HttpStatus.OK);
     }
 
     @DeleteMapping("/store/{storeId}")
-    public ResponseEntity<Void> removeMarket(@RequestParam Long storeId) {
+    public ResponseEntity<Void> removeMarket(@PathVariable Long storeId) {
         marketService.removeMarket(storeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -95,7 +93,7 @@ public class OwnerController {
     }
 
     @DeleteMapping("/{ownerId}/store/{marketId}/reward/{rewardId}")
-    public ResponseEntity<Void> removeReward(@RequestParam Long rewardId) {
+    public ResponseEntity<Void> removeReward(@PathVariable Long rewardId) {
         rewardService.removeReward(rewardId);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -115,7 +113,7 @@ public class OwnerController {
     }
 
     @PostMapping("/phoneNum")
-    public ResponseEntity<Void> searchCustomerByPhoneNum(@RequestBody String phoneNumber, Model model) {
+    public ResponseEntity<CustomerSendDTO> searchCustomerByPhoneNum(@RequestBody String phoneNumber) {
 
         if (customerService.isPhoneNumExist(phoneNumber)) {
             Customer findCustomer = customerService.findByPhoneNum(phoneNumber);
@@ -124,8 +122,7 @@ public class OwnerController {
             customerSendDTO.setCustomerId(findCustomer.getId());
             customerSendDTO.setName(findCustomer.getPrivacy().getName());
 
-            model.addAttribute(customerSendDTO);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(customerSendDTO, HttpStatus.OK);
         } else{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

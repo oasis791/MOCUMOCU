@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TokenController {
 
     @PostMapping("/token")
-    public ResponseEntity<Void> token(@RequestBody TokenDTO tokenDTO, Model model) {
-        model.addAttribute(tokenDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<TokenDTO> token(@RequestBody TokenDTO tokenDTO, Model model) {
+        return new ResponseEntity<>(tokenDTO, HttpStatus.OK);
     }
 }

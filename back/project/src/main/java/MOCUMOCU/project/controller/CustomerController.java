@@ -4,6 +4,7 @@ import MOCUMOCU.project.customer.Customer;
 import MOCUMOCU.project.customer.CustomerService;
 import MOCUMOCU.project.customer.Gender;
 import MOCUMOCU.project.domain.Privacy;
+import MOCUMOCU.project.form.CouponInfoDTO;
 import MOCUMOCU.project.form.CustomerInfoDTO;
 import MOCUMOCU.project.form.CustomerLoginDTO;
 import MOCUMOCU.project.form.CustomerRegisterDTO;
@@ -14,6 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -49,7 +53,7 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<CustomerInfoDTO> login(@RequestBody CustomerLoginDTO customerLoginDTO, Model model) {
+    public ResponseEntity<CustomerInfoDTO> login(@RequestBody CustomerLoginDTO customerLoginDTO) {
         if (customerService.login(customerLoginDTO)) {
             CustomerInfoDTO customerInfoDTO = customerService.findCustomerByEmail(customerLoginDTO.getCustomerEmail());
             log.info("customerInfoDTO = {}", customerInfoDTO.getCustomerId());
@@ -61,9 +65,11 @@ public class CustomerController {
     }
 
     @GetMapping("/{customerIdTest}/coupon")
-    public ResponseEntity<Void> enterMain(@RequestParam Long customerIdTest, Model model) {
-        model.addAttribute(customerService.findAllCoupon(customerIdTest));
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<List<CouponInfoDTO>> main(@PathVariable Long customerIdTest) {
+
+        List<CouponInfoDTO> couponInfoDTOList = customerService.findAllCoupon(customerIdTest);
+
+        return new ResponseEntity<>(couponInfoDTOList, HttpStatus.OK);
     }
 
     @GetMapping("/reward-list")

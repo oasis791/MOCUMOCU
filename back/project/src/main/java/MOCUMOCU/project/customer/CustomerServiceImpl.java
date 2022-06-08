@@ -46,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CouponInfoDTO> findAllCoupon(Long id) {
         List<Coupon> myCoupons = couponRepository.findByCustomerId(id);
         List<CouponInfoDTO> couponInfoDTOList = new ArrayList<>();
-
+        System.out.println("2");
         for (Coupon myCoupon : myCoupons) {
             CouponInfoDTO couponInfoDTO = new CouponInfoDTO();
 
@@ -56,6 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 
             couponInfoDTOList.add(couponInfoDTO);
         }
+        System.out.println("#");
         return  couponInfoDTOList;
     }
 
