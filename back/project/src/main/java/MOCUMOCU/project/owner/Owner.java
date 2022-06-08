@@ -11,7 +11,8 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Owner {
+public class
+Owner {
 
     @Id @GeneratedValue
     @Column(name = "owner_id")
