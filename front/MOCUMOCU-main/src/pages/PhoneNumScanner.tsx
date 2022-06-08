@@ -39,7 +39,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/phoneNum`, {
+      const response = await axios.post(`${Config.API_URL}/owner/phoneNum`, {
         phoneNumber,
       });
 

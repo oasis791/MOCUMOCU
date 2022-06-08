@@ -30,11 +30,9 @@ function AppInner() {
   // const isLoggedIn = useSelector(
   //   (state: RootState) => !!state.user.accessToken,
   // );
-  const isLoggedInTest = useSelector(
-    (state: RootState) => state.userTest.isLoggedIn,
-  );
+  const isLogIn = useSelector((state: RootState) => state.userTest.isLogIn);
   const userType = useSelector((state: RootState) => state.userTest.userType);
-  const userTypeTest = 'Customer';
+  // const userTypeTest = 'Customer';
   const dispatch = useAppDispatch();
   // const isLoggedIn = false;
 
@@ -43,38 +41,35 @@ function AppInner() {
     const getTokenAndRefresh = async () => {
       SplashScreen.hide();
       try {
-        const token = await EncryptedStorage.getItem('refreshToken');
+        const token = isLogIn;
         if (!token) {
           console.log('!token');
           SplashScreen.hide();
           return;
         }
-        const response = await axios.post(
-          `${Config.API_URL}/refreshToken`,
-          {},
-          {
-            headers: {
-              // authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        const response = await axios.post('http://54.180.91.167:8080/token', {
+          isLogIn: isLogIn,
+          userType: userType,
+        });
         // dispatch(
         //   userSlice.actions.setUserInfo({
         //     name: response.data.data.name,
         //     id: response.data.data.id,
         //     email: response.data.data.email,
-        //     accessToken: response.data.data.accessToken,
+        //     accessToken: response.data.data.accessToken,3
         //   }),
         // );
-        dispatch(
-          userSliceTest.actions.setUserInfoTest({
-            name: response.data.data.name,
-            id: response.data.data.id,
-            email: response.data.data.email,
-            userType: response.data.data.userType,
-            isLoggedInTest: response.data.data.email,
-          }),
-        );
+        // dispatch(
+        //   userSliceTest.actions.setLoginType({
+        //     // name: response.data.data.name,
+        //     // id: response.data.data.id,
+        //     // email: response.data.data.email,
+        //     userType: response.data.userType,
+        //     isLogIn: response.data.logIn,
+        //   }),
+        // );
+        console.log('AppInner log(userType)', userType);
+        console.log('AppInner log(isLogin)', isLogIn);
       } catch (error) {
         console.error(error);
         if ((error as AxiosError<any>).response?.data.code === 'expired') {
@@ -86,10 +81,10 @@ function AppInner() {
       }
     };
     getTokenAndRefresh();
-  }, [dispatch]);
+  }, [dispatch, isLogIn, userType]);
 
-  return isLoggedInTest ? (
-    userTypeTest === 'Owner' ? (
+  return isLogIn ? (
+    userType === 'Owner' ? (
       <OwnerWrapper />
     ) : (
       <CustomerWrapper />

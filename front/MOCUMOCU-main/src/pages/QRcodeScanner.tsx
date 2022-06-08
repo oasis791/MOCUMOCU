@@ -1,17 +1,11 @@
 /* eslint-disable prettier/prettier */
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import axios, { AxiosError } from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Alert,
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { Camera, CameraType } from 'react-native-camera-kit';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import axios, {AxiosError} from 'axios';
+import React, {useEffect, useRef, useState} from 'react';
+import {Alert, Dimensions, StyleSheet, Text, View} from 'react-native';
+import {Camera, CameraType} from 'react-native-camera-kit';
 import Config from 'react-native-config';
-import { LoggedInOwnerParamList } from '../../App';
+import {LoggedInOwnerParamList} from '../../App';
 
 const window = Dimensions.get('screen');
 
@@ -22,14 +16,14 @@ type QRCodeScannerScreenProps = NativeStackScreenProps<
 
 export type SaveQRProps = {
   customerId: number;
-}
+};
 
 export type UseQRProps = {
   couponId: number;
   couponRequire: number;
-}
+};
 
-function QRCodeScanner({ navigation, route }: QRCodeScannerScreenProps) {
+function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
   const [scaned, setScaned] = useState<boolean>(true);
   const ref = useRef(null);
 
@@ -48,20 +42,22 @@ function QRCodeScanner({ navigation, route }: QRCodeScannerScreenProps) {
     // Vibration.vibrate();
 
     Alert.alert('QR Code', event.nativeEvent.codeStringValue, [
-      { text: 'OK', onPress: () => setScaned(true) },
+      {text: 'OK', onPress: () => setScaned(true)},
     ]);
 
-    const qrValue: SaveQRProps | UseQRProps = JSON.parse(event.nativeEvent.codeStringValue);
+    const qrValue: SaveQRProps | UseQRProps = JSON.parse(
+      event.nativeEvent.codeStringValue,
+    );
 
     switch (route.params.type) {
       case 'saveUp': // 적립
         setScaned(true);
-        navigation.navigate('StampAmount', { customerId: qrValue.customerId });
+        navigation.navigate('StampAmount', {customerId: qrValue.customerId});
         break;
       case 'use': // 사용
         setScaned(true);
         try {
-          const response = await axios.put(`${Config.API_URL}/Stamp`, {
+          const response = await axios.patch(`${Config.API_URL}/owner/stamp`, {
             couponId: qrValue.couponId,
             couponRequire: qrValue.couponRequire,
           });
@@ -76,7 +72,6 @@ function QRCodeScanner({ navigation, route }: QRCodeScannerScreenProps) {
       default:
         Alert.alert('알림', 'default');
         break;
-
     }
   };
 
@@ -104,12 +99,8 @@ function QRCodeScanner({ navigation, route }: QRCodeScannerScreenProps) {
         <Text style={styles.scanAreaText}>손님이 제시한</Text>
         <Text style={styles.scanAreaText}>QR코드를 스캔하세요</Text>
         <Text style={styles.scanAreaText}>{route.params.type}</Text>
-
       </View>
-
-
-
-    </View >
+    </View>
   );
 }
 
@@ -118,7 +109,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
-
   },
 
   scanAreaBackground: {
@@ -129,8 +119,6 @@ const styles = StyleSheet.create({
     height: window.height,
     // backgroundColor: 'pink',
     alignItems: 'center',
-
-
   },
 
   scanAreaText: {
@@ -146,6 +134,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
 });
 export default QRCodeScanner;

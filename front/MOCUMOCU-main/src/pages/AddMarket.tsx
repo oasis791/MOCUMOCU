@@ -27,7 +27,7 @@ function AddMarket({navigation}: AddStoreProps) {
   const [businessNum, setBusinessNum] = useState('');
   const [marketPhoneNum, setMarketPhoneNum] = useState('');
   const [marketName, setMarketName] = useState('');
-  const ownerId = useSelector((state: RootState) => state.user.userId);
+  const ownerId = useSelector((state: RootState) => state.userTest.id);
   useEffect(() => {
     return setButtonActive(!!businessNum && !!marketPhoneNum && !!marketName);
   }, [businessNum, marketPhoneNum, marketName]);
@@ -50,7 +50,7 @@ function AddMarket({navigation}: AddStoreProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/store`, {
+      const response = await axios.post(`${Config.API_URL}/owner/store`, {
         businessNum,
         marketPhoneNum,
         marketName,
