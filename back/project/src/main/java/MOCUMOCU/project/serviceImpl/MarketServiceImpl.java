@@ -62,8 +62,8 @@ public class MarketServiceImpl implements MarketService {
             RewardOwnerDTO rewardOwnerDTO = new RewardOwnerDTO();
 
             rewardOwnerDTO.setId(findReward.getId());
-            rewardOwnerDTO.setRewardContent(findReward.getRewardContent());
-            rewardOwnerDTO.setNeedAmount(findReward.getNeedAmount());
+            rewardOwnerDTO.setReward(findReward.getRewardContent());
+            rewardOwnerDTO.setCouponRequire(findReward.getNeedAmount());
 
             rewardOwnerDTOList.add(rewardOwnerDTO);
         }
