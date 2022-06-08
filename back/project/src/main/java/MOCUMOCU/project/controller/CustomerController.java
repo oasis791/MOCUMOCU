@@ -4,19 +4,14 @@ import MOCUMOCU.project.customer.Customer;
 import MOCUMOCU.project.customer.CustomerService;
 import MOCUMOCU.project.customer.Gender;
 import MOCUMOCU.project.domain.Privacy;
-import MOCUMOCU.project.form.CouponInfoDTO;
-import MOCUMOCU.project.form.CustomerInfoDTO;
-import MOCUMOCU.project.form.CustomerLoginDTO;
-import MOCUMOCU.project.form.CustomerRegisterDTO;
+import MOCUMOCU.project.form.*;
 import MOCUMOCU.project.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -56,7 +51,6 @@ public class CustomerController {
     public ResponseEntity<CustomerInfoDTO> login(@RequestBody CustomerLoginDTO customerLoginDTO) {
         if (customerService.login(customerLoginDTO)) {
             CustomerInfoDTO customerInfoDTO = customerService.findCustomerByEmail(customerLoginDTO.getCustomerEmail());
-            log.info("customerInfoDTO = {}", customerInfoDTO.getCustomerId());
 
             return new ResponseEntity<>(customerInfoDTO, HttpStatus.OK);
         } else {
@@ -73,8 +67,9 @@ public class CustomerController {
     }
 
     @GetMapping("/reward-list")
-    public ResponseEntity<Void> showRewards(@RequestParam Long couponId, Model model) {
-        model.addAttribute(couponService.findAllReward(couponId));
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<List<RewardInfoDTO>> showRewards(@RequestParam Long couponId) {
+
+        List<RewardInfoDTO> rewardInfoDTOList = couponService.findAllReward(couponId);
+        return new ResponseEntity<>(rewardInfoDTOList, HttpStatus.OK);
     }
 }
