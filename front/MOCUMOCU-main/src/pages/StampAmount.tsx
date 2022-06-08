@@ -33,7 +33,7 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/Stamp`, {
+      const response = await axios.post(`${Config.API_URL}/owner/stamp`, {
         marketId,
         customerId,
         amount,

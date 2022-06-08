@@ -67,6 +67,7 @@ export type RootStackParamList = {
   FindIdOwner: undefined;
   FindPassword: undefined;
   FindPasswordOwner: undefined;
+  AppInner: undefined;
 }; // -> 이 타입은 로그인 안 했을 때 보이는 페이지들
 
 function App() {

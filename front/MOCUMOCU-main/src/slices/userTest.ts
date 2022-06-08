@@ -5,26 +5,26 @@ export interface UserInfoTest {
   email: String;
   id: number;
   userType: String;
-  isLoggedIn: boolean;
+  isLogIn: boolean;
 }
-interface initialState {
+interface initialStateTest {
   name: String;
   email: String;
   id: number;
   userType: String;
-  isLoggedIn: boolean;
+  isLogIn: boolean;
 }
 
-const initialState: initialState = {
+const initialState: initialStateTest = {
   name: '',
   id: 0,
   email: '',
   userType: '',
-  isLoggedIn: false,
+  isLogIn: false,
 };
 
 const userSliceTest = createSlice({
-  name: 'user',
+  name: 'userTest',
   initialState,
   reducers: {
     setUserInfoTest(state = initialState, action) {
@@ -32,12 +32,16 @@ const userSliceTest = createSlice({
       state.id = action.payload.id;
       state.email = action.payload.email;
       state.userType = action.payload.userType;
-      state.isLoggedIn = action.payload.isLoggedIn;
+      state.isLogIn = action.payload.isLogIn;
       // state.id = action.payload.id;
     },
     // setAccessToken(state, action) {
     //   state.accessToken = action.payload;
     // },
+    setLoginType(state, action) {
+      state.isLogIn = action.payload.isLogIn;
+      state.userType = action.payload.userType;
+    },
   },
   extraReducers: builder => {}, // 비동기 action 만들 때 사용=======>>>>>>> su
 });
