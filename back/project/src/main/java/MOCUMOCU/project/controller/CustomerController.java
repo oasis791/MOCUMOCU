@@ -4,15 +4,18 @@ import MOCUMOCU.project.customer.Customer;
 import MOCUMOCU.project.customer.CustomerService;
 import MOCUMOCU.project.customer.Gender;
 import MOCUMOCU.project.domain.Privacy;
+import MOCUMOCU.project.form.CustomerInfoDTO;
 import MOCUMOCU.project.form.CustomerLoginDTO;
 import MOCUMOCU.project.form.CustomerRegisterDTO;
 import MOCUMOCU.project.service.CouponService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -48,8 +51,11 @@ public class CustomerController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody CustomerLoginDTO customerLoginDTO, Model model) {
         if (customerService.login(customerLoginDTO)) {
+            CustomerInfoDTO customerInfoDTO = customerService.findCustomerByEmail(customerLoginDTO.getCustomerEmail());
+            log.info("customerInfoDTO = {}", customerInfoDTO.getCustomerId());
+            model.addAttribute("customerInfoDTO",customerInfoDTO);
 
-            model.addAttribute(customerService.findCustomerByEmail(customerLoginDTO.getCustomerEmail()));
+
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
