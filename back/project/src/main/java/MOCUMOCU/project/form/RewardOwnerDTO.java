@@ -7,6 +7,6 @@ import lombok.Setter;
 public class RewardOwnerDTO {
 
     private Long id;
-    private int needAmount;
-    private String rewardContent;
+    private int couponRequire;
+    private String reward;
 }

@@ -1,11 +1,13 @@
 package MOCUMOCU.project.serviceImpl;
 
+import MOCUMOCU.project.customer.CustomerRepository;
 import MOCUMOCU.project.domain.Coupon;
 import MOCUMOCU.project.domain.Reward;
 import MOCUMOCU.project.form.RewardInfoDTO;
 import MOCUMOCU.project.form.SaveStampDTO;
 import MOCUMOCU.project.form.UseStampDTO;
 import MOCUMOCU.project.repository.CouponRepository;
+import MOCUMOCU.project.repository.MarketRepository;
 import MOCUMOCU.project.repository.RewardRepository;
 import MOCUMOCU.project.service.CouponService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
     private final RewardRepository rewardRepository;
+    private final MarketRepository marketRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public Long addCoupon(Coupon coupon) {
@@ -38,8 +42,18 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public void earnStamp(SaveStampDTO saveStampDTO) {
-        Coupon findCoupon = couponRepository.findByCustomerIdAndMarketId(saveStampDTO.getCustomerId(), saveStampDTO.getMarketId());
-        findCoupon.setAmount(findCoupon.getAmount() + saveStampDTO.getAmount());
+
+        List<Coupon> findCoupons = couponRepository.findByCustomerIdAndMarketId(saveStampDTO.getCustomerId(), saveStampDTO.getMarketId());
+
+        if (findCoupons.isEmpty()) {
+            Coupon newCoupon = new Coupon();
+            newCoupon.setMarket(marketRepository.findOne(saveStampDTO.getMarketId()));
+            newCoupon.setCustomer(customerRepository.findOne(saveStampDTO.getCustomerId()));
+            newCoupon.setAmount(saveStampDTO.getAmount());
+        } else{
+            findCoupons.get(0).setAmount(findCoupons.get(0).getAmount() + saveStampDTO.getAmount());
+        }
+
     }
 
 
