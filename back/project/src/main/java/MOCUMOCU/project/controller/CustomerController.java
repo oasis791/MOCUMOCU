@@ -49,14 +49,12 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody CustomerLoginDTO customerLoginDTO, Model model) {
+    public ResponseEntity<CustomerInfoDTO> login(@RequestBody CustomerLoginDTO customerLoginDTO, Model model) {
         if (customerService.login(customerLoginDTO)) {
             CustomerInfoDTO customerInfoDTO = customerService.findCustomerByEmail(customerLoginDTO.getCustomerEmail());
             log.info("customerInfoDTO = {}", customerInfoDTO.getCustomerId());
-            model.addAttribute("customerInfoDTO",customerInfoDTO);
 
-
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(customerInfoDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
