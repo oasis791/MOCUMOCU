@@ -157,7 +157,7 @@ function SignUp({navigation}: SignUpScreenProps) {
       setLoading(true);
       // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
       const response = await axios.post(
-        'http://54.180.91.167:8080/customer/signup',
+        'http://54.180.91.167:8080/user/signup',
         {
           customerName: name,
           customerPhoneNum: telephoneNumber,

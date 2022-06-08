@@ -18,6 +18,7 @@ import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import userSliceTest from '../slices/userTest';
 type SignInOwnerScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SignInOwner'
@@ -55,19 +56,20 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
       dispatch(
-        userSlice.actions.setUserInfo({
+        userSliceTest.actions.setUserInfoTest({
           // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
-          name: response.data.data.name,
-          id: response.data.data.id,
-          email: response.data.data.email,
-          accessToken: response.data.data.accessToken,
+          name: response.data.ownerName,
+          id: response.data.ownerId,
+          email: response.data.ownerEmail,
+          userType: response.data.userType,
+          isLogIn: response.data.logIn,
         }),
       );
-      await EncryptedStorage.setItem(
-        'refreshToken',
-        response.data.data.refreshToken,
-      );
-      console.log(EncryptedStorage.getItem('refreshToken'));
+      // await EncryptedStorage.setItem(
+      //   'refreshToken',
+      //   response.data.data.refreshToken,
+      // );
+      // console.log(EncryptedStorage.getItem('refreshToken'));
     } catch (error) {
       setLoading(false);
       const errorResponse = (error as AxiosError).response;
@@ -111,7 +113,8 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
       <Pressable
         style={{
           height: '33%',
-        }}>
+        }}
+        onPress={onSubmit}>
         <LinearGradient
           colors={['#FA6072', '#414FFD']}
           start={{x: 0, y: 0}}
