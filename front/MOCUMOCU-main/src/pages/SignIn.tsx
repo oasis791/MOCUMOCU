@@ -23,7 +23,6 @@ import {RootState} from '../store/reducer';
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
 function SignIn({navigation}: SignInScreenProps) {
-  let test = useSelector((state: RootState) => state.userTest);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');

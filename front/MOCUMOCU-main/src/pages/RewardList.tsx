@@ -60,7 +60,7 @@ function RewardList({navigation, route}: RewardListScreenProps) {
   useEffect(() => {
     async function getCustomerId() {
       const response = await axios.get<{data: Reward[]}>(
-        'http://54.180.91.167:8080/customer/reward-list',
+        'http://54.180.91.167:8080/user/reward-list',
         {
           headers: {
             // authorization: `Bearer ${accessToken}`,

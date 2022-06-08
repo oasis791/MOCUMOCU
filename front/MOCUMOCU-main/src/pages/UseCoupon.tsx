@@ -23,6 +23,7 @@ export type Select = {
 };
 
 const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
 function UseCoupon({navigation}: UseCouponScreenProps) {
   const coupons = useSelector((state: RootState) => state.coupon.coupons); // 사용자 쿠폰 리스트 가져오기
   const couponList = useMemo(() => {
@@ -111,23 +112,29 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
       </Pressable>
     );
   });
-  const renderMarket = coupons.map(coupon => {
-    return (
-      <Pressable key={coupon.couponId}>
-        style={styles.marketContainer}
-        onPress=
-        {() => {
-          const identify = coupon.couponId;
-          toRewardListTest(identify);
-        }}
-        <Text style={styles.marketText}>{coupon.marketName}</Text>
-        <Image
-          style={styles.arrowButton}
-          source={require('../assets/icon/arrowNormal.png')}
-        />
-      </Pressable>
-    );
-  });
+  const renderMarket = coupons ? (
+    coupons.map(coupon => {
+      return (
+        <Pressable key={coupon.couponId}>
+          style={styles.marketContainer}
+          onPress=
+          {() => {
+            const identify = coupon.couponId;
+            toRewardListTest(identify);
+          }}
+          <Text style={styles.marketText}>{coupon.marketName}</Text>
+          <Image
+            style={styles.arrowButton}
+            source={require('../assets/icon/arrowNormal.png')}
+          />
+        </Pressable>
+      );
+    })
+  ) : (
+    <View style={styles.scrollItemNone}>
+      <Text style={styles.myCouponText}>보유한 쿠폰이 없습니다</Text>
+    </View>
+  );
   return (
     <View>
       <View style={styles.titleContiner}>
@@ -137,7 +144,7 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
         </Text>
         <Text style={styles.titleText}>선택해 주세요</Text>
       </View>
-      <>{renderMarketTest}</>
+      <>{renderMarket}</>
     </View>
   );
 }
@@ -180,6 +187,23 @@ const styles = StyleSheet.create({
     height: 20,
     width: 40,
     paddingHorizontal: 36,
+  },
+  scrollItemNone: {
+    // backgroundColor: 'pink',
+    top: screenHeight / 3,
+    width: screenWidth,
+    height: 139,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  myCouponText: {
+    // marginBottom: 39,
+    marginHorizontal: 30,
+    // height: 30,
+    fontFamily: 'GmarketSansTTFBold',
+    color: '#363636',
+    fontSize: 18,
+    // backgroundColor: 'pink',
   },
 });
 

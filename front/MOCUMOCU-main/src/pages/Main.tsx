@@ -44,14 +44,14 @@ function Main({navigation}: MainScreenProps) {
   useEffect(() => {
     async function getCouponInfo() {
       const response = await axios.get<{data: Coupon[]}>(
-        `http://54.180.91.167:8080/customer/${customerIdTest}/coupon`,
+        `http://54.180.91.167:8080/user/${customerIdTest}/coupon`,
         {
           headers: {
             // authorization: `Bearer ${accessToken}`,
           },
         },
       );
-      console.log(response.data.data);
+      console.log('coupon', response);
       dispatch(couponSlice.actions.setCouponInfo(response.data.data));
     }
     getCouponInfo();
@@ -83,18 +83,22 @@ function Main({navigation}: MainScreenProps) {
   const toCouponList = () => {
     Alert.alert('알림', '쿠폰 리스트 화면으로 이동');
   };
-  const renderCoupon = coupons.map(coupon => {
-    return (
-      <>
+  const renderCoupon = coupons ? (
+    coupons.map(coupon => {
+      return (
         <View style={styles.scrollItem}>
           <Text style={styles.scrollItemText}>{coupon.couponId}</Text>
           <Text style={[styles.scrollItemText, {color: '#414FFD'}]}>
             {coupon.marketName}
           </Text>
         </View>
-      </>
-    );
-  });
+      );
+    })
+  ) : (
+    <View style={styles.scrollItemNone}>
+      <Text style={styles.myCouponText}>보유한 쿠폰이 없습니다</Text>
+    </View>
+  );
 
   const renderItem = ({item}: any) => {
     return (
@@ -389,6 +393,13 @@ const styles = StyleSheet.create({
     height: 139,
     borderRadius: 10,
     elevation: 12,
+  },
+  scrollItemNone: {
+    // backgroundColor: 'pink',
+    width: screenWidth,
+    height: 139,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   scrollItemText: {
     fontFamily: 'GmarketSansTTFBold',
