@@ -232,7 +232,6 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                                 placeholder="물품"
                                     value={rewardName}
                                     onChangeText={changeRewardName} />
-                                <Text>{rewardName}</Text>
                             </View>
                             <View style={styles.addRewardButtonWrapper}>
                                 <TouchableOpacity style={styles.addRewardButton}
