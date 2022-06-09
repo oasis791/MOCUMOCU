@@ -10,10 +10,12 @@ import {
   ActivityIndicator,
   Alert,
   TextInput,
+  Pressable,
 } from 'react-native';
 import Config from 'react-native-config';
 import {useSelector} from 'react-redux';
 import {LoggedInOwnerParamList} from '../../App';
+import marketOwnerSlice from '../slices/marketOwner';
 import {RootState} from '../store/reducer';
 
 type AddStoreProps = NativeStackScreenProps<LoggedInOwnerParamList, 'AddStore'>;
@@ -21,7 +23,7 @@ type AddStoreProps = NativeStackScreenProps<LoggedInOwnerParamList, 'AddStore'>;
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
-function AddMarket({navigation}: AddStoreProps) {
+function AddMarket({navigation, route}: AddStoreProps) {
   const [loading, setLoading] = useState(false);
   const [buttonActive, setButtonActive] = useState(false);
   const [businessNum, setBusinessNum] = useState('');
@@ -50,15 +52,22 @@ function AddMarket({navigation}: AddStoreProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/owner/store`, {
-        businessNum,
-        marketPhoneNum,
-        marketName,
-        ownerId,
-      });
+
+      const response = await axios.post(
+        'http://54.180.91.167:8080/owner/store',
+        {
+          businessNum,
+          marketPhoneNum,
+          marketName,
+          ownerId,
+        },
+      );
+      Alert.alert('알림', '매장 등록에 성공했습니다.');
+      setLoading(false);
+
+      navigation.navigate('MainOwner');
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
-      Alert.alert('알림', '매장 등록에 성공했습니다.');
       if (errorResponse) {
         switch (errorResponse.status) {
           case 404: // 404
@@ -67,7 +76,7 @@ function AddMarket({navigation}: AddStoreProps) {
         setLoading(false);
       }
     }
-  }, [loading, businessNum, marketPhoneNum, marketName, ownerId]);
+  }, [loading, businessNum, marketPhoneNum, marketName, ownerId, navigation]);
   return (
     <View style={styles.background}>
       <View style={styles.titleWrapper}>
@@ -80,25 +89,19 @@ function AddMarket({navigation}: AddStoreProps) {
           style={styles.inputBox}
           placeholder="사업자등록번호"
           value={businessNum}
-          onChange={v => {
-            changeCorporationNumber(v);
-          }}
+          onChangeText={changeCorporationNumber}
         />
         <TextInput
           style={styles.inputBox}
           placeholder="가게번호"
           value={marketPhoneNum}
-          onChange={v => {
-            changeStorePhoneNumber(v);
-          }}
+          onChangeText={changeStorePhoneNumber}
         />
         <TextInput
           style={styles.inputBox}
           placeholder="가게이름"
           value={marketName}
-          onChange={v => {
-            changeStoreName(v);
-          }}
+          onChangeText={changeStoreName}
         />
       </View>
 
@@ -186,3 +189,6 @@ const styles = StyleSheet.create({
 });
 
 export default AddMarket;
+function dispatch(arg0: any) {
+  throw new Error('Function not implemented.');
+}

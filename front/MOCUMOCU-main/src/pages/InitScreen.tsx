@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
   },
   startZone: {
-    marginTop: '60%',
+    marginTop: '80%',
     justifyContent: 'center',
     alignItems: 'center',
   },

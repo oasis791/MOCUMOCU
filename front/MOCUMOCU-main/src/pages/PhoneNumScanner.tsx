@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import { NavigationRouteContext} from '@react-navigation/native';
 import { NativeStackScreenProps} from '@react-navigation/native-stack';
 import axios, { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -16,9 +15,6 @@ import Config from 'react-native-config';
 import { TextInput } from 'react-native-gesture-handler';
 import { LoggedInOwnerParamList } from '../../App';
 
-const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
-
 type PhoneNumScannerOwnerProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
   'PhoneNumScanner'
@@ -28,9 +24,6 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [buttonActive, setButtonActive] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const passfunc = useCallback(() => { }, []);
-
   const [marketId, setMarketId] = useState(route.params.marketId);
 
   const onSubmit = useCallback(async () => {
@@ -39,7 +32,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/owner/phoneNum`, {
+      const response = await axios.post('http://54.180.91.167:8080/owner/phoneNum', {
         phoneNumber,
       });
 
@@ -50,13 +43,10 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
           onPress: () => {
             navigation.navigate('StampAmount', {
               marketId: marketId,
-              // customerId: response.data.customerId,
-              customerId: '11',
+              customerId: response.data.customerId,
             });
           },
         },
-        // The "No" button
-        // Does nothing but dismiss the dialog when tapped
         {
           text: '취소',
         },
@@ -66,24 +56,12 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
         switch (errorResponse.status) {
-          case 404: // 404
-            Alert.alert('알림', '등록되어 있지 않는 전화번호입니다', [
-              // The "Yes" button
-              {
-                text: '확인',
-                onPress: () => {
-                  navigation.navigate('StampAmount', {
-                    marketId: marketId,
-                    customerId: '11',
-                  });
-                },
-              },
-              // The "No" button
-              // Does nothing but dismiss the dialog when tapped
-              {
-                text: '취소',
-              },
-            ]);
+          case 400: // 404
+            Alert.alert('알림', '등록되어 있지 않는 전화번호입니다');
+            break;
+          default:
+            Alert.alert('알림', `error code: ${errorResponse.status}`);
+            break;
         }
         setLoading(false);
       }
@@ -167,7 +145,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    flex: 4,
+    flex: 1,
     // backgroundColor: 'green',
   },
 
@@ -183,7 +161,7 @@ const styles = StyleSheet.create({
   },
 
   okButtonWrapper: {
-    flex: 1,
+    flex: 4,
     // backgroundColor: 'blue',
     paddingHorizontal: 30,
   },

@@ -26,7 +26,6 @@ export type UseQRProps = {
 function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
   const [scaned, setScaned] = useState<boolean>(true);
   const ref = useRef(null);
-
   const marketId = route.params.marketId;
 
   useEffect(() => {
@@ -41,37 +40,53 @@ function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
     setScaned(false);
     // Vibration.vibrate();
 
-    Alert.alert('QR Code', event.nativeEvent.codeStringValue, [
-      {text: 'OK', onPress: () => setScaned(true)},
-    ]);
-
-    const qrValue: SaveQRProps | UseQRProps = JSON.parse(
-      event.nativeEvent.codeStringValue,
-    );
-
+    let qrValue: SaveQRProps | UseQRProps | undefined;
     switch (route.params.type) {
-      case 'saveUp': // 적립
-        setScaned(true);
-        navigation.navigate('StampAmount', {customerId: qrValue.customerId});
+      case 'saveUp':
+         qrValue = JSON.parse(
+          event.nativeEvent.codeStringValue,
+        );
         break;
-      case 'use': // 사용
-        setScaned(true);
-        try {
-          const response = await axios.patch(`${Config.API_URL}/owner/stamp`, {
-            couponId: qrValue.couponId,
-            couponRequire: qrValue.couponRequire,
-          });
-          navigation.navigate('StampControl');
-        } catch (error) {
-          const errorResponse = (error as AxiosError).response;
-          if (errorResponse) {
-            Alert.alert('알림', '사용 처리에 실패했습니다.');
-          }
-        }
+      case 'use':
+         qrValue = JSON.parse(
+          event.nativeEvent.codeStringValue,
+        );
         break;
       default:
-        Alert.alert('알림', 'default');
-        break;
+        qrValue = undefined;
+        return;
+
+    }
+    // const qrValue: SaveQRProps = JSON.parse(
+    //   event.nativeEvent.codeStringValue,
+    // );
+
+    if (qrValue) {
+      switch (route.params.type) {
+        case 'saveUp': // 적립
+          setScaned(true);
+          navigation.navigate('StampAmount', { marketId: marketId, customerId: qrValue.customerId });
+          break;
+        case 'use': // 사용
+          setScaned(true);
+          try {
+            const response = await axios.patch('http://54.180.91.167:8080/owner/stamp', {
+              couponId: qrValue.couponId,
+              couponRequire: qrValue.couponRequire,
+            });
+            Alert.alert('알림', '정상적으로 사용되었습니다.');
+            navigation.navigate('SaveUpOwner');
+          } catch (error) {
+            const errorResponse = (error as AxiosError).response;
+            if (errorResponse) {
+              Alert.alert('알림', '사용 처리에 실패했습니다.');
+            }
+          }
+          break;
+        default:
+          Alert.alert('알림', 'default');
+          break;
+      }
     }
   };
 
