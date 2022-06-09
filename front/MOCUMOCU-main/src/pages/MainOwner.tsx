@@ -151,7 +151,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
       <View style={styles.storeListWrapper}>
         <Text style={styles.storeListTitle}>매장 리스트</Text>
 
-        {!markets ? (
+        {markets.length === 0 ? (
           <View style={[styles.noneMarketWrapper, {height: 60}]}>
             <Text style={{top: 5}}>등록된 매장이 없습니다.</Text>
           </View>
@@ -231,7 +231,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
       <View style={styles.marketAnalysisWrapper}>
         <Text style={styles.marketAnalysisTitle}>매장 분석</Text>
 
-        {!markets ? (
+        {markets.length === 0 ? (
           <View style={[styles.noneMarketWrapper, {height: 200}]}>
             <Text>등록된 매장이 없습니다.</Text>
           </View>

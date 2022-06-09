@@ -103,6 +103,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
             });
 
             onGetRewardSubmit();
+            setAddButtonActive(false);
 
 
             Alert.alert('알림', '리워드가 등록되었습니다.');
@@ -177,28 +178,39 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                 </View>
 
                 <View style={styles.marketRewardListWrapper}>
-                    <ScrollView style={styles.scrollRewardWrapper}>
-                        {rewardList.map(reward => {
-                            return (
-                                <View key={reward.id} style={styles.rewardWrapper}>
-                                    <Text style={styles.rewardText}>
-                                        {reward.couponRequire}개 리워드 - {reward.reward}
-                                    </Text>
+                    {rewardList.length === 0
+                        ?
+                        (
+                            <View style={[styles.scrollRewardWrapper, { alignItems: 'center', justifyContent: 'center' }]}>
+                                <Text>등록된 리워드가 없습니다</Text>
+                            </View>
+                        )
+                        : (
+                            <ScrollView style={styles.scrollRewardWrapper}>
+                                {rewardList.map(reward => {
+                                    return (
+                                        <View key={reward.id} style={styles.rewardWrapper}>
+                                            <Text style={styles.rewardText}>
+                                                {reward.couponRequire}개 리워드 - {reward.reward}
+                                            </Text>
 
-                                    {deleteButtonActive ? (
-                                        <TouchableOpacity onPress={() => { onDeleteRewardSubmit(reward.id); }}>
-                                            <Image
-                                                source={require('../assets/icon/xIconRed.png')}
-                                                style={styles.deleteIcon}
-                                            />
-                                        </TouchableOpacity>
-                                    ) : null
+                                            {deleteButtonActive ? (
+                                                <TouchableOpacity onPress={() => { onDeleteRewardSubmit(reward.id); }}>
+                                                    <Image
+                                                        source={require('../assets/icon/xIconRed.png')}
+                                                        style={styles.deleteIcon}
+                                                    />
+                                                </TouchableOpacity>
+                                            ) : null
 
-                                    }
-                                </View>
-                            );
-                        })}
-                    </ScrollView>
+                                            }
+                                        </View>
+                                    );
+                                })}
+                            </ScrollView>
+                        )
+                    }
+
                 </View>
 
                 <View style={styles.rewardControlWrapper}>
