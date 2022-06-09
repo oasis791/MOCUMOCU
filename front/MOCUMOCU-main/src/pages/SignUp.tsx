@@ -30,6 +30,14 @@ import DatePicker from 'react-native-date-picker';
 type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
 const window = Dimensions.get('screen');
+function convertDateFormat(date: any) {
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  month = month >= 10 ? month : '0' + month;
+  var day = date.getDate();
+  day = day >= 10 ? day : '0' + day;
+  return [year, month, day].join('-');
+}
 
 function SignUp({navigation}: SignUpScreenProps) {
   const [loading, setLoading] = useState(false);
@@ -397,6 +405,7 @@ function SignUp({navigation}: SignUpScreenProps) {
               placeholderTextColor="#c4c4c4"
               onChangeText={onChangeTelephoneNumber}
               value={telephoneNumber}
+              keyboardType="number-pad"
               textContentType="telephoneNumber"
               returnKeyType="next"
               clearButtonMode="while-editing"
@@ -549,8 +558,9 @@ function SignUp({navigation}: SignUpScreenProps) {
             onDateChange={setClickDate}
             // eslint-disable-next-line @typescript-eslint/no-shadow
             onConfirm={clickDate => {
-              setSendDate(clickDate.toISOString().split('T')[0]);
-              console.log(sendDate);
+              console.log('click date', convertDateFormat(clickDate));
+              setSendDate(convertDateFormat(clickDate));
+              console.log('sendDate', sendDate);
               setIsBirthClick(false);
             }}
             confirmText="확인"
