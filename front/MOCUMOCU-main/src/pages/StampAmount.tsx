@@ -7,12 +7,9 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Systrace,
   Alert,
 } from 'react-native';
-import Config from 'react-native-config';
 import {LoggedInOwnerParamList} from '../../App';
-
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
@@ -33,13 +30,17 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/owner/stamp`, {
-        marketId,
-        customerId,
-        amount,
-      });
+      const response = await axios.post(
+        'http://54.180.91.167:8080/owner/stamp',
+        {
+          marketId,
+          customerId,
+          amount,
+        },
+      );
       Alert.alert('알림', '적립되었습니다');
       setLoading(false);
+      navigation.navigate('SaveUpOwner');
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
@@ -47,7 +48,7 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
         setLoading(false);
       }
     }
-  }, [amount, customerId, loading, marketId]);
+  }, [customerId, loading, marketId, navigation]);
   return (
     <View style={styles.stampAmountWrapper}>
       {/* <Text>{customerId}</Text> */}

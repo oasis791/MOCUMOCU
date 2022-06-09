@@ -74,7 +74,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
       setLoading(false);
       const errorResponse = (error as AxiosError).response;
       if (errorResponse) {
-        Alert.alert('알림', errorResponse.data.message);
+        Alert.alert('알림', '회원정보와 일치하지 않습니다.');
       }
     }
   }, [loading, dispatch, ownerEmail, ownerPassword]);

@@ -1,15 +1,15 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 export interface UserInfo {
-  name: String;
-  email: String;
-  accessToken: String;
+  name: string;
+  email: string;
+  accessToken: string;
   id: number;
 }
 interface initialState {
-  name: String;
-  email: String;
-  accessToken: String;
+  name: string;
+  email: string;
+  accessToken: string;
   id: number;
 }
 

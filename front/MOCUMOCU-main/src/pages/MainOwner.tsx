@@ -17,10 +17,11 @@ import {useSelector} from 'react-redux';
 import ActivityRings from 'react-native-activity-rings';
 import {LoggedInOwnerParamList} from '../../App';
 import {RootState} from '../store/reducer';
-import Config from 'react-native-config';
+// import Config from 'react-native-config';
 import axios, {AxiosError} from 'axios';
 import {useAppDispatch} from '../store';
 import marketOwnerSlice from '../slices/marketOwner';
+import {useIsFocused} from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -32,8 +33,8 @@ type MainOwnerScreenProps = NativeStackScreenProps<
 
 function MainOwner({navigation}: MainOwnerScreenProps) {
   const isAlarm = false;
-  const ownerName = '김준서';
-  const ownerId = 111;
+  const ownerName = useSelector((state: RootState) => state.userTest.name);
+  const ownerId = useSelector((state: RootState) => state.userTest.id);
   const [deleteButtonAcitive, setDeleteButtonActive] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -47,7 +48,6 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
   };
 
   const onSubmitSetting = () => {
-    // Alert.alert('알림', '설정');
     navigation.navigate('SettingsOwner');
   };
   const onSubmitAlarm = () => {
@@ -55,52 +55,61 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
   };
 
   const toAddMarket = () => {
-    // Alert.alert('알림', '매장 등록으로 이동');
     navigation.navigate('AddMarket');
   };
 
   const toMarketInfo = marketIndex => {
     navigation.navigate('MarketInfo', {marketIndex});
   };
-
   const toDeleteMarket = () => {
     setDeleteButtonActive(!deleteButtonAcitive);
   };
 
   const onGetMarkets = useCallback(async () => {
     try {
+      console.log('ownerId', ownerId);
+
       const response = await axios.get(
-        `${Config.API_URL}/owner/${ownerId}/store-list/`,
+        `http://54.180.91.167:8080/owner/${ownerId}/market-list`,
       );
+      console.log('market', response.data);
       dispatch(
         marketOwnerSlice.actions.setMarket({
-          markets: response.data.markets,
+          markets: response.data,
         }),
       );
     } catch (error) {
       const errorResponse = (error as AxiosError).response;
       if (errorResponse) {
-        Alert.alert('알림', '매장 목록을 불러오는데 실패하였습니다.');
+        Alert.alert('알림', `${errorResponse.status}`);
       }
     }
-  }, []);
+  }, [dispatch, ownerId]);
 
-  const onDeleteSubmit = useCallback(async storeId => {
-    try {
-      const response = await axios.delete(`${Config.API_URL}/store/${storeId}`);
-      Alert.alert('알림', '매장이 삭제되었습니다.');
-    } catch (error) {
-      const errorResponse = (error as AxiosError<any>).response;
+  const onDeleteSubmit = useCallback(
+    async storeId => {
+      try {
+        const response = await axios.delete(
+          `http://54.180.91.167:8080/owner/store/${storeId}`,
+        );
+        onGetMarkets();
+        Alert.alert('알림', '매장이 삭제되었습니다.');
+      } catch (error) {
+        const errorResponse = (error as AxiosError<any>).response;
 
-      if (errorResponse) {
-        Alert.alert('알림', '매장 삭제에 실패하였습니다');
+        if (errorResponse) {
+          Alert.alert('알림', '매장 삭제에 실패하였습니다');
+        }
       }
-    }
-  }, []);
+    },
+    [onGetMarkets],
+  );
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     onGetMarkets();
-  }, [onGetMarkets]);
+  }, [isFocused, onGetMarkets]);
 
   return (
     <ScrollView style={styles.mainBackground}>
@@ -142,7 +151,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
       <View style={styles.storeListWrapper}>
         <Text style={styles.storeListTitle}>매장 리스트</Text>
 
-        {markets.length === 0 ? (
+        {!markets ? (
           <View style={[styles.noneMarketWrapper, {height: 60}]}>
             <Text style={{top: 5}}>등록된 매장이 없습니다.</Text>
           </View>
@@ -222,7 +231,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
       <View style={styles.marketAnalysisWrapper}>
         <Text style={styles.marketAnalysisTitle}>매장 분석</Text>
 
-        {markets.length === 0 ? (
+        {!markets ? (
           <View style={[styles.noneMarketWrapper, {height: 200}]}>
             <Text>등록된 매장이 없습니다.</Text>
           </View>
@@ -260,7 +269,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
                           오늘 방문자 수
                         </Text>
                         <Text style={[styles.todaysText, {bottom: 10}]}>
-                          {market.todays}명
+                          {market.today}명
                         </Text>
                       </View>
 

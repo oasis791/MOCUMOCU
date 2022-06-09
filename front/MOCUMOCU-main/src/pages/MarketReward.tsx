@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import Config from 'react-native-config';
 import { ScrollView } from 'react-native-gesture-handler';
+import { TextInput } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { LoggedInOwnerParamList } from '../../App';
 import marketOwnerSlice from '../slices/marketOwner';
@@ -45,15 +46,13 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
     const rewardList = useSelector(
         (state: RootState) => state.marketOwner.markets[marketIndex].rewardList
     );
-    // const ownerId = useSelector(
-    //     (state: RootState) => state.user.userId
-    // );
-    const ownerId = 111;
+
+    const ownerId = useSelector((state: RootState) => state.userTest.id);
 
     const [addButtonActive, setAddButtonActive] = useState(false);
     const [deleteButtonActive, setDeleteButtonActive] = useState(false);
     const [rewardName, setRewardName] = useState('');
-    const [couponRequire, setCouponRequire] = useState(1);
+    const [couponRequire, setCouponRequire] = useState('');
 
 
     const isAlarm = false;
@@ -66,41 +65,53 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
         Alert.alert('알림', '알람');
     };
 
+    const changeRewardName = useCallback(text => {
+        setRewardName(text);
+    }, []);
+    const changeCouponRequire = useCallback(text => {
+        setCouponRequire(text);
+    }, []);
+
     const onGetRewardSubmit = useCallback(async () => {
         try {
-            const response = await axios.get(`${Config.API_URL}/owner/${ownerId}/store/${marketId}/reward-list/`);
+            const response = await axios.get(`http://54.180.91.167:8080/owner/${marketId}/reward-list/`);
+            console.log('get rewardList:', response.data, '\nrewardList :', typeof (response.data.rewardList));
+
             dispatch(
                 marketOwnerSlice.actions.setReward({
-                    index: response.data.index,
-                    rewardList: response.data.rewardList,
+                    marketId: marketId,
+                    rewardList: response.data,
                 })
+
             );
         } catch (error) {
             const errorResponse = (error as AxiosError<any>).response;
             if (errorResponse) {
                 Alert.alert('알림', '리워드 목록을 불러오는데 실패했습니다.');
             }
+            console.log('error catch');
+
         }
     }, [dispatch, marketId]);
 
     const onAddRewardSubmit = useCallback(async () => {
         try {
-            const response = await axios.post(`${Config.API_URL}/owner/store/reward`, {
-                ownerId,
+            const response = await axios.post('http://54.180.91.167:8080/owner/store/reward', {
                 marketId,
                 rewardName,
-                couponRequire,
+                couponRequire: Number(couponRequire),
             });
-            onGetRewardSubmit;
+
+            onGetRewardSubmit();
+
+
             Alert.alert('알림', '리워드가 등록되었습니다.');
         } catch (error) {
             const errorResponse = (error as AxiosError<any>).response;
 
             if (errorResponse) {
-                Alert.alert('알림', '리워드 등록에 실패하였습니다.');
+                Alert.alert('알림asdf', `${errorResponse.status}`);
             }
-        } finally {
-            onGetRewardSubmit();
         }
     }, [couponRequire, marketId, onGetRewardSubmit, rewardName]);
 
@@ -110,7 +121,8 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
             text: '확인',
             onPress: async () => {
                 try {
-                    const response = await axios.delete(`${Config.API_URL}/owner/${ownerId}/store/${marketId}/reward/${rewardId}`);
+                    const response = await axios.delete(`http://54.180.91.167:8080/owner/${ownerId}/store/${marketId}/reward/${rewardId}`);
+                    onGetRewardSubmit();
                     Alert.alert('알림', '리워드가 삭제되었습니다.');
                 } catch (error) {
                     const errorResponse = (error as AxiosError<any>).response;
@@ -118,8 +130,6 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                     if (errorResponse) {
                         Alert.alert('알림', '리워드 삭제에 실패하였습니다');
                     }
-                } finally {
-                    onGetRewardSubmit();
                 }
             },
         },
@@ -129,29 +139,11 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
         ]);
 
 
-    }, [marketId, onGetRewardSubmit]);
+    }, [marketId, onGetRewardSubmit, ownerId]);
 
-    useEffect(() => {
-        onGetRewardSubmit();
-    }, [onGetRewardSubmit]);
-
-
-    // ref
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-    // variables
-    const snapPoints = useMemo(() => ['25%', '50%'], []);
-
-    // callbacks
-    const handlePresentModalPress = useCallback(() => {
-        bottomSheetModalRef.current?.present();
-    }, []);
-    const handleSheetChanges = useCallback((index: number) => {
-        console.log('handleSheetChanges', index);
-    }, []);
-
-
-
+    // useEffect(() => {
+    //     onGetRewardSubmit();
+    // }, [onGetRewardSubmit]);
 
     return (
         <BottomSheetModalProvider>
@@ -185,7 +177,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                 </View>
 
                 <View style={styles.marketRewardListWrapper}>
-                    <ScrollView >
+                    <ScrollView style={styles.scrollRewardWrapper}>
                         {rewardList.map(reward => {
                             return (
                                 <View key={reward.id} style={styles.rewardWrapper}>
@@ -210,7 +202,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                 </View>
 
                 <View style={styles.rewardControlWrapper}>
-                    <TouchableOpacity style={[styles.rewardWrapper, styles.plusButton]} onPress={() => { handlePresentModalPress; setAddButtonActive(true); }}>
+                    <TouchableOpacity style={[styles.rewardWrapper, styles.plusButton]} onPress={() => {setAddButtonActive(true); }}>
                         <Text style={[styles.rewardText, { fontSize: 25, marginLeft: 0 }]}>
                             +
                         </Text>
@@ -230,20 +222,28 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                 {addButtonActive
                     ? (
                         <View style={styles.container}>
-                            <BottomSheetModal
-                                ref={bottomSheetModalRef}
-                                index={1}
-                                snapPoints={snapPoints}
-                                onChange={handleSheetChanges}
-                            >
-                                <View style={styles.contentContainer}>
-                                    <Text>Awesome 🎉</Text>
-                                    <Text>Awesome 🎉</Text>
-                                    <Text>Awesome 🎉</Text>
-                                    <Text>Awesome 🎉</Text>
-                                    <Text>Awesome 🎉</Text>
-                                </View>
-                            </BottomSheetModal>
+                            <View style={styles.addRewardInputWrapper}>
+                                <TextInput placeholder="소모 개수"
+                                    keyboardType="numeric"
+                                    value={couponRequire}
+                                    onChangeText={changeCouponRequire}
+                                   />
+                                <TextInput
+                                placeholder="물품"
+                                    value={rewardName}
+                                    onChangeText={changeRewardName} />
+                                <Text>{rewardName}</Text>
+                            </View>
+                            <View style={styles.addRewardButtonWrapper}>
+                                <TouchableOpacity style={styles.addRewardButton}
+                                    onPress={onAddRewardSubmit}>
+                                    <Text style={styles.addRewardButtonText}>확인</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.addRewardButton} onPress={()=>{setAddButtonActive(false);}}>
+                                    <Text style={styles.addRewardButtonText}>취소</Text>
+                                </TouchableOpacity>
+                            </View>
+
                         </View>
                     )
                     : null
@@ -252,7 +252,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
 
 
 
-            </View >
+            </View>
         </BottomSheetModalProvider >
     );
 }
@@ -319,6 +319,11 @@ const styles = StyleSheet.create({
     marketRewardListWrapper: {
 
     },
+
+    scrollRewardWrapper: {
+        height: 350,
+    },
+
     rewardWrapper: {
         backgroundColor: 'white',
         margin: 10,
@@ -347,7 +352,41 @@ const styles = StyleSheet.create({
     },
 
 
-    plusButton: { backgroundColor: '#E5E5E5', alignItems: 'center', justifyContent: 'center', width: '95%', marginBottom: 15 },
+    plusButton: {
+        backgroundColor: '#E5E5E5',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '95%',
+        marginBottom: 15,
+    },
+
+    addRewardInputWrapper: {
+
+    },
+
+    addRewardInput: {
+    },
+
+    addRewardButtonWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+
+    },
+
+    addRewardButton: {
+        backgroundColor: 'pink',
+        borderRadius: 10,
+        marginHorizontal: 10,
+
+
+    },
+
+    addRewardButtonText: {
+        color: 'black',
+        fontSize: 18,
+    },
 });
 
 export default MarketReward;

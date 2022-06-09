@@ -82,24 +82,26 @@ function SaveUpOwner({navigation}: SaveUpOwnerProps) {
       </View>
 
       <ScrollView>
-        {markets.map(market => {
-          return (
-            <TouchableOpacity
-              style={styles.marketTabWrapper}
-              key={market.id}
-              onPress={() => {
-                navigation.navigate('StampControl', {
-                  marketId: market.id,
-                });
-              }}>
-              <Text style={styles.marketTabNameText}>{market.name}</Text>
-              <Image
-                source={require('../assets/icon/arrowGray.png')}
-                style={styles.marketTabArrow}
-              />
-            </TouchableOpacity>
-          );
-        })}
+        {!markets
+          ? null
+          : markets.map(market => {
+              return (
+                <TouchableOpacity
+                  style={styles.marketTabWrapper}
+                  key={market.id}
+                  onPress={() => {
+                    navigation.navigate('StampControl', {
+                      marketId: market.id,
+                    });
+                  }}>
+                  <Text style={styles.marketTabNameText}>{market.name}</Text>
+                  <Image
+                    source={require('../assets/icon/arrowGray.png')}
+                    style={styles.marketTabArrow}
+                  />
+                </TouchableOpacity>
+              );
+            })}
       </ScrollView>
     </View>
   );

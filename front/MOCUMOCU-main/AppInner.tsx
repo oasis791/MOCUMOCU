@@ -32,6 +32,7 @@ function AppInner() {
   // );
   const isLogIn = useSelector((state: RootState) => state.userTest.isLogIn);
   const userType = useSelector((state: RootState) => state.userTest.userType);
+  // const userType = 'Owner';
   // const userTypeTest = 'Customer';
   const dispatch = useAppDispatch();
   // const isLoggedIn = false;
