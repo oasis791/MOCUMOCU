@@ -35,9 +35,15 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public void useStamp(UseStampDTO useStampDTO) {
+    public boolean useStamp(UseStampDTO useStampDTO) {
         Coupon findCoupon = couponRepository.findOne(useStampDTO.getCouponId());
-        findCoupon.setAmount(findCoupon.getAmount() - useStampDTO.getCouponRequire());
+
+        if(findCoupon.getAmount() - useStampDTO.getCouponRequire() > 0 ){
+            findCoupon.setAmount(findCoupon.getAmount() - useStampDTO.getCouponRequire());
+            return true;
+        }
+        return false;
+
     }
 
     @Override

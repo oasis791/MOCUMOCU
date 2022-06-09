@@ -11,7 +11,7 @@ public interface CouponService {
 
     Long addCoupon(Coupon coupon);
 
-    void useStamp(UseStampDTO useStampDTO);
+    boolean useStamp(UseStampDTO useStampDTO);
 
     void earnStamp(SaveStampDTO saveStampDTO);
 

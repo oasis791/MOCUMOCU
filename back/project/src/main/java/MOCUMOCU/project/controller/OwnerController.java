@@ -107,9 +107,13 @@ public class OwnerController {
 
     @PatchMapping("/stamp")
     public ResponseEntity<Void> useStamp(@RequestBody UseStampDTO useStampDTO) {
-        couponService.useStamp(useStampDTO);
+        if(couponService.useStamp(useStampDTO)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
     @PostMapping("/phoneNum")
