@@ -113,10 +113,10 @@ public class OwnerController {
     }
 
     @PostMapping("/phoneNum")
-    public ResponseEntity<CustomerSendDTO> searchCustomerByPhoneNum(@RequestBody String phoneNumber) {
+    public ResponseEntity<CustomerSendDTO> searchCustomerByPhoneNum(@RequestBody PhoneNumDTO phoneNumDTO) {
 
-        if (customerService.isPhoneNumExist(phoneNumber)) {
-            Customer findCustomer = customerService.findByPhoneNum(phoneNumber);
+        if (customerService.isPhoneNumExist(phoneNumDTO.getPhoneNumber())) {
+            Customer findCustomer = customerService.findByPhoneNum(phoneNumDTO.getPhoneNumber());
 
             CustomerSendDTO customerSendDTO = new CustomerSendDTO();
             customerSendDTO.setCustomerId(findCustomer.getId());

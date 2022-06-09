@@ -106,11 +106,7 @@ public class CustomerServiceImpl implements CustomerService {
     public boolean isPhoneNumExist(String phoneNum) {
         List<Customer> findCustomer = customerRepository.findByPhoneNum(phoneNum);
 
-        if (findCustomer.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return !findCustomer.isEmpty();
 
     }
 
