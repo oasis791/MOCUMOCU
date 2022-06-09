@@ -54,6 +54,25 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
   const onChangeTelephoneNumber = useCallback(text => {
     setOwnerPhoneNumber(text.trim());
   }, []);
+
+  useEffect(() => {
+    setOwnerPhoneNumber(ownerPhoneNum.trim());
+    // setPhoneNumber(phoneNumber.replace('-', ''));
+
+    if (ownerPhoneNum.length === 11) {
+      setOwnerPhoneNumber(
+        ownerPhoneNum.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'),
+      );
+    }
+    if (ownerPhoneNum.length === 11) {
+      setOwnerPhoneNumber(
+        ownerPhoneNum
+          .replace(/-/g, '')
+          .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
+      );
+    }
+  }, [ownerPhoneNum]);
+
   const onSubmit = useCallback(async () => {
     if (loading) {
       return;
@@ -322,6 +341,7 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
             placeholder="전화번호"
             placeholderTextColor="#c4c4c4"
             onChangeText={onChangeTelephoneNumber}
+            keyboardType="decimal-pad"
             value={ownerPhoneNum}
             textContentType="telephoneNumber"
             returnKeyType="next"
@@ -329,6 +349,7 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
             ref={telephoneNumberRef}
             onSubmitEditing={onSubmit}
             blurOnSubmit={false}
+            maxLength={13}
           />
           {/* <Text style={styles.label}>이름</Text> */}
         </View>
@@ -457,7 +478,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     // position: 'relative',
   },
-  modalButtonActive: {backgroundColor: '#363636'},
+  modalButtonActive: {backgroundColor: '#FA6072'},
   modalButtonText: {
     color: 'gray',
     justifyContent: 'center',
@@ -471,7 +492,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
     fontFamily: 'GmarketSansTTFBold',
-    color: '#363636',
+    color: '#FA6072',
   },
   privacyAgreeText: {
     marginHorizontal: 40,

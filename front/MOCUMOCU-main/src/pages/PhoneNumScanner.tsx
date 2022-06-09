@@ -72,10 +72,10 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     setPhoneNumber(phoneNumber.trim());
     // setPhoneNumber(phoneNumber.replace('-', ''));
 
-    if (phoneNumber.length === 10) {
+    if (phoneNumber.length === 11) {
       setPhoneNumber(phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
     }
-    if (phoneNumber.length === 13) {
+    if (phoneNumber.length === 11) {
       setPhoneNumber(
         phoneNumber
           .replace(/-/g, '')

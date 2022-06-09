@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
   Modal,
@@ -82,6 +82,24 @@ function SignUp({navigation}: SignUpScreenProps) {
   const onChangeTelephoneNumber = useCallback(text => {
     setTelephoneNumber(text.trim());
   }, []);
+  useEffect(() => {
+    setTelephoneNumber(telephoneNumber.trim());
+    // setPhoneNumber(phoneNumber.replace('-', ''));
+
+    if (telephoneNumber.length === 11) {
+      setTelephoneNumber(
+        telephoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'),
+      );
+    }
+    if (telephoneNumber.length === 11) {
+      setTelephoneNumber(
+        telephoneNumber
+          .replace(/-/g, '')
+          .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
+      );
+    }
+  }, [telephoneNumber]);
+
   const expandButtonPress = () => {
     bottomSheetRef?.current?.expand();
     setIsOpen(true);
@@ -411,6 +429,7 @@ function SignUp({navigation}: SignUpScreenProps) {
               clearButtonMode="while-editing"
               ref={telephoneNumberRef}
               blurOnSubmit={false}
+              maxLength={13}
             />
           </View>
           <View style={styles.inputWrapper}>
