@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
   },
   startZone: {
-    marginTop: '80%',
+    flex: 1,
+    marginTop: '70%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     height: '100%',
     textAlignVertical: 'center',
-    // marginBottom: '1%',
+    marginBottom: 5,
   },
 });
 export default InitScreen;
