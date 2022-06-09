@@ -127,4 +127,14 @@ public class OwnerController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("{marketId}/reward-list")
+    public ResponseEntity<List<RewardOwnerDTO>> rewardList(@PathVariable Long marketId) {
+
+        List<RewardOwnerDTO> rewardOwnerDTOList = marketService.findAllReward(marketId);
+
+        return new ResponseEntity<>(rewardOwnerDTOList, HttpStatus.OK);
+    }
+
+
 }

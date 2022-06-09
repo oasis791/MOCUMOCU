@@ -5,8 +5,6 @@ import MOCUMOCU.project.domain.Privacy;
 import MOCUMOCU.project.form.CouponInfoDTO;
 import MOCUMOCU.project.form.CustomerInfoDTO;
 import MOCUMOCU.project.form.CustomerLoginDTO;
-import MOCUMOCU.project.form.OwnerLoginDTO;
-import MOCUMOCU.project.owner.Owner;
 import MOCUMOCU.project.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
