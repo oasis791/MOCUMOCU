@@ -1,6 +1,7 @@
-import axios from 'axios';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import axios, {AxiosError} from 'axios';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
+  Alert,
   Dimensions,
   Image,
   Pressable,
@@ -12,22 +13,20 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {LoggedInUserParamList} from '../../App';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
+import {useFocusEffect} from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('screen').width;
 type RewardListScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
   'RewardList'
 >;
-export type Coupon = {
-  couponId: number;
-  couponRequire: number;
-};
 export type Reward = {
-  rewardName: String;
+  rewardContent: string;
   needAmount: number;
 };
 
 function RewardList({navigation, route}: RewardListScreenProps) {
+  const [loading, setLoading] = useState(false);
   const selectedCouponId = route.params.selectCouponId;
   const selectedMarket = route.params.selectMarket;
   // const accessToken = useSelector((state: RootState) => state.user.accessToken);
@@ -35,7 +34,7 @@ function RewardList({navigation, route}: RewardListScreenProps) {
   // const [loading, setLoading] = useState(false);
   const [rewardList, setRewardList] = useState<Reward[]>([
     {
-      rewardName: '',
+      rewardContent: '',
       needAmount: 0,
     },
   ]);
@@ -57,22 +56,38 @@ function RewardList({navigation, route}: RewardListScreenProps) {
   //     ],
   //   ];
   // }, []);
-  useEffect(() => {
-    async function getCustomerId() {
-      const response = await axios.get<{data: Reward[]}>(
-        'http://54.180.91.167:8080/user/reward-list',
-        {
-          headers: {
-            // authorization: `Bearer ${accessToken}`,
-          },
-          params: {couponId: selectedCouponId},
-        },
-      );
-      console.log(response.data.data);
-      setRewardList(response.data.data);
-    }
-    getCustomerId();
-  }, [rewardList, selectedCouponId]);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      const getRewardList = async () => {
+        try {
+          const response = await axios.get(
+            'http://54.180.91.167:8080/user/reward-list',
+            {
+              headers: {
+                // authorization: `Bearer ${accessToken}`,
+              },
+              params: {couponId: selectedCouponId},
+            },
+          );
+          if (isActive) {
+            setRewardList(response.data);
+          }
+        } catch (error) {
+          const errorResponse = (error as AxiosError<any>).response;
+          if (errorResponse) {
+            Alert.alert('알림', errorResponse.data.message);
+            setLoading(false);
+          }
+        }
+      };
+      getRewardList();
+      return () => {
+        isActive = false;
+      };
+    }, [selectedCouponId]),
+  );
+
   const toUseQRTest = (idx: number) => {
     // const couponRequireTest =
     //   rewardListTest[selectedCouponId][idx].couponRequireTest; //Test
@@ -120,11 +135,11 @@ function RewardList({navigation, route}: RewardListScreenProps) {
         onPress={() => {
           toUseQRTest(idx);
         }}
-        key={reward.rewardName}>
+        key={reward.rewardContent}>
         <Text style={styles.rewardText}>
           {/* {idx} */}
           {reward.needAmount}개 리워드 - {'\t'}
-          {reward.rewardName}
+          {reward.rewardContent}
         </Text>
         <Image
           style={styles.arrowButton}

@@ -83,7 +83,7 @@ function SignIn({navigation}: SignInScreenProps) {
       setLoading(false);
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
-        Alert.alert('알림', errorResponse.data.message);
+        Alert.alert('알림', '회원정보와 일치하지 않습니다.');
       }
     }
   }, [loading, email, password, dispatch]);
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     // paddingVertical: 10,
     borderRadius: 5,
     // marginTop: '4%',
-    height: 40,
+    height: 35,
     paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',

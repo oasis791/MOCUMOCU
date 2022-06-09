@@ -1,6 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import axios from 'axios';
-import React, {useCallback, useEffect, useRef} from 'react';
+import axios, {AxiosError} from 'axios';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import couponSlice, {Coupon} from '../slices/coupon';
 import {useAppDispatch} from '../store';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
+import {useFocusEffect} from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('screen').width;
 const data = [
@@ -40,23 +41,40 @@ function Main({navigation}: MainScreenProps) {
   // const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const customerIdTest = useSelector((state: RootState) => state.userTest.id);
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    async function getCouponInfo() {
-      const response = await axios.get<{data: Coupon[]}>(
-        `http://54.180.91.167:8080/user/${customerIdTest}/coupon`,
-        {
-          headers: {
-            // authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      console.log('coupon', response);
-      dispatch(couponSlice.actions.setCouponInfo(response.data.data));
-    }
-    getCouponInfo();
-    return () => {};
-  }, [customerIdTest, dispatch]);
+  const [loading, setLoading] = useState(false);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      const getCouponInfo = async () => {
+        try {
+          const response = await axios.get<Coupon[]>(
+            `http://54.180.91.167:8080/user/${customerIdTest}/coupon`,
+            {
+              headers: {
+                // authorization: `Bearer ${accessToken}`,
+              },
+            },
+          );
+          if (isActive) {
+            console.log('coupon', response.data);
+            setLoading(false);
+            dispatch(couponSlice.actions.setCouponInfo(response.data));
+          }
+        } catch (error) {
+          setLoading(false);
+          const errorResponse = (error as AxiosError<any>).response;
+          if (errorResponse) {
+            Alert.alert('알림', errorResponse.data.message);
+            setLoading(false);
+          }
+        }
+      };
+      getCouponInfo();
+      return () => {
+        isActive = false;
+      };
+    }, [customerIdTest, dispatch]),
+  );
 
   const isAlarm = true;
   // const customerName = useSelector((state: RootState) => state.user.name);
@@ -83,22 +101,24 @@ function Main({navigation}: MainScreenProps) {
   const toCouponList = () => {
     Alert.alert('알림', '쿠폰 리스트 화면으로 이동');
   };
-  const renderCoupon = coupons ? (
-    coupons.map(coupon => {
-      return (
-        <View style={styles.scrollItem}>
-          <Text style={styles.scrollItemText}>{coupon.couponId}</Text>
-          <Text style={[styles.scrollItemText, {color: '#414FFD'}]}>
-            {coupon.marketName}
-          </Text>
-        </View>
-      );
-    })
-  ) : (
-    <View style={styles.scrollItemNone}>
-      <Text style={styles.myCouponText}>보유한 쿠폰이 없습니다</Text>
-    </View>
-  );
+  const renderCoupon =
+    coupons.length !== 0 ? (
+      coupons.map(coupon => {
+        return (
+          <View style={styles.scrollItem} key={coupon.couponId}>
+            {/* <Text style={styles.scrollItemText}>{coupon.couponId}</Text> */}
+            <Text style={[styles.scrollItemText, {color: '#414FFD'}]}>
+              {coupon.marketName}
+            </Text>
+            <Text style={styles.scrollItemText}>{coupon.stampAmount} 장</Text>
+          </View>
+        );
+      })
+    ) : (
+      <View style={styles.scrollItemNone}>
+        <Text style={styles.myCouponText}>보유한 쿠폰이 없습니다</Text>
+      </View>
+    );
 
   const renderItem = ({item}: any) => {
     return (
@@ -192,13 +212,15 @@ function Main({navigation}: MainScreenProps) {
                 <Text style={styles.myCouponboxButtonText}>전체 +</Text>
               </Pressable>
             </View>
-            <ScrollView
-              horizontal={true}
-              pagingEnabled={true}
-              showsHorizontalScrollIndicator={true}
-              contentContainerStyle={styles.scrollViewHorizontal}>
-              {renderCoupon}
-            </ScrollView>
+            <View style={styles.ScrollViewWrapper}>
+              <ScrollView
+                horizontal={true}
+                pagingEnabled={true}
+                showsHorizontalScrollIndicator={true}
+                contentContainerStyle={styles.scrollViewHorizontal}>
+                {renderCoupon}
+              </ScrollView>
+            </View>
           </View>
           <View style={styles.footer}>
             <View style={styles.footerButtonWrapper}>
@@ -258,7 +280,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     resizeMode: 'contain',
     width: 20,
-    height: 20,
+    height: 19,
     // backgroundColor: 'cyan',
   },
   headerSetting: {
@@ -273,7 +295,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     resizeMode: 'contain',
     // flex: 1,
-    height: 20,
+    height: 22,
     width: 20,
     // backgroundColor: 'orange',
   },
@@ -353,6 +375,7 @@ const styles = StyleSheet.create({
     // elevation: 30,
   },
   myCouponboxButton: {
+    // backgroundColor: 'white',
     justifyContent: 'center',
     marginRight: 30,
     // backgroundColor: 'pink',
@@ -367,9 +390,10 @@ const styles = StyleSheet.create({
   myCouponTextWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 20,
+    height: 18,
     marginTop: 33,
     marginBottom: 35,
+    // backgroundColor: 'green',
   },
   myCouponText: {
     // marginBottom: 39,
@@ -389,7 +413,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     // alignItems: 'baseline',
-    width: 251,
+    width: 260,
     height: 139,
     borderRadius: 10,
     elevation: 12,
@@ -425,11 +449,24 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // justifyContent: 'center',
   },
+  ScrollViewWrapper: {
+    width: screenWidth,
+    height: 170,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'pink',
+  },
   scrollViewHorizontal: {
-    // backgroundColor: 'black',
-    // width: '100%',
-    // height: 150,
-    alignItems: 'baseline',
+    // top: -10,
+    // // backgroundColor: 'black',
+    // width: screenWidth - 100,
+    // backgroundColor: 'green',
+    // backgroundColor: 'pink',
+    height: 150,
+    // backgroundColor: 'green',
+    // backgroundColor: 'pink',
+    alignItems: 'center',
+    justifyContent: 'center',
     // marginBottom: 9,
     // elevation: 2,
   },

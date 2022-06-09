@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
+import {Coupon} from '../slices/coupon';
 
 type UseCouponScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
@@ -19,36 +20,38 @@ type UseCouponScreenProps = NativeStackScreenProps<
 >;
 export type Select = {
   selectCouponId: number;
-  selectMarket: String;
+  selectMarket: string;
 };
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 function UseCoupon({navigation}: UseCouponScreenProps) {
   const coupons = useSelector((state: RootState) => state.coupon.coupons); // 사용자 쿠폰 리스트 가져오기
-  const couponList = useMemo(() => {
-    return [
-      {couponId: 0, marketName: 'market 1'},
-      {couponId: 1, marketName: 'market 2'},
-    ];
-  }, []);
+  // const couponList = useMemo(() => {
+  //   return [
+  //     {couponId: 0, marketName: 'market 1'},
+  //     {couponId: 1, marketName: 'market 2'},
+  //   ];
+  // }, []);
 
-  const toRewardList = (idx: number) => {
-    const selectCouponId = couponList[idx].couponId;
-    const selectMarket = couponList[idx].marketName;
+  // const toRewardList = (idx: number) => {
+  //   const selectCouponId = couponList[idx].couponId;
+  //   const selectMarket = couponList[idx].marketName;
+  //   console.log(
+  //     `선택 coupon id: ${selectCouponId} / 마켓이름: ${selectMarket}`,
+  //   );
+  //   navigation.navigate('RewardList', {
+  //     selectCouponId: selectCouponId,
+  //     selectMarket: selectMarket,
+  //   });
+  // };
+  const toRewardList = ({couponId, marketName, stampAmount}: Coupon) => {
+    let selectCouponId: number = couponId;
+    let selectMarket: string = marketName;
+    let selectStampAmount: number = stampAmount;
     console.log(
-      `선택 coupon id: ${selectCouponId} / 마켓이름: ${selectMarket}`,
-    );
-    navigation.navigate('RewardList', {
-      selectCouponId: selectCouponId,
-      selectMarket: selectMarket,
-    });
-  };
-  const toRewardListTest = (idx: number) => {
-    const selectCouponId = couponList[idx].couponId;
-    const selectMarket = couponList[idx].marketName;
-    console.log(
-      `선택 coupon id: ${selectCouponId} / 마켓이름: ${selectMarket}`,
+      `선택 coupon id: ${selectCouponId} / 마켓이름: ${selectMarket}
+        / 도장 보유 개수: ${selectStampAmount}`,
     );
     navigation.navigate('RewardList', {
       selectCouponId: selectCouponId,
@@ -96,55 +99,32 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
   //   getCoupon();
   //   return () => {};
   // }, [customerId, dispatch]);
-  const renderMarketTest = couponList.map((coupon, idx) => {
+
+  const renderMarket = coupons.map((coupon: Coupon) => {
     return (
-      <Pressable
-        style={styles.marketContainer}
-        key={coupon.couponId}
-        onPress={() => {
-          toRewardListTest(idx);
-        }}>
-        <Text style={styles.marketText}>{coupon.marketName}</Text>
-        <Image
-          style={styles.arrowButton}
-          source={require('../assets/icon/arrowNormal.png')}
-        />
-      </Pressable>
-    );
-  });
-  const renderMarket = coupons ? (
-    coupons.map(coupon => {
-      return (
-        <Pressable key={coupon.couponId}>
+      <View>
+        <Pressable
+          key={coupon.couponId}
           style={styles.marketContainer}
-          onPress=
-          {() => {
-            const identify = coupon.couponId;
-            toRewardListTest(identify);
-          }}
+          onPress={() => {
+            toRewardList(coupon);
+          }}>
           <Text style={styles.marketText}>{coupon.marketName}</Text>
           <Image
             style={styles.arrowButton}
             source={require('../assets/icon/arrowNormal.png')}
           />
         </Pressable>
-      );
-    })
-  ) : (
-    <View style={styles.scrollItemNone}>
-      <Text style={styles.myCouponText}>보유한 쿠폰이 없습니다</Text>
-    </View>
-  );
+      </View>
+    );
+  });
   return (
     <View>
       <View style={styles.titleContiner}>
-        <Text style={styles.titleText}>
-          {/* {params.customerId} */}
-          쿠폰을 사용할 매장을
-        </Text>
+        <Text style={styles.titleText}>쿠폰을 사용할 매장을</Text>
         <Text style={styles.titleText}>선택해 주세요</Text>
       </View>
-      <>{renderMarket}</>
+      {renderMarket}
     </View>
   );
 }

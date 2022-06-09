@@ -2,17 +2,17 @@ import {createSlice} from '@reduxjs/toolkit';
 
 export interface UserInfoTest {
   logIn: any;
-  name: String;
-  email: String;
+  name: string;
+  email: string;
   id: number;
-  userType: String;
+  userType: string;
   isLogIn: boolean;
 }
 interface initialStateTest {
-  name: String;
-  email: String;
+  name: string;
+  email: string;
   id: number;
-  userType: String;
+  userType: string;
   isLogIn: boolean;
 }
 

@@ -10,13 +10,7 @@ interface initialState {
   coupons: Coupon[];
 }
 const initialState: initialState = {
-  coupons: [
-    {
-      couponId: 0,
-      marketName: '',
-      stampAmount: 0,
-    },
-  ],
+  coupons: [],
 };
 
 const couponSlice = createSlice({

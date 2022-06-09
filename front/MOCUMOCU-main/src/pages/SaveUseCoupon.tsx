@@ -26,7 +26,8 @@ type SaveUseCouponScreenProps = NativeStackScreenProps<
 >;
 function SaveUseCoupon({navigation}: SaveUseCouponScreenProps) {
   // const navigation = useNavigation();
-  const customerId = useSelector((state: RootState) => state.user.id);
+  const customerId = useSelector((state: RootState) => state.userTest.id);
+  const couponExist = useSelector((state: RootState) => state.coupon.coupons);
   // const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(true);
   const [clickSaveUpCoupon, setClickSaveUpCoupon] = useState(false);
@@ -102,12 +103,32 @@ function SaveUseCoupon({navigation}: SaveUseCouponScreenProps) {
               />
               <Text style={styles.buttonText}>쿠폰 적립</Text>
             </Pressable>
-            <Pressable onPress={toUseCouponTest} style={styles.button}>
-              <Image
-                source={require('../assets/icon/couponUseIcon.png')}
-                style={styles.couponIcon}
-              />
-              <Text style={styles.buttonText}>쿠폰 사용</Text>
+            <Pressable
+              onPress={toUseCouponTest}
+              disabled={!couponExist}
+              style={styles.button}>
+              {couponExist ? (
+                <Image
+                  source={require('../assets/icon/couponUseIcon.png')}
+                  style={styles.couponIcon}
+                />
+              ) : (
+                <Image
+                  source={require('../assets/icon/couponUseIconDisabled.png')}
+                  style={styles.couponIcon}
+                />
+              )}
+              <Text
+                style={
+                  !couponExist
+                    ? StyleSheet.compose(
+                        styles.buttonText,
+                        styles.buttonTextActive,
+                      )
+                    : styles.buttonText
+                }>
+                쿠폰 사용
+              </Text>
             </Pressable>
           </View>
         </View>
@@ -155,6 +176,9 @@ const styles = StyleSheet.create({
     fontFamily: 'GmarketSansTTFBold',
     fontSize: 16,
     fontWeight: '500',
+    color: '#414ffd',
+  },
+  buttonTextActive: {
     color: '#5d5d5d',
   },
   animatedView: {
