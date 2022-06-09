@@ -43,7 +43,6 @@ public class CouponServiceImpl implements CouponService {
             return true;
         }
         return false;
-
     }
 
     @Override
@@ -56,6 +55,7 @@ public class CouponServiceImpl implements CouponService {
             newCoupon.setMarket(marketRepository.findOne(saveStampDTO.getMarketId()));
             newCoupon.setCustomer(customerRepository.findOne(saveStampDTO.getCustomerId()));
             newCoupon.setAmount(saveStampDTO.getAmount());
+            couponRepository.save(newCoupon);
         } else{
             findCoupons.get(0).setAmount(findCoupons.get(0).getAmount() + saveStampDTO.getAmount());
         }
