@@ -24,6 +24,13 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
   const marketId = route.params.marketId;
   const customerId = route.params.customerId;
 
+  const upAmount = () => {
+    setAmount(x => x + 1);
+  };
+  const downAmount = () => {
+    setAmount(x => x - 1);
+  };
+
   const onSubmit = useCallback(async () => {
     if (loading) {
       return;
@@ -48,7 +55,7 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
         setLoading(false);
       }
     }
-  }, [customerId, loading, marketId, navigation]);
+  }, [amount, customerId, loading, marketId, navigation]);
   return (
     <View style={styles.stampAmountWrapper}>
       {/* <Text>{customerId}</Text> */}
@@ -59,10 +66,7 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
       </View>
 
       <View style={styles.counterWrapper}>
-        <TouchableOpacity
-          onPress={() => {
-            setAmount(x => x + 1);
-          }}>
+        <TouchableOpacity onPress={upAmount}>
           <Text style={styles.controlIcon}>+</Text>
         </TouchableOpacity>
 
@@ -70,7 +74,7 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
 
         <TouchableOpacity
           onPress={() => {
-            amount > 1 ? setAmount(x => x - 1) : null;
+            amount > 1 ? downAmount() : null;
           }}>
           <Text style={styles.controlIcon}>-</Text>
         </TouchableOpacity>
