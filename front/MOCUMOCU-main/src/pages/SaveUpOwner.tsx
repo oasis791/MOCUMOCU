@@ -57,12 +57,6 @@ function SaveUpOwner({navigation}: SaveUpOwnerProps) {
       <StatusBar hidden={true} />
       <View style={styles.mainHeader}>
         <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
-              style={styles.headerSetting}
-            />
-          </Pressable>
           <Pressable onPress={onSubmitAlarm}>
             <Image
               source={
@@ -71,6 +65,12 @@ function SaveUpOwner({navigation}: SaveUpOwnerProps) {
                   : require('../assets/icon/mainAlarm.png')
               }
               style={styles.headerAlarm}
+            />
+          </Pressable>
+          <Pressable onPress={onSubmitSetting}>
+            <Image
+              source={require('../assets/icon/mainSetting.png')}
+              style={styles.headerSetting}
             />
           </Pressable>
         </View>
@@ -147,13 +147,13 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: 20,
     height: 20,
-    marginRight: 15,
   },
   headerAlarm: {
     resizeMode: 'contain',
     // backgroundColor: 'black',
     width: 20,
     height: 20,
+    marginRight: 15,
   },
 
   selectMarketListTitle: {

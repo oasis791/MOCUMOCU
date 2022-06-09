@@ -36,12 +36,6 @@ function StampControl({navigation, route}: StampControlProps) {
       <StatusBar hidden={true} />
       <View style={styles.mainHeader}>
         <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
-              style={styles.headerSetting}
-            />
-          </Pressable>
           <Pressable onPress={onSubmitAlarm}>
             <Image
               source={
@@ -50,6 +44,12 @@ function StampControl({navigation, route}: StampControlProps) {
                   : require('../assets/icon/mainAlarm.png')
               }
               style={styles.buttonIcon}
+            />
+          </Pressable>
+          <Pressable onPress={onSubmitSetting}>
+            <Image
+              source={require('../assets/icon/mainSetting.png')}
+              style={styles.headerSetting}
             />
           </Pressable>
         </View>
