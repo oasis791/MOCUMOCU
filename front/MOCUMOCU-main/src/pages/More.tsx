@@ -19,10 +19,14 @@ import userSliceTest from '../slices/userTest';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {LoggedInUserParamList} from '../../App';
 
 const screenWidth = Dimensions.get('screen').width;
 
-function More() {
+type MoreScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'More'>;
+
+function More({navigation}: MoreScreenProps) {
   // const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const isLoggedIn = useSelector(
     (state: RootState) => state.userTest.isLoggedIn,
@@ -60,6 +64,10 @@ function More() {
   const toPointShop = () => {
     Alert.alert('알림', '포인트 상점으로 이동');
   };
+  const toModifyUserAccount = useCallback(() => {
+    navigation.navigate('ModifyUserAccount');
+  }, [navigation]);
+
   return (
     <>
       <SafeAreaView style={styles.scrollView}>
@@ -90,7 +98,9 @@ function More() {
             </View>
           </View>
           <View style={styles.buttonZone}>
-            <Pressable style={styles.buttonContainer}>
+            <Pressable
+              style={styles.buttonContainer}
+              onPress={toModifyUserAccount}>
               <Text style={styles.buttonText}>회원정보 수정</Text>
               <Image
                 style={styles.arrowButton}

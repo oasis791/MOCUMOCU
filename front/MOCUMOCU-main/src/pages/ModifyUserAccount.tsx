@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-function ModifyInfo() {
+function ModifyUserAccount() {
   return (
     <View>
       <Text>회원정보 수정</Text>
@@ -9,4 +9,4 @@ function ModifyInfo() {
   );
 }
 
-export default ModifyInfo;
+export default ModifyUserAccount;
