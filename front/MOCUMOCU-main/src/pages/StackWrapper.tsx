@@ -1,11 +1,20 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import Settings from './Settings';
+import Settings from './MainComponent/Settings';
 import TabWrapper from './TabWrapper';
-import ModifyUserAccount from './ModifyUserAccount';
-import UseCoupon from './UseCoupon';
-import RewardList from './RewardList';
-import UseQR from './UseQR';
+import ModifyUserAccount from './MoreComponent/ModifyUserAccount';
+import UseCoupon from './SaveUseComponent/UseCoupon';
+import RewardList from './SaveUseComponent/RewardList';
+import UseQR from './SaveUseComponent/UseQR';
+import CouponUsageHistory from './MoreComponent/CouponUsageHistory';
+import TermsOfUse from './MoreComponent/TermsOfUse';
+import DevInfo from './MoreComponent/DevInfo';
+import CustomShop from './MoreComponent/CustomShop';
+import CouponDetail from './MainComponent/CouponDetail';
+import PushNotice from './MainComponent/PushNotice';
+import MyPointLog from './MoreComponent/MyPointLog';
+import Notice from './MainComponent/Notice';
+import QnA from './MainComponent/QnA';
 
 const Stack = createNativeStackNavigator();
 function StackWrapper() {
@@ -34,11 +43,52 @@ function StackWrapper() {
         component={Settings}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="PushNotice"
+        component={PushNotice}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CouponDetail"
+        component={CouponDetail}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MyPointLog"
+        component={MyPointLog}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Notice"
+        component={Notice}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen name="QnA" component={QnA} options={{headerShown: false}} />
 
       {/* 더보기 스택 */}
       <Stack.Screen
+        name="CustomShop"
+        component={CustomShop}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="ModifyUserAccount"
         component={ModifyUserAccount}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CouponUsageHistory"
+        component={CouponUsageHistory}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="TermsOfUse"
+        component={TermsOfUse}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="DevInfo"
+        component={DevInfo}
         options={{headerShown: false}}
       />
 
