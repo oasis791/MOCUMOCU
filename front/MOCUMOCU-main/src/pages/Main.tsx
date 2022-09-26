@@ -48,7 +48,7 @@ function Main({navigation}: MainScreenProps) {
       const getCouponInfo = async () => {
         try {
           const response = await axios.get<Coupon[]>(
-            `http://54.180.91.167:8080/user/${customerIdTest}/coupon`,
+            `http://15.164.100.68:8080/user/${customerIdTest}/coupon`,
             {
               headers: {
                 // authorization: `Bearer ${accessToken}`,

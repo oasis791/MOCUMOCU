@@ -74,7 +74,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
 
     const onGetRewardSubmit = useCallback(async () => {
         try {
-            const response = await axios.get(`http://54.180.91.167:8080/owner/${marketId}/reward-list/`);
+            const response = await axios.get(`http://15.164.100.68:8080/owner/${marketId}/reward-list/`);
             console.log('get rewardList:', response.data, '\nrewardList :', typeof (response.data.rewardList));
 
             dispatch(
@@ -96,7 +96,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
 
     const onAddRewardSubmit = useCallback(async () => {
         try {
-            const response = await axios.post('http://54.180.91.167:8080/owner/store/reward', {
+            const response = await axios.post('http://15.164.100.68:8080/owner/store/reward', {
                 marketId,
                 rewardName,
                 couponRequire: Number(couponRequire),
@@ -122,7 +122,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
             text: '확인',
             onPress: async () => {
                 try {
-                    const response = await axios.delete(`http://54.180.91.167:8080/owner/${ownerId}/store/${marketId}/reward/${rewardId}`);
+                    const response = await axios.delete(`http://15.164.100.68:8080/owner/${ownerId}/store/${marketId}/reward/${rewardId}`);
                     onGetRewardSubmit();
                     Alert.alert('알림', '리워드가 삭제되었습니다.');
                 } catch (error) {

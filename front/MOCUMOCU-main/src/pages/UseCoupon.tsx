@@ -66,7 +66,7 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
   //     }
   //     setLoading(true);
   //     const response = await axios.post(
-  //       'http://54.180.91.167:8080/user/use-coupon',
+  //       'http://15.164.100.68:8080/user/use-coupon',
   //       {
   //         userCouponId: couponId,
   //       },
@@ -90,7 +90,7 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
   // useEffect(() => {
   //   async function getCoupon() {
   //     const response = await axios.post(
-  //       'http://54.180.91.167:8080/customer/main',
+  //       'http://15.164.100.68:8080/customer/main',
   //       {
   //         couponId: coupons.couponId,
   //       },

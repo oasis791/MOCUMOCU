@@ -116,7 +116,7 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
       setLoading(true);
       // http method : get, put, patch, post, delete, head, options 가 주로 쓰임 ${Config.API_URL}/owner/signup
       const response = await axios.post(
-        'http://54.180.91.167:8080/owner/signup ',
+        'http://15.164.100.68:8080/owner/signup ',
         {
           ownerEmail,
           ownerName,

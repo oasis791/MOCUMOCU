@@ -70,7 +70,7 @@ function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
         case 'use': // 사용
 
           try {
-            const response = await axios.patch('http://54.180.91.167:8080/owner/stamp', {
+            const response = await axios.patch('http://15.164.100.68:8080/owner/stamp', {
               couponId: qrValue.couponId,
               couponRequire: qrValue.couponRequire,
             });

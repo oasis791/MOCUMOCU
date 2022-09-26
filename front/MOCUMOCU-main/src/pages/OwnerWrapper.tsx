@@ -1,11 +1,11 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Image, Text, View} from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Image, Text, View } from 'react-native';
 import More from './More';
 import SaveUpOwner from './SaveUpOwner';
 import MainOwner from './MainOwner';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {LoggedInOwnerParamList} from '../../App';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { LoggedInOwnerParamList } from '../../App';
 import MainOwnerWrapper from './MainOwnerWrapper';
 import SaveUpOwnerWrapper from './SaveUpOwnerWrapper';
 
@@ -26,49 +26,13 @@ function OwnerWrapper() {
         },
       }}>
       <Tab.Screen
-        name="SaveUpOwnerWrapper"
-        component={SaveUpOwnerWrapper}
-        options={{
-          tabBarLabel: '적립',
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarIcon: ({focused}) => (
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                top: 7,
-              }}>
-              <Image
-                source={require('../assets/saveButton.png')}
-                resizeMode="contain"
-                style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: focused ? '#FA6072' : '#A5A5A5',
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 11,
-                  top: -3,
-                  fontFamily: 'NotoSansCJKkr-Black (TTF)',
-                  color: focused ? '#FA6072' : '#A5A5A5',
-                }}>
-                적립/사용
-              </Text>
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen
         name="Main"
         component={MainOwnerWrapper}
         options={{
           tabBarLabel: '메인',
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <View
               style={{
                 alignItems: 'center',
@@ -97,6 +61,44 @@ function OwnerWrapper() {
           ),
         }}
       />
+
+      <Tab.Screen
+        name="SaveUpOwnerWrapper"
+        component={SaveUpOwnerWrapper}
+        options={{
+          tabBarLabel: '적립',
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                top: 7,
+              }}>
+              <Image
+                source={require('../assets/saveButton.png')}
+                resizeMode="contain"
+                style={{
+                  width: 20,
+                  height: 20,
+                  tintColor: focused ? '#FA6072' : '#A5A5A5',
+                }}
+              />
+              <Text
+                style={{
+                  fontSize: 11,
+                  top: -3,
+                  fontFamily: 'NotoSansCJKkr-Black (TTF)',
+                  color: focused ? '#FA6072' : '#A5A5A5',
+                }}>
+                적립/사용
+              </Text>
+            </View>
+          ),
+        }}
+      />
+
       <Tab.Screen
         name="More"
         component={More}
@@ -104,7 +106,7 @@ function OwnerWrapper() {
           tabBarLabel: '더보기',
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <View
               style={{
                 alignItems: 'center',

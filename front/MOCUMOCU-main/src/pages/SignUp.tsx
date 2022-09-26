@@ -183,7 +183,7 @@ function SignUp({navigation}: SignUpScreenProps) {
       setLoading(true);
       // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
       const response = await axios.post(
-        'http://54.180.91.167:8080/user/signup',
+        'http://15.164.100.68:8080/user/signup',
         {
           customerName: name,
           customerPhoneNum: telephoneNumber,
@@ -195,7 +195,7 @@ function SignUp({navigation}: SignUpScreenProps) {
         },
       ); //비동기 요청이므로 await가 필요
       console.log(response);
-      console.log('http://54.180.91.167:8080');
+      console.log('http://15.164.100.68:8080');
       Alert.alert('알림', '회원가입 되었습니다.');
       navigation.navigate('SignIn');
     } catch (error) {

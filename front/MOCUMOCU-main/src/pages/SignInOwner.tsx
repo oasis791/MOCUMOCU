@@ -46,7 +46,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
     try {
       // setLoading(true); `${Config.API_URL}/login`
       const response = await axios.post(
-        'http://54.180.91.167:8080/owner/login',
+        'http://15.164.100.68:8080/owner/login',
         {
           ownerEmail,
           ownerPassword,

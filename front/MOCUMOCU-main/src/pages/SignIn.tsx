@@ -44,7 +44,7 @@ function SignIn({navigation}: SignInScreenProps) {
     try {
       setLoading(true);
       const response = await axios.post(
-        'http://54.180.91.167:8080/user/login',
+        'http://15.164.100.68:8080/user/login',
         {
           customerEmail: email,
           customerPassword: password,

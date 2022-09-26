@@ -54,7 +54,7 @@ function AddMarket({navigation, route}: AddStoreProps) {
       setLoading(true);
 
       const response = await axios.post(
-        'http://54.180.91.167:8080/owner/store',
+        'http://15.164.100.68:8080/owner/store',
         {
           businessNum,
           marketPhoneNum,

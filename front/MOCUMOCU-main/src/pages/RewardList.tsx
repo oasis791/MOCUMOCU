@@ -62,7 +62,7 @@ function RewardList({navigation, route}: RewardListScreenProps) {
       const getRewardList = async () => {
         try {
           const response = await axios.get(
-            'http://54.180.91.167:8080/user/reward-list',
+            'http://15.164.100.68:8080/user/reward-list',
             {
               headers: {
                 // authorization: `Bearer ${accessToken}`,
@@ -109,7 +109,7 @@ function RewardList({navigation, route}: RewardListScreenProps) {
   //     }
   //     setLoading(true);
   //     const response = await axios.post(
-  //       'http://54.180.91.167:8080/customer/reward-list',
+  //       'http://15.164.100.68:8080/customer/reward-list',
   //       {
   //         userCouponId: couponId,
   //       },

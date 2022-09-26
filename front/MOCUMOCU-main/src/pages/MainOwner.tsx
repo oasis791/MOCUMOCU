@@ -70,7 +70,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
       console.log('ownerId', ownerId);
 
       const response = await axios.get(
-        `http://54.180.91.167:8080/owner/${ownerId}/market-list`,
+        `http://15.164.100.68:8080/owner/${ownerId}/market-list`,
       );
       console.log('market', response.data);
       dispatch(
@@ -90,7 +90,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
     async storeId => {
       try {
         const response = await axios.delete(
-          `http://54.180.91.167:8080/owner/store/${storeId}`,
+          `http://15.164.100.68:8080/owner/store/${storeId}`,
         );
         onGetMarkets();
         Alert.alert('알림', '매장이 삭제되었습니다.');

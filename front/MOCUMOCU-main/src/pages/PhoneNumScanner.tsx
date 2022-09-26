@@ -32,7 +32,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post('http://54.180.91.167:8080/owner/phoneNum', {
+      const response = await axios.post('http://15.164.100.68:8080/owner/phoneNum', {
         phoneNumber,
       });
 

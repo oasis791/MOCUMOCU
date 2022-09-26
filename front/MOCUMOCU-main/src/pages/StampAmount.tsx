@@ -38,7 +38,7 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
     try {
       setLoading(true);
       const response = await axios.post(
-        'http://54.180.91.167:8080/owner/stamp',
+        'http://15.164.100.68:8080/owner/stamp',
         {
           marketId,
           customerId,
