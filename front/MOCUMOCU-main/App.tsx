@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import store from './src/store';
 import AppInner from './AppInner';
-import { NavigationContainer } from '@react-navigation/native';
-import { PortalProvider } from '@gorhom/portal';
-import { Coupon } from './src/pages/RewardList';
-import { Select } from './src/pages/UseCoupon';
+import {NavigationContainer} from '@react-navigation/native';
+import {PortalProvider} from '@gorhom/portal';
+import {Coupon} from './src/pages/RewardList';
+import {Select} from './src/pages/UseCoupon';
 export type LoggedInUserParamList = {
   CustomerWrapper: undefined;
   Main: undefined;
@@ -30,15 +30,17 @@ export type LoggedInUserParamList = {
 export type LoggedInOwnerParamList = {
   MainOwnerWrapper: undefined;
   SaveUpOwnerWrapper: undefined;
-
+  MarketAnalysis: {marketIndex: number};
+  ModifyMarket: {marketIndex: number};
+  MarketCouponLog: {marketIndex: number};
   MainOwner: undefined;
   SaveUpOwner: undefined;
   StampControl: undefined;
   SettingsOwner: undefined;
   AddMarket: undefined;
-  MarketReward: { marketIndex: number };
-  MarketInfo: { marketIndex: number };
-
+  MarketReward: {marketIndex: number};
+  MarketInfo: {marketIndex: number};
+  EventControl: {marketIndex: number};
   NoticeOwner: undefined;
   ModifyStore: undefined;
   AddEvent: undefined;
@@ -47,9 +49,9 @@ export type LoggedInOwnerParamList = {
   HelpOwner: undefined;
   ModifyInfoOwner: undefined;
   DevInfoOwner: undefined;
-  QRCodeScanner: { marketId: number; type: 'saveUp' | 'use' };
-  PhoneNumScanner: { marketId: number };
-  StampAmount: { marketId: number; customerId: number };
+  QRCodeScanner: {marketId: number; type: 'saveUp' | 'use'};
+  PhoneNumScanner: {marketId: number};
+  StampAmount: {marketId: number; customerId: number};
   SaveUp: undefined;
   MarketFunc: undefined;
   // orderId : parameter 칸 => 주문에 고유한 ID가 부여되어 있음 이걸 변수처럼 사용하기 위해서 넣어줌

@@ -3,17 +3,17 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {LoggedInOwnerParamList} from '../../App';
 
-type MarketAnalysislScreenProps = NativeStackScreenProps<
+type MarketCouponLogScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
-  'EventControl'
+  'MarketCouponLog'
 >;
 
-function MarketAnalysis({navigate, route}: MarketAnalysislScreenProps) {
+function MarketCouponLog({navigate, route}: MarketCouponLoglScreenProps) {
   return (
     <View>
-      <Text>매장 분석</Text>
+      <Text>적립/사용 내역</Text>
     </View>
   );
 }
 
-export default MarketAnalysis;
+export default MarketCouponLog;

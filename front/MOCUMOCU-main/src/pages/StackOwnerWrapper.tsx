@@ -12,6 +12,10 @@ import SaveUpOwner from './SaveUpOwner';
 import PhoneNumScanner from './PhoneNumScanner';
 import QRCodeScanner from './QRCodeScanner';
 import MoreOwner from './MoreOwner';
+import EventControl from './EventControl';
+import MarketAnalysis from './MarketAnalysis';
+import ModifyMarket from './ModifyMarket';
+import MarketCouponLog from './MarketCouponLog';
 const Stack = createNativeStackNavigator();
 function StackOwnerWrapper() {
   return (
@@ -51,14 +55,39 @@ function StackOwnerWrapper() {
         options={{headerShown: false}}
       />
 
+      {/* 각 매장 세부 정보 */}
       <Stack.Screen
         name="MarketInfo"
         component={MarketInfo}
         options={{headerShown: false}}
       />
+
+      <Stack.Screen
+        name="MarketAnalysis"
+        component={MarketAnalysis}
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         name="MarketReward"
         component={MarketReward}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="EventControl"
+        component={EventControl}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="ModifyMarket"
+        component={ModifyMarket}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="MarketCouponLog"
+        component={MarketCouponLog}
         options={{headerShown: false}}
       />
 

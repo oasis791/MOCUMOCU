@@ -221,7 +221,10 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => { setDeleteButtonActive(!deleteButtonActive); }}>
-                        <Text>삭제하기</Text>
+                        { !deleteButtonActive
+                        ? <Text>삭제하기</Text>
+                        : <Text>취소</Text>
+                        }
                     </TouchableOpacity>
                     {/*
                     <Button
@@ -234,7 +237,8 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                 {addButtonActive
                     ? (
                         <View style={styles.container}>
-                            <View style={styles.addRewardInputWrapper}>
+                            <TouchableOpacity style={styles.addRewardBackground} onPress={()=>{setAddButtonActive(false);}} />
+                            <View style={styles.addRewardInputWrapper} >
                                 <TextInput placeholder="소모 개수"
                                     keyboardType="numeric"
                                     value={couponRequire}
@@ -244,15 +248,16 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                                 placeholder="물품"
                                     value={rewardName}
                                     onChangeText={changeRewardName} />
-                            </View>
-                            <View style={styles.addRewardButtonWrapper}>
-                                <TouchableOpacity style={styles.addRewardButton}
-                                    onPress={onAddRewardSubmit}>
-                                    <Text style={styles.addRewardButtonText}>확인</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.addRewardButton} onPress={()=>{setAddButtonActive(false);}}>
-                                    <Text style={styles.addRewardButtonText}>취소</Text>
-                                </TouchableOpacity>
+
+                                <View style={styles.addRewardButtonWrapper}>
+                                    <TouchableOpacity style={styles.addRewardButton}
+                                        onPress={onAddRewardSubmit}>
+                                        <Text style={styles.addRewardButtonText}>확인</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={[styles.addRewardButton, {backgroundColor:'#A5A5A5'}]} onPress={()=>{setAddButtonActive(false);}}>
+                                        <Text style={styles.addRewardButtonText}>취소</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
 
                         </View>
@@ -271,11 +276,11 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '100%',
+        // height: '85%',
+        height: screenHeight,
         position: 'absolute',
-        padding: 24,
-        justifyContent: 'center',
-        // backgroundColor: 'pink',
+        // padding: 24,
+        // justifyContent: 'center',
     },
     contentContainer: {
         alignItems: 'center',
@@ -371,8 +376,28 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
 
-    addRewardInputWrapper: {
+    addRewardBackground:{
+        flex: 3,
+        // backgroundColor: 'pink',
+    },
 
+
+
+    addRewardInputWrapper: {
+        flex: 1,
+        padding: 40,
+        borderTopLeftRadius: 30,
+        borderTopEndRadius: 30,
+
+        shadowColor: '#000',
+        shadowOffset: {
+        width: 0,
+        height: 2,
+        },
+        shadowOpacity: 0.4,
+        shadowRadius: 3.84,
+        elevation: 7,
+        backgroundColor: 'white',
     },
 
     addRewardInput: {
@@ -387,16 +412,18 @@ const styles = StyleSheet.create({
     },
 
     addRewardButton: {
-        backgroundColor: 'pink',
-        borderRadius: 10,
+        backgroundColor: '#FA6072',
+        borderRadius: 7,
         marginHorizontal: 10,
-
-
+        width: 100,
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     addRewardButtonText: {
-        color: 'black',
-        fontSize: 18,
+        color: 'white',
+        fontFamily: 'NotoSansCJKkr-Medium (TTF)',
     },
 });
 

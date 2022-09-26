@@ -31,11 +31,13 @@ function MarketInfo({navigation, route}: MarketInfoScreenProps) {
   const isAlarm = false;
 
   const toMarektAnalysis = () => {
-    Alert.alert('알림', '매장 분석으로 이동');
+    // Alert.alert('알림', '매장 분석으로 이동');
+    navigation.navigate('MarketAnalysis', {marketIndex});
   };
 
   const toMarketModify = () => {
-    Alert.alert('알림', '매장정보 수정로 이동');
+    // Alert.alert('알림', '매장정보 수정로 이동');
+    navigation.navigate('ModifyMarket', {marketIndex});
   };
 
   const toMarketReward = () => {
@@ -43,11 +45,13 @@ function MarketInfo({navigation, route}: MarketInfoScreenProps) {
   };
 
   const toMarketEvent = () => {
-    Alert.alert('알림', '이벤트 관리로 이동');
+    // Alert.alert('알림', '이벤트 관리로 이동');
+    navigation.navigate('EventControl', {marketIndex});
   };
 
   const toMarketUsageHistory = () => {
-    Alert.alert('알림', '적립/사용 내역으로 이동');
+    // Alert.alert('알림', '적립/사용 내역으로 이동');
+    navigation.navigate('MarketCouponLog', {marketIndex});
   };
 
   const onSubmitSetting = () => {

@@ -3,17 +3,18 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {LoggedInOwnerParamList} from '../../App';
 
-type MarketAnalysislScreenProps = NativeStackScreenProps<
+type EventControlScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
   'EventControl'
 >;
 
-function MarketAnalysis({navigate, route}: MarketAnalysislScreenProps) {
+function EventControl({navigation, route}: EventControlScreenProps) {
+  const marketIndex = route.params.marketIndex;
   return (
     <View>
-      <Text>매장 분석</Text>
+      <Text>이벤트 관리</Text>
     </View>
   );
 }
 
-export default MarketAnalysis;
+export default EventControl;
