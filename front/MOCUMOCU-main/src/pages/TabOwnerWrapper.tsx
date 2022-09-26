@@ -1,17 +1,15 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Image, Text, View } from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Image, Text, View} from 'react-native';
 import More from './More';
 import SaveUpOwner from './SaveUpOwner';
 import MainOwner from './MainOwner';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { LoggedInOwnerParamList } from '../../App';
-import MainOwnerWrapper from './MainOwnerWrapper';
-import SaveUpOwnerWrapper from './SaveUpOwnerWrapper';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {LoggedInOwnerParamList} from '../../App';
 
 const Tab = createBottomTabNavigator();
 
-function OwnerWrapper() {
+function TapOwnerWrapper() {
   return (
     <Tab.Navigator
       initialRouteName="Main"
@@ -27,12 +25,12 @@ function OwnerWrapper() {
       }}>
       <Tab.Screen
         name="Main"
-        component={MainOwnerWrapper}
+        component={MainOwner}
         options={{
           tabBarLabel: '메인',
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <View
               style={{
                 alignItems: 'center',
@@ -64,12 +62,12 @@ function OwnerWrapper() {
 
       <Tab.Screen
         name="SaveUpOwnerWrapper"
-        component={SaveUpOwnerWrapper}
+        component={SaveUpOwner}
         options={{
           tabBarLabel: '적립',
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <View
               style={{
                 alignItems: 'center',
@@ -106,7 +104,7 @@ function OwnerWrapper() {
           tabBarLabel: '더보기',
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <View
               style={{
                 alignItems: 'center',
@@ -139,4 +137,4 @@ function OwnerWrapper() {
   );
 }
 
-export default OwnerWrapper;
+export default TapOwnerWrapper;
