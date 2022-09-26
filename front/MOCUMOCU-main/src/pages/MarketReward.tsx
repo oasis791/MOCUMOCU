@@ -147,7 +147,6 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
     // }, [onGetRewardSubmit]);
 
     return (
-        <BottomSheetModalProvider>
             <View style={styles.mainBackground}>
                 <StatusBar hidden={true} />
 
@@ -264,12 +263,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                     )
                     : null
                 }
-
-
-
-
             </View>
-        </BottomSheetModalProvider >
     );
 }
 
