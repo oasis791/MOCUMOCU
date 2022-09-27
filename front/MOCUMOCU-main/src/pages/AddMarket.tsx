@@ -21,7 +21,7 @@ import {RootState} from '../store/reducer';
 type AddStoreProps = NativeStackScreenProps<LoggedInOwnerParamList, 'AddStore'>;
 
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 
 function AddMarket({navigation, route}: AddStoreProps) {
   const [loading, setLoading] = useState(false);

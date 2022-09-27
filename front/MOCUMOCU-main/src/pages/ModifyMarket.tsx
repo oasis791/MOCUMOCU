@@ -17,7 +17,7 @@ type ModifyMarketScreenProps = NativeStackScreenProps<
   'ModifyMarket'
 >;
 
-function ModifyMarket({navigate, route}: ModifyMarketScreenProps) {
+function ModifyMarket({navigation, route}: ModifyMarketScreenProps) {
   const marketIndex = route.params.marketIndex;
   const isAlarm = false;
 
@@ -61,7 +61,7 @@ function ModifyMarket({navigate, route}: ModifyMarketScreenProps) {
   );
 }
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   mainBackground: {
     width: screenWidth,

@@ -21,7 +21,7 @@ type MarketInfoScreenProps = NativeStackScreenProps<
 >;
 
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 
 function MarketInfo({navigation, route}: MarketInfoScreenProps) {
   const marketIndex = route.params.marketIndex;

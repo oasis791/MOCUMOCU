@@ -24,7 +24,7 @@ import marketOwnerSlice from '../slices/marketOwner';
 import {useIsFocused} from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 
 type MainOwnerScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,

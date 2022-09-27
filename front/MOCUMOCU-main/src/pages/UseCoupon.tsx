@@ -24,7 +24,7 @@ export type Select = {
 };
 
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 function UseCoupon({navigation}: UseCouponScreenProps) {
   const coupons = useSelector((state: RootState) => state.coupon.coupons); // 사용자 쿠폰 리스트 가져오기
   // const couponList = useMemo(() => {

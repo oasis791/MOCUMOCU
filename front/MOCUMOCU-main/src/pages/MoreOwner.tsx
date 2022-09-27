@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -19,10 +19,26 @@ import userSliceTest from '../slices/userTest';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {LoggedInOwnerParamList} from '../../App';
 
 const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('window').width;
 
-function MoreOwner() {
+type MoreOwnerScreenProps = NativeStackScreenProps<
+  LoggedInOwnerParamList,
+  'MoreOwner'
+>;
+
+function MoreOwner({navigation, route}: MoreOwnerScreenProps) {
+  const isAlarm = false;
+  const onSubmitSetting = () => {
+    // Alert.alert('알림', '설정');
+    navigation.navigate('SettingsOwner');
+  };
+  const onSubmitAlarm = () => {
+    Alert.alert('알림', '알람');
+  };
   // const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const isLoggedIn = useSelector(
     (state: RootState) => state.userTest.isLoggedIn,
@@ -54,41 +70,34 @@ function MoreOwner() {
       console.error(errorResponse);
     }
   }, [dispatch]);
-  const toPointUseInfo = () => {
-    Alert.alert('알림', '포인트 사용 상세 내역으로 이동');
-  };
-  const toPointShop = () => {
-    Alert.alert('알림', '포인트 상점으로 이동');
-  };
   return (
     <>
+      <StatusBar hidden={true} />
+
+      <View style={styles.mainHeader}>
+        <View style={styles.headerButtonWrapper}>
+          <Pressable onPress={onSubmitAlarm}>
+            <Image
+              source={
+                isAlarm
+                  ? require('../assets/icon/mainAlarmActive.png')
+                  : require('../assets/icon/mainAlarm.png')
+              }
+              style={styles.headerAlarm}
+            />
+          </Pressable>
+
+          <Pressable onPress={onSubmitSetting}>
+            <Image
+              source={require('../assets/icon/mainSetting.png')}
+              style={styles.headerSetting}
+            />
+          </Pressable>
+        </View>
+      </View>
       <SafeAreaView style={styles.scrollView}>
         <ScrollView fadingEdgeLength={1}>
           <StatusBar hidden={true} />
-          <View>
-            <View style={styles.myPointZone}>
-              <View style={styles.myPointBox}>
-                <Text style={styles.myPointBoxText}>내 포인트</Text>
-                <Text
-                  style={[
-                    styles.myPointBoxText,
-                    {color: '#414FFD', fontSize: 20},
-                  ]}>
-                  1000 P
-                </Text>
-              </View>
-              <View style={styles.pointButtonZone}>
-                <Pressable
-                  style={styles.pointUseInfoButton}
-                  onPress={toPointUseInfo}>
-                  <Text>포인트 사용 내역</Text>
-                </Pressable>
-                <Pressable style={styles.pointShopButton} onPress={toPointShop}>
-                  <Text>포인트 상점</Text>
-                </Pressable>
-              </View>
-            </View>
-          </View>
           <View style={styles.buttonZone}>
             <Pressable style={styles.buttonContainer}>
               <Text style={styles.buttonText}>회원정보 수정</Text>
@@ -137,6 +146,38 @@ function MoreOwner() {
 }
 
 const styles = StyleSheet.create({
+  mainBackground: {
+    width: screenWidth,
+    height: screenHeight,
+    backgroundColor: '#F7F7F7',
+  },
+
+  mainHeader: {
+    width: screenWidth,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 10,
+  },
+  headerButtonWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 19,
+    marginTop: 5,
+    justifyContent: 'space-around',
+  },
+  headerSetting: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+  },
+  headerAlarm: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+    marginRight: 15,
+  },
+
   scrollView: {
     // backgroundColor: 'pink',
     // backgroundColor: 'white',
@@ -184,7 +225,7 @@ const styles = StyleSheet.create({
   },
   buttonZone: {
     // backgroundColor: 'blue',
-    marginTop: 60,
+
     paddingTop: 20,
     fontSize: 18,
     borderRadius: 10,

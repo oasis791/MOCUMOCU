@@ -32,7 +32,7 @@ export interface Store {
 }
 
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 
 type SaveUpOwnerProps = NativeStackScreenProps<
   LoggedInOwnerParamList,

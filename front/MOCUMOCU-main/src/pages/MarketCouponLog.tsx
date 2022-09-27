@@ -67,7 +67,7 @@ function MarketCouponLog({navigation, route}: MarketCouponLogScreenProps) {
   );
 }
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   mainBackground: {
     width: screenWidth,

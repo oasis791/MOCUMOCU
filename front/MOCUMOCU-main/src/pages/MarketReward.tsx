@@ -27,7 +27,7 @@ import { useAppDispatch } from '../store';
 import { RootState } from '../store/reducer';
 
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 
 type MarketRewardScreenProps = NativeStackScreenProps<
     LoggedInOwnerParamList,

@@ -1,7 +1,6 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import TabOwnerWrapper from './TabOwnerWrapper';
-import MainOwner from './MainOwner';
 import SettingsOwner from './SettingsOwner';
 import AddMarket from './AddMarket';
 import MarketInfo from './MarketInfo';
@@ -11,23 +10,23 @@ import StampControl from './StampControl';
 import SaveUpOwner from './SaveUpOwner';
 import PhoneNumScanner from './PhoneNumScanner';
 import QRCodeScanner from './QRCodeScanner';
-import MoreOwner from './MoreOwner';
 import EventControl from './EventControl';
 import MarketAnalysis from './MarketAnalysis';
 import ModifyMarket from './ModifyMarket';
 import MarketCouponLog from './MarketCouponLog';
+import AddEvent from './AddEvent';
 const Stack = createNativeStackNavigator();
 function StackOwnerWrapper() {
   return (
     <Stack.Navigator>
       {/* 탭 눌렀을 때 */}
       <Stack.Screen
-        name="Main"
+        name="MainOwner"
         component={TabOwnerWrapper}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="More"
+        name="MoreOwner"
         component={TabOwnerWrapper}
         options={{headerShown: false}}
       />
@@ -36,13 +35,7 @@ function StackOwnerWrapper() {
         component={TabOwnerWrapper}
         options={{headerShown: false}}
       />
-      {/* mainOwnerWrapper */}
-      <Stack.Screen
-        name="MainOwner"
-        component={MainOwner}
-        options={{headerShown: false}}
-      />
-
+      {/* mainOwner */}
       <Stack.Screen
         name="SettingsOwner"
         component={SettingsOwner}
@@ -73,6 +66,7 @@ function StackOwnerWrapper() {
         options={{headerShown: false}}
       />
 
+      {/* 이벤트 관리, 등록*/}
       <Stack.Screen
         name="EventControl"
         component={EventControl}
@@ -80,11 +74,18 @@ function StackOwnerWrapper() {
       />
 
       <Stack.Screen
+        name="AddEvent"
+        component={AddEvent}
+        options={{headerShown: false}}
+      />
+
+      {/* 매장 정보 변경 */}
+      <Stack.Screen
         name="ModifyMarket"
         component={ModifyMarket}
         options={{headerShown: false}}
       />
-
+      {/* 매장 적립/사용 내역 */}
       <Stack.Screen
         name="MarketCouponLog"
         component={MarketCouponLog}
@@ -117,12 +118,6 @@ function StackOwnerWrapper() {
       <Stack.Screen
         name="QRCodeScanner"
         component={QRCodeScanner}
-        options={{headerShown: false}}
-      />
-      {/* 더보기 */}
-      <Stack.Screen
-        name="MoreOwner"
-        component={MoreOwner}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

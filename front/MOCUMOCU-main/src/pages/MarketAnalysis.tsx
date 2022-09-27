@@ -17,7 +17,7 @@ type MarketAnalysislScreenProps = NativeStackScreenProps<
   'EventControl'
 >;
 
-function MarketAnalysis({navigate, route}: MarketAnalysislScreenProps) {
+function MarketAnalysis({navigation, route}: MarketAnalysislScreenProps) {
   const marketIndex = route.params.marketIndex;
   const isAlarm = false;
 
@@ -61,7 +61,7 @@ function MarketAnalysis({navigate, route}: MarketAnalysislScreenProps) {
   );
 }
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   mainBackground: {
     width: screenWidth,

@@ -1,18 +1,18 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image, Text, View} from 'react-native';
-import More from './More';
 import SaveUpOwner from './SaveUpOwner';
 import MainOwner from './MainOwner';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {LoggedInOwnerParamList} from '../../App';
+import MoreOwner from './MoreOwner';
 
 const Tab = createBottomTabNavigator();
 
 function TapOwnerWrapper() {
   return (
     <Tab.Navigator
-      initialRouteName="Main"
+      initialRouteName="MainOwner"
       backBehavior="initialRoute"
       screenOptions={{
         tabBarActiveTintColor: '#414FFD',
@@ -24,7 +24,7 @@ function TapOwnerWrapper() {
         },
       }}>
       <Tab.Screen
-        name="Main"
+        name="MainOwner"
         component={MainOwner}
         options={{
           tabBarLabel: '메인',
@@ -61,7 +61,7 @@ function TapOwnerWrapper() {
       />
 
       <Tab.Screen
-        name="SaveUpOwnerWrapper"
+        name="SaveUseCoupon"
         component={SaveUpOwner}
         options={{
           tabBarLabel: '적립',
@@ -98,8 +98,8 @@ function TapOwnerWrapper() {
       />
 
       <Tab.Screen
-        name="More"
-        component={More}
+        name="MoreOwner"
+        component={MoreOwner}
         options={{
           tabBarLabel: '더보기',
           headerShown: false,

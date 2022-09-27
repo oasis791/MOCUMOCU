@@ -18,7 +18,7 @@ type StampControlProps = NativeStackScreenProps<
   'StampControl'
 >;
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 
 function StampControl({navigation, route}: StampControlProps) {
   const [marketId, setMarketId] = useState(route.params.marketId);
