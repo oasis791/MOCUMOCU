@@ -11,10 +11,9 @@ import {
   Text,
   TouchableWithoutFeedback,
   View,
-  PermissionsAndroid,
 } from 'react-native';
 import {LoggedInOwnerParamList} from '../../App';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 type AddEventScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
   'AddEvent'
@@ -40,35 +39,6 @@ function AddEvent({navigation, route}: AddEventScreenProps) {
   };
 
   const uploadImage = async (type: string) => {
-    // const grantedStorage = await PermissionsAndroid.request(
-    //   PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-    //   {
-    //     title: 'App Camera Perssion',
-    //     message: 'App needs access to your camera',
-    //     buttonNeutral: 'Ask me Later',
-    //     buttonNegative: '취소',
-    //     buttonPositive: '확인',
-    //   },
-    // );
-
-    // if (grantedStorage === PermissionsAndroid.RESULTS.GRNTED) {
-    //   console.log('승인 완료');
-    // }
-    // // const options = {
-    // //   mediaType: 'photo',
-    // //   quality: 1,
-    // //   includeBase64: true,
-    // // };
-    // const result = await launchImageLibrary();
-    // if (result.didCancel) {
-    //   return null;
-    // }
-    // const localUri = result.assets[0].uri;
-    // // const uriPath = localUri.split('//').pop();
-    // // const imageName = localUri.split('/').pop();
-    // setBannerImage(localUri?.split('//').pop());
-    // console.log(localUri?.split('//').pop());
-
     let options = {
       includeBase64: true,
       storageOptions: {
@@ -91,12 +61,6 @@ function AddEvent({navigation, route}: AddEventScreenProps) {
         }
       }
     });
-
-    // if (type === '배너 이미지') {
-    //   Alert.alert('알림', '배너이미지');
-    // } else {
-    //   Alert.alert('알림', '배너상세이미지');
-    // }
   };
 
   return (
