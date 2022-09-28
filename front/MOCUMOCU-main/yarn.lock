@@ -4422,20 +4422,6 @@
   dependencies:
     "fontfaceobserver" "^2.1.0"
 
-"expo-image-loader@~3.2.0":
-  "integrity" "sha512-LU3Q2prn64/HxdToDmxgMIRXS1ZvD9Q3iCxRVTZn1fPQNNDciIQFE5okaa74Ogx20DFHs90r6WoUd7w9Af1OGQ=="
-  "resolved" "https://registry.npmjs.org/expo-image-loader/-/expo-image-loader-3.2.0.tgz"
-  "version" "3.2.0"
-
-"expo-image-picker@^13.3.1":
-  "integrity" "sha512-IY84uDu9uxetAup5yw0CIIujigl/lM3grwyfpeZFMKGmWHzmKamptjd/sG8K65xkb6tF9awmGMW0qglHQ9hakQ=="
-  "resolved" "https://registry.npmjs.org/expo-image-picker/-/expo-image-picker-13.3.1.tgz"
-  "version" "13.3.1"
-  dependencies:
-    "@expo/config-plugins" "~5.0.0"
-    "expo-image-loader" "~3.2.0"
-    "uuid" "7.0.2"
-
 "expo-keep-awake@~10.2.0":
   "integrity" "sha512-kIRtO4Hmrvxh4E45IPWG/NiUZsuRe1AQwBT09pq+kx8nm6tUS4B9TeL6+1NFy+qVBLbGKDqoQD5Ez7XYTFtBeQ=="
   "resolved" "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-10.2.0.tgz"
@@ -4459,6 +4445,11 @@
   dependencies:
     "compare-versions" "^3.4.0"
     "invariant" "^2.2.4"
+
+"expo-permissions@^13.2.0":
+  "integrity" "sha512-fAvutJjlUjlmyR2jjI9uQT0LXQ+A3U8hZnA4twQG8eXEURR3/V5WSGkx5wwX+7OF6qWR68rvs7Xjkd3ghsCm4w=="
+  "resolved" "https://registry.npmjs.org/expo-permissions/-/expo-permissions-13.2.0.tgz"
+  "version" "13.2.0"
 
 "expo@*":
   "integrity" "sha512-xaU8GlJ7j3vo1U5tSbFDsoJqUfTkRF4XDEUj/Dr/jqUf0GcvlMKuGe6HvnbMO9slxYQlYlWJUzvlAx38TLhxyA=="
@@ -8023,6 +8014,11 @@
   "resolved" "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.0.6.tgz"
   "version" "0.0.6"
 
+"react-native-image-picker@^4.10.0":
+  "integrity" "sha512-QNK4ZnFLD+BdiM1QL1jh9GUALhRXm3MV97crhnTCSMv50H6E4tq3ozgfyxF5uKz0cECbNkWswg4sjgqZKEJtww=="
+  "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-4.10.0.tgz"
+  "version" "4.10.0"
+
 "react-native-inset-shadow@^1.0.3":
   "integrity" "sha512-4UXuSrenJtOWKcV0zSqHLQ47Oxn+BXdmxFxYXf5rE8KletbTvQq8ziZsX8MSEegUGWDcJJ3Mw+1OVbPJxm4lZg=="
   "resolved" "https://registry.npmjs.org/react-native-inset-shadow/-/react-native-inset-shadow-1.0.3.tgz"
@@ -9721,11 +9717,6 @@
   "integrity" "sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg=="
   "resolved" "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   "version" "8.3.2"
-
-"uuid@7.0.2":
-  "integrity" "sha512-vy9V/+pKG+5ZTYKf+VcphF5Oc6EFiu3W8Nv3P3zIh0EqVI80ZxOzuPfe9EHjkFNvf8+xuTHVeei4Drydlx4zjw=="
-  "resolved" "https://registry.npmjs.org/uuid/-/uuid-7.0.2.tgz"
-  "version" "7.0.2"
 
 "v8-compile-cache@^2.0.3":
   "integrity" "sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA=="
