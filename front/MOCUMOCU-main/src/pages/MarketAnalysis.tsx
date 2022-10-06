@@ -13,7 +13,7 @@ import {
 import {useSelector} from 'react-redux';
 import {LoggedInOwnerParamList} from '../../App';
 import {RootState} from '../store/reducer';
-import {BarChart, PieChart} from 'react-native-chart-kit';
+import {BarChart, PieChart, LineChart} from 'react-native-chart-kit';
 import {ScrollView} from 'react-native-gesture-handler';
 
 type MarketAnalysislScreenProps = NativeStackScreenProps<
@@ -46,7 +46,11 @@ function MarketAnalysis(
   const tempTimeDataMax = Math.max(...tempTimeData);
   const timeChartData = {
     labels: tempTimeData.reduce((arr, value, i) => {
-      arr.push(i + 1 + '');
+      if ((i + 1) % 2 === 1) {
+        arr.push('');
+      } else {
+        arr.push(i + 1 + '');
+      }
       return arr;
     }, []),
     datasets: [
@@ -109,14 +113,14 @@ function MarketAnalysis(
     {
       name: '남자',
       population: 60,
-      color: '#505050',
+      color: '#FA6072',
       legendFontColor: '#7F7F7F',
       legendFontSize: 12,
     },
     {
       name: '여자',
       population: 40,
-      color: '#888888',
+      color: '#e5e5e5',
       legendFontColor: '#7F7F7F',
       legendFontSize: 12,
     },
@@ -125,13 +129,19 @@ function MarketAnalysis(
   const timeChartConfig = {
     backgroundGradientFrom: '#F7F7F7',
     backgroundGradientTo: '#F7F7F7',
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // 글자색
+    // color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // 글자색
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    color: (opacity = 1) => `rgba(12, 12, 12, ${opacity})`,
     strokeWidth: 2, // optional, default 3
     barPercentage: 0.15,
     useShadowColorFromDataset: false, // optional
-    barRadius: 7,
+    barRadius: 2,
     decimalPlaces: 0,
-    propsForVerticalLabels: {fontSize: 10},
+    propsForVerticalLabels: {
+      fontSize: 10,
+      fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+    },
+    withVerticalLabels: false,
   };
 
   const monthChartConfig = {
@@ -143,7 +153,10 @@ function MarketAnalysis(
     useShadowColorFromDataset: false, // optional
     barRadius: 7,
     decimalPlaces: 0,
-    propsForVerticalLabels: {fontSize: 10},
+    propsForVerticalLabels: {
+      fontSize: 10,
+      fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+    },
   };
 
   const dayChartConfig = {
@@ -155,6 +168,10 @@ function MarketAnalysis(
     useShadowColorFromDataset: false, // optional
     barRadius: 7,
     decimalPlaces: 0,
+    propsForVerticalLabels: {
+      fontSize: 10,
+      fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+    },
   };
 
   const genderChartConfig = {
@@ -164,7 +181,12 @@ function MarketAnalysis(
     strokeWidth: 2, // optional, default 3
     useShadowColorFromDataset: false, // optional
     barRadius: 7,
-    propsForLabels: {color: '#123456'},
+    propsForLabels: {
+      // 안먹음
+      fontSize: 10,
+      fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+      color: 'black',
+    },
   };
 
   return (
@@ -332,11 +354,12 @@ const styles = StyleSheet.create({
   innerChartTitleText: {
     color: 'black',
     marginBottom: 10,
+    fontFamily: 'NotoSansCJKkr-Medium (TTF)',
   },
   graphStyle: {
     // width: screenWidth,
     // height: 300,
-    borderColor: 'black',
+    borderColor: '#c8c8c8',
     borderWidth: 2,
     borderRadius: 10,
     paddingTop: 15,
