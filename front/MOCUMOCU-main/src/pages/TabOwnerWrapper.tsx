@@ -12,7 +12,7 @@ const Tab = createBottomTabNavigator();
 function TapOwnerWrapper() {
   return (
     <Tab.Navigator
-      initialRouteName="MainOwner"
+      initialRouteName="TabMainOwner"
       backBehavior="initialRoute"
       screenOptions={{
         tabBarActiveTintColor: '#414FFD',
@@ -24,7 +24,7 @@ function TapOwnerWrapper() {
         },
       }}>
       <Tab.Screen
-        name="MainOwner"
+        name="TabMainOwner"
         component={MainOwner}
         options={{
           tabBarLabel: '메인',

@@ -72,8 +72,6 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
 
   const onGetMarkets = useCallback(async () => {
     try {
-      console.log('ownerId', ownerId);
-
       const response = await axios.get(
         `http://15.164.100.68:8080/owner/${ownerId}/market-list`,
       );
@@ -86,7 +84,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
     } catch (error) {
       const errorResponse = (error as AxiosError).response;
       if (errorResponse) {
-        Alert.alert('알림', `${errorResponse.status}`);
+        console.log('MainOwnerDebug', `${errorResponse.status}`);
       }
     }
   }, [dispatch, ownerId]);
