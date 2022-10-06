@@ -11,8 +11,10 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 
 import {LoggedInOwnerParamList} from '../../App';
+import {RootState} from '../store/reducer';
 
 type EventControlScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
@@ -21,6 +23,9 @@ type EventControlScreenProps = NativeStackScreenProps<
 
 function EventControl({navigation, route}: EventControlScreenProps) {
   const marketIndex = route.params.marketIndex;
+  const marketName = useSelector(
+    (state: RootState) => state.marketOwner.markets[marketIndex].name,
+  );
   const isAlarm = false;
   const [checkDeleteModalState, setCheckDeleteModalState] = useState(false);
   const onSubmitSetting = () => {
@@ -67,6 +72,9 @@ function EventControl({navigation, route}: EventControlScreenProps) {
 
       <View style={styles.marketTitleWrapper}>
         <Text style={styles.marketTitleText}>이벤트 관리</Text>
+        <Text style={[styles.marketTitleText, {fontSize: 12}]}>
+          {marketName}
+        </Text>
       </View>
       <View style={styles.buttonWrapper}>
         <TouchableOpacity

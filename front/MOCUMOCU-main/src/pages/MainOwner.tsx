@@ -65,6 +65,11 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
     setDeleteButtonActive(!deleteButtonAcitive);
   };
 
+  const toMarektAnalysis = (index: number) => {
+    // Alert.alert('알림', '매장 분석으로 이동');
+    navigation.navigate('MarketAnalysis', {marketIndex: index});
+  };
+
   const onGetMarkets = useCallback(async () => {
     try {
       console.log('ownerId', ownerId);
@@ -257,6 +262,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
                   style={styles.analysisCard}
                   onPress={() => {
                     Alert.alert('알림', `${market.name} 매장 분석으로 이동`);
+                    toMarektAnalysis(i);
                   }}
                   key={i}>
                   <Text style={styles.analysisStoreNameText}>

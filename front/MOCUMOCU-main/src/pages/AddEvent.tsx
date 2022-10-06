@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import {LoggedInOwnerParamList} from '../../App';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {RootState} from '../store/reducer';
+import {useSelector} from 'react-redux';
 type AddEventScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
   'AddEvent'
@@ -25,6 +27,9 @@ function AddEvent({navigation, route}: AddEventScreenProps) {
   }, []);
 
   const marketIndex = route.params.marketIndex;
+  const marketName = useSelector(
+    (state: RootState) => state.marketOwner.markets[marketIndex].name,
+  );
   const isAlarm = false;
 
   const [bannerImage, setBannerImage] = useState(null);
@@ -91,6 +96,9 @@ function AddEvent({navigation, route}: AddEventScreenProps) {
 
       <View style={styles.marketTitleWrapper}>
         <Text style={styles.marketTitleText}>이벤트 등록</Text>
+        <Text style={[styles.marketTitleText, {fontSize: 12}]}>
+          {marketName}
+        </Text>
       </View>
 
       <View>

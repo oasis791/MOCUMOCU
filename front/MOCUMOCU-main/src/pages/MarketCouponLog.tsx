@@ -60,8 +60,10 @@ function MarketCouponLog({navigation, route}: MarketCouponLogScreenProps) {
       </View>
 
       <View style={styles.marketTitleWrapper}>
-        <Text style={styles.marketTitleText}>{marketName}</Text>
         <Text style={styles.marketTitleText}>적립/사용 내역</Text>
+        <Text style={[styles.marketTitleText, {fontSize: 12}]}>
+          {marketName}
+        </Text>
       </View>
     </View>
   );

@@ -10,7 +10,9 @@ import {
   Text,
   View,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 import {LoggedInOwnerParamList} from '../../App';
+import {RootState} from '../store/reducer';
 
 type MarketAnalysislScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
@@ -19,6 +21,9 @@ type MarketAnalysislScreenProps = NativeStackScreenProps<
 
 function MarketAnalysis({navigation, route}: MarketAnalysislScreenProps) {
   const marketIndex = route.params.marketIndex;
+  const marketName = useSelector(
+    (state: RootState) => state.marketOwner.markets[marketIndex].name,
+  );
   const isAlarm = false;
 
   const onSubmitSetting = () => {
@@ -56,6 +61,9 @@ function MarketAnalysis({navigation, route}: MarketAnalysislScreenProps) {
 
       <View style={styles.marketTitleWrapper}>
         <Text style={styles.marketTitleText}>매장 분석</Text>
+        <Text style={[styles.marketTitleText, {fontSize: 12}]}>
+          {marketName}
+        </Text>
       </View>
     </View>
   );
