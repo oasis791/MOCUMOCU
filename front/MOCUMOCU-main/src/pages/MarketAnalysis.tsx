@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -25,6 +25,14 @@ function MarketAnalysis(
   this: any,
   {navigation, route}: MarketAnalysislScreenProps,
 ) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
   const marketIndex = route.params.marketIndex;
   const marketName = useSelector(
     (state: RootState) => state.marketOwner.markets[marketIndex].name,
@@ -39,11 +47,15 @@ function MarketAnalysis(
     Alert.alert('알림', '알람');
   };
 
+  const defaultColor = () => '#bbbbbb';
+  const redColor = () => '#FA6072';
+
   const tempTimeData = [
     10, 20, 50, 30, 40, 15, 20, 10, 20, 60, 30, 40, 15, 20, 10, 20, 50, 30, 40,
     15, 20, 50, 30, 40,
   ];
-  const tempTimeDataMax = Math.max(...tempTimeData);
+  const tempTimeDataMax = Math.max.apply(null, tempTimeData);
+  // const tempTimeDataMax = 0;
   const timeChartData = {
     labels: tempTimeData.reduce((arr, value, i) => {
       if ((i + 1) % 2 === 1) {
@@ -58,9 +70,9 @@ function MarketAnalysis(
         data: tempTimeData,
         colors: tempTimeData.reduce((arr, value: number) => {
           if (tempTimeDataMax === value) {
-            arr.push(() => '#FA6072');
+            arr.push(redColor);
           } else {
-            arr.push(() => '#bbbbbb');
+            arr.push(defaultColor);
           }
           return arr;
         }, []),
@@ -69,27 +81,29 @@ function MarketAnalysis(
   };
 
   const tempDayData = [10, 20, 50, 30, 40, 15, 20];
-  const tempDayDataMax = Math.max(...tempDayData);
-  const dayChartData = {
+  const tempDayDataMax = Math.max.apply(null, tempDayData);
+  // const tempDayDataMax = 0;
+  const [dayChartData, setDayChartData] = useState({
     labels: ['일', '월', '화', '수', '목', '금', '토'],
     datasets: [
       {
         data: tempDayData,
         colors: tempDayData.reduce((arr, value: number) => {
           if (tempDayDataMax === value) {
-            arr.push(() => '#FA6072');
+            arr.push(redColor);
           } else {
-            arr.push(() => '#bbbbbb');
+            arr.push(defaultColor);
           }
           return arr;
         }, []),
       },
     ],
-  };
+  });
 
   const tempMonthData = [99, 45, 28, 80, 20, 43, 20, 45, 28, 80, 70, 43];
-  const tempMonthDataMax = Math.max(...tempMonthData);
-  const monthChartData = {
+  const tempMonthDataMax = Math.max.apply(null, tempMonthData);
+  // const tempMonthDataMax = 0;
+  const [monthChartData, setMonthChartData] = useState({
     labels: tempMonthData.reduce((arr, value, i) => {
       arr.push(i + 1 + '월');
       return arr;
@@ -99,16 +113,19 @@ function MarketAnalysis(
         data: tempMonthData,
         colors: tempMonthData.reduce((arr, value: number) => {
           if (tempMonthDataMax === value) {
-            arr.push(() => '#FA6072');
+            arr.push(redColor);
           } else {
-            arr.push(() => '#bbbbbb');
+            arr.push(defaultColor);
           }
           return arr;
         }, []),
       },
     ],
-  };
+  });
 
+  useMemo(() => {
+    console.log('asdf');
+  }, [timeChartData]);
   const genderChartData = [
     {
       name: '남자',
@@ -191,6 +208,11 @@ function MarketAnalysis(
 
   return (
     <ScrollView>
+      {isLoading ? (
+        <View style={styles.loadingModal}>
+          <Text> 로딩중 입니다.</Text>
+        </View>
+      ) : null}
       <View style={styles.mainBackground}>
         <StatusBar hidden={true} />
 
@@ -303,6 +325,13 @@ function MarketAnalysis(
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
+  loadingModal: {
+    width: screenWidth,
+    height: screenHeight,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   mainBackground: {
     width: screenWidth,
     // height: screenHeight,
