@@ -1,12 +1,12 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-function Notice() {
+function TermsOfUse() {
   return (
     <View>
-      <Text>푸시 알림</Text>
+      <Text>이용약관</Text>
     </View>
   );
 }
 
-export default Notice;
+export default TermsOfUse;

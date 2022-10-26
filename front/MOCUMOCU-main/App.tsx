@@ -4,26 +4,35 @@ import store from './src/store';
 import AppInner from './AppInner';
 import {NavigationContainer} from '@react-navigation/native';
 import {PortalProvider} from '@gorhom/portal';
-import {Coupon} from './src/pages/RewardList';
-import {Select} from './src/pages/UseCoupon';
+import {Coupon} from './src/pages/SaveUseComponent/RewardList';
+import {Select} from './src/pages/SaveUseComponent/UseCoupon';
 export type LoggedInUserParamList = {
-  CustomerWrapper: undefined;
+  /** MainComponent Type  */
   Main: undefined;
+  Settings: undefined;
+  PushNotice: undefined; // 푸시알림
+  Notice: undefined; // 공지사항
+  QnA: undefined;
+  CouponDetail: undefined;
+  SelectCustomizing: Customizing;
+
+  /** MoreComponent Type */
+  More: undefined;
+  ModifyUserAccount: undefined;
+  TermsOfUse: undefined;
+  CouponUsageHistory: undefined;
+  MyPointLog: undefined; // 더보기랑 메인 둘 다 해당
+  DevInfo: undefined;
+
+  /** SaveUseComponent Type */
   SaveUseCoupon: undefined;
   UseCoupon: undefined;
   RewardList: Select;
   UseQR: Coupon;
-  Settings: undefined;
+
   // EventInfo: undefined;
-  // Notice: undefined;
-  // CustomShop: undefined;
-  // PointLog: undefined;
-  // CouponInfo: undefined;
-  // Privacy: undefined;
+  CustomShop: undefined;
   // Help: undefined;
-  // ModifyInfo: undefined;
-  // UsageHistory: undefined;
-  // DevInfo: undefined;
   // orderId : parameter 칸 => 주문에 고유한 ID가 부여되어 있음 이걸 변수처럼 사용하기 위해서 넣어줌
 }; // -> 로그인 했을 때 보이는 페이지들
 

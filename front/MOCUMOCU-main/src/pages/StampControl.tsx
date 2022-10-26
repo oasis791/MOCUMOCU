@@ -17,8 +17,8 @@ type StampControlProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
   'StampControl'
 >;
-const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 function StampControl({navigation, route}: StampControlProps) {
   const [marketId, setMarketId] = useState(route.params.marketId);
@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-around',
   },
   headerSetting: {
+    // marginTop: screenHeight / 25,
     resizeMode: 'contain',
     width: 20,
     height: 20,

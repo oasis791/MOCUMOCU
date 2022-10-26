@@ -256,12 +256,6 @@ function MyPointLog({navigation}: MyPointScreenProps) {
                   style={styles.headerSetting}
                 />
               </Pressable>
-              <Pressable onPress={toSettings} style={styles.headerButton}>
-                <Image
-                  source={require('../../assets/icon/mainSetting.png')}
-                  style={styles.headerSetting}
-                />
-              </Pressable>
             </View>
           </View>
           <View style={styles.topContent}>

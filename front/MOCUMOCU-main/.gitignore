@@ -1,7 +1,6 @@
 # OSX
 #
 .DS_Store
-
 # Xcode
 #
 build/
@@ -60,3 +59,5 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 .DS_Store
+
+.eslintrc.js

@@ -10,8 +10,8 @@ import {
   Alert,
 } from 'react-native';
 import {LoggedInOwnerParamList} from '../../App';
-const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 type StampAmountOwnerProps = NativeStackScreenProps<
   LoggedInOwnerParamList,

@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image, Text, View} from 'react-native';
-import More from './More';
+import More from './MoreComponent/More';
 import SaveUpOwner from './SaveUpOwner';
 import MainOwner from './MainOwner';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';

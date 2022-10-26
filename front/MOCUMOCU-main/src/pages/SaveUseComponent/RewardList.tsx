@@ -10,12 +10,12 @@ import {
   View,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {LoggedInUserParamList} from '../../App';
+import {LoggedInUserParamList} from '../../../App';
 import {useSelector} from 'react-redux';
-import {RootState} from '../store/reducer';
+import {RootState} from '../../store/reducer';
 import {useFocusEffect} from '@react-navigation/native';
 
-const screenWidth = Dimensions.get('screen').width;
+const screenWidth = Dimensions.get('window').width;
 type RewardListScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
   'RewardList'
@@ -143,7 +143,7 @@ function RewardList({navigation, route}: RewardListScreenProps) {
         </Text>
         <Image
           style={styles.arrowButton}
-          source={require('../assets/icon/arrowNormal.png')}
+          source={require('../../assets/icon/arrowNormal.png')}
         />
       </Pressable>
     );

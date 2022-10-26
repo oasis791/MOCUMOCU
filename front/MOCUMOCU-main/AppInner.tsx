@@ -21,21 +21,21 @@ import FindPassword from './src/pages/FindPassword';
 import FindPasswordOwner from './src/pages/FindPasswordOwner';
 import FindIdOwner from './src/pages/FindIdOwner';
 import FindId from './src/pages/FindId';
-import CustomerWrapper from './src/pages/CustomerWrapper';
 import OwnerWrapper from './src/pages/OwnerWrapper';
 import userSliceTest from './src/slices/userTest';
+import StackWrapper from './src/pages/StackWrapper';
 
 const Stack = createNativeStackNavigator();
 function AppInner() {
   // const isLoggedIn = useSelector(
   //   (state: RootState) => !!state.user.accessToken,
   // );
-  const isLogIn = useSelector((state: RootState) => state.userTest.isLogIn);
+  // const isLogIn = useSelector((state: RootState) => state.userTest.isLogIn);
   const userType = useSelector((state: RootState) => state.userTest.userType);
   // const userType = 'Owner';
   // const userTypeTest = 'Customer';
   const dispatch = useAppDispatch();
-  // const isLoggedIn = false;
+  const isLogIn = false;
 
   // 앱 실행 시 토큰 있으면 로그인하는 코드
   useEffect(() => {
@@ -88,7 +88,7 @@ function AppInner() {
     userType === 'Owner' ? (
       <OwnerWrapper />
     ) : (
-      <CustomerWrapper />
+      <StackWrapper />
     )
   ) : (
     <Stack.Navigator>
@@ -118,7 +118,7 @@ function AppInner() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="findId"
+        name="FindId"
         component={FindId}
         options={{headerShown: false}}
       />

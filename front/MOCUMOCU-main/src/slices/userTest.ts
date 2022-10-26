@@ -44,7 +44,7 @@ const userSliceTest = createSlice({
       state.userType = action.payload.userType;
     },
   },
-  extraReducers: builder => {}, // 비동기 action 만들 때 사용=======>>>>>>> su
+  extraReducers: builder => {}, // 비동기 action 만들 때 사용
 });
 
 export default userSliceTest;

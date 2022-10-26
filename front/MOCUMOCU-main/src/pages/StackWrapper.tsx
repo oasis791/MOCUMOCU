@@ -15,6 +15,7 @@ import PushNotice from './MainComponent/PushNotice';
 import MyPointLog from './MoreComponent/MyPointLog';
 import Notice from './MainComponent/Notice';
 import QnA from './MainComponent/QnA';
+import SelectCustomizing from './MainComponent/SelectCustomizing';
 
 const Stack = createNativeStackNavigator();
 function StackWrapper() {
@@ -56,6 +57,11 @@ function StackWrapper() {
       <Stack.Screen
         name="MyPointLog"
         component={MyPointLog}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SelectCustomizing"
+        component={SelectCustomizing}
         options={{headerShown: false}}
       />
       <Stack.Screen

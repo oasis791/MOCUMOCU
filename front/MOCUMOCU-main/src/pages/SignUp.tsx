@@ -29,7 +29,7 @@ import DatePicker from 'react-native-date-picker';
 
 type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
-const window = Dimensions.get('screen');
+const window = Dimensions.get('window');
 function convertDateFormat(date: any) {
   var year = date.getFullYear();
   var month = date.getMonth() + 1;

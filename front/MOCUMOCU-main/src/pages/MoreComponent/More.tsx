@@ -13,16 +13,16 @@ import {
 } from 'react-native';
 import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
-import {useAppDispatch} from '../store';
-import userSlice from '../slices/user';
-import userSliceTest from '../slices/userTest';
+import {useAppDispatch} from '../../store';
+import userSlice from '../../slices/user';
+import userSliceTest from '../../slices/userTest';
 import {useSelector} from 'react-redux';
-import {RootState} from '../store/reducer';
+import {RootState} from '../../store/reducer';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {LoggedInUserParamList} from '../../App';
+import {LoggedInUserParamList} from '../../../App';
 
-const screenWidth = Dimensions.get('screen').width;
+const screenWidth = Dimensions.get('window').width;
 
 type MoreScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'More'>;
 
@@ -58,16 +58,24 @@ function More({navigation}: MoreScreenProps) {
       console.error(errorResponse);
     }
   }, [dispatch]);
-  const toPointUseInfo = () => {
-    Alert.alert('알림', '포인트 사용 상세 내역으로 이동');
-  };
-  const toPointShop = () => {
-    Alert.alert('알림', '포인트 상점으로 이동');
-  };
+  const toCustomShop = useCallback(() => {
+    navigation.navigate('CustomShop');
+  }, [navigation]);
+  const toMyPointLog = useCallback(() => {
+    navigation.navigate('MyPointLog');
+  }, [navigation]);
   const toModifyUserAccount = useCallback(() => {
     navigation.navigate('ModifyUserAccount');
   }, [navigation]);
-
+  const toCouponUsageHistory = useCallback(() => {
+    navigation.navigate('CouponUsageHistory');
+  }, [navigation]);
+  const toTermsOfUse = useCallback(() => {
+    navigation.navigate('TermsOfUse');
+  }, [navigation]);
+  const toDevInfo = useCallback(() => {
+    navigation.navigate('DevInfo');
+  }, [navigation]);
   return (
     <>
       <SafeAreaView style={styles.scrollView}>
@@ -88,10 +96,12 @@ function More({navigation}: MoreScreenProps) {
               <View style={styles.pointButtonZone}>
                 <Pressable
                   style={styles.pointUseInfoButton}
-                  onPress={toPointUseInfo}>
+                  onPress={toMyPointLog}>
                   <Text>포인트 사용 내역</Text>
                 </Pressable>
-                <Pressable style={styles.pointShopButton} onPress={toPointShop}>
+                <Pressable
+                  style={styles.pointShopButton}
+                  onPress={toCustomShop}>
                   <Text>포인트 상점</Text>
                 </Pressable>
               </View>
@@ -104,28 +114,30 @@ function More({navigation}: MoreScreenProps) {
               <Text style={styles.buttonText}>회원정보 수정</Text>
               <Image
                 style={styles.arrowButton}
-                source={require('../assets/icon/arrowNormal.png')}
+                source={require('../../assets/icon/arrowNormal.png')}
               />
             </Pressable>
-            <Pressable style={styles.buttonContainer}>
+            <Pressable
+              style={styles.buttonContainer}
+              onPress={toCouponUsageHistory}>
               <Text style={styles.buttonText}>쿠폰 적립 및 사용 내역</Text>
               <Image
                 style={styles.arrowButton}
-                source={require('../assets/icon/arrowNormal.png')}
+                source={require('../../assets/icon/arrowNormal.png')}
               />
             </Pressable>
-            <Pressable style={styles.buttonContainer}>
+            <Pressable style={styles.buttonContainer} onPress={toTermsOfUse}>
               <Text style={styles.buttonText}>개인정보 수집 및 이용 약관</Text>
               <Image
                 style={styles.arrowButton}
-                source={require('../assets/icon/arrowNormal.png')}
+                source={require('../../assets/icon/arrowNormal.png')}
               />
             </Pressable>
-            <Pressable style={styles.buttonContainer}>
-              <Text style={styles.buttonText}>개발자 소개</Text>
+            <Pressable style={styles.buttonContainer} onPress={toDevInfo}>
+              <Text style={styles.buttonText}>도움말</Text>
               <Image
                 style={styles.arrowButton}
-                source={require('../assets/icon/arrowNormal.png')}
+                source={require('../../assets/icon/arrowNormal.png')}
               />
             </Pressable>
             <View style={styles.buttonContainer}>
@@ -134,10 +146,6 @@ function More({navigation}: MoreScreenProps) {
             </View>
             <Pressable style={styles.buttonContainer} onPress={onLogout}>
               <Text style={styles.logOutButtonText}>로그아웃</Text>
-              <Image
-                style={styles.arrowButton}
-                source={require('../assets/icon/arrowNormal.png')}
-              />
             </Pressable>
           </View>
         </ScrollView>
@@ -214,7 +222,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'cyan',
     // width: 200,
     // paddingTop: 20,
-    color: '#363636',
+    color: '#414ffd',
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
     fontSize: 14,
     // backgroundColor: 'blue',

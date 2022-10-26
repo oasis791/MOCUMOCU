@@ -1,6 +1,6 @@
 // import axios, {AxiosError} from 'axios';
-import React, {useMemo} from 'react';
-import {LoggedInUserParamList} from '../../App';
+import React, {useCallback, useMemo} from 'react';
+import {LoggedInUserParamList} from '../../../App';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   Text,
@@ -11,28 +11,38 @@ import {
   Image,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import {RootState} from '../store/reducer';
-import {Coupon} from '../slices/coupon';
+import {RootState} from '../../store/reducer';
 
-type UseCouponScreenProps = NativeStackScreenProps<
+export type Customizing = {
+  couponId: number;
+  customerId: number;
+};
+
+type CouponDetailScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
-  'UseCoupon'
+  'CouponDetail'
 >;
 export type Select = {
   selectCouponId: number;
   selectMarket: string;
 };
 
-const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
-function UseCoupon({navigation}: UseCouponScreenProps) {
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+function CouponDetail({navigation}: CouponDetailScreenProps) {
   const coupons = useSelector((state: RootState) => state.coupon.coupons); // 사용자 쿠폰 리스트 가져오기
-  // const couponList = useMemo(() => {
-  //   return [
-  //     {couponId: 0, marketName: 'market 1'},
-  //     {couponId: 1, marketName: 'market 2'},
-  //   ];
-  // }, []);
+
+  // const customerId = useSelector((state: RootState) => state.userTest.id);
+  const customerIdTest = 1;
+  const couponList = useMemo(() => {
+    return [
+      {couponId: 0, marketName: 'market 1'},
+      {couponId: 1, marketName: 'market 2'},
+    ];
+  }, []);
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
 
   // const toRewardList = (idx: number) => {
   //   const selectCouponId = couponList[idx].couponId;
@@ -45,17 +55,11 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
   //     selectMarket: selectMarket,
   //   });
   // };
-  const toRewardList = ({couponId, marketName, stampAmount}: Coupon) => {
-    let selectCouponId: number = couponId;
-    let selectMarket: string = marketName;
-    let selectStampAmount: number = stampAmount;
-    console.log(
-      `선택 coupon id: ${selectCouponId} / 마켓이름: ${selectMarket}
-        / 도장 보유 개수: ${selectStampAmount}`,
-    );
-    navigation.navigate('RewardList', {
-      selectCouponId: selectCouponId,
-      selectMarket: selectMarket,
+  const toSelectCustomizing = (couponId: number, customerId: number) => {
+    console.log(`선택 coupon id: ${couponId} / 고객 ID: ${customerId}`);
+    navigation.navigate('SelectCustomizing', {
+      couponId: couponId,
+      customerId: customerId,
     });
   };
 
@@ -100,19 +104,19 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
   //   return () => {};
   // }, [customerId, dispatch]);
 
-  const renderMarket = coupons.map((coupon: Coupon) => {
+  const renderMarket = couponList.map(coupon => {
     return (
-      <View>
+      <View style={styles.continer}>
         <Pressable
           key={coupon.couponId}
           style={styles.marketContainer}
           onPress={() => {
-            toRewardList(coupon);
+            toSelectCustomizing(coupon.couponId, customerIdTest);
           }}>
           <Text style={styles.marketText}>{coupon.marketName}</Text>
           <Image
             style={styles.arrowButton}
-            source={require('../assets/icon/arrowNormal.png')}
+            source={require('../../assets/icon/arrowNormal.png')}
           />
         </Pressable>
       </View>
@@ -120,9 +124,17 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
   });
   return (
     <View>
+      <View style={styles.header}>
+        <Pressable style={styles.headerButton} onPress={toBack}>
+          <Image
+            source={require('../../assets/icon/arrowBack.png')}
+            style={styles.headerSetting}
+          />
+        </Pressable>
+      </View>
       <View style={styles.titleContiner}>
-        <Text style={styles.titleText}>쿠폰을 사용할 매장을</Text>
-        <Text style={styles.titleText}>선택해 주세요</Text>
+        <Text style={styles.titleText}>쿠폰 리스트</Text>
+        {/* <Text style={styles.titleText}>선택해 주세요</Text> */}
       </View>
       {renderMarket}
     </View>
@@ -130,40 +142,70 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  titleContiner: {alignItems: 'center'},
+  header: {
+    height: screenHeight / 15,
+    // backgroundColor: 'orange',
+    width: screenWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    // marginHorizontal: 10,
+  },
+  headerButton: {
+    marginHorizontal: 10,
+  },
+  headerSetting: {
+    // flex: 1,
+    width: 18,
+    resizeMode: 'contain',
+    // marginTop: screenHeight / 25,
+    // flex: 1 / 3,
+    // marginHorizontal: 15,
+    height: 18,
+  },
+  titleContiner: {
+    marginLeft: screenWidth / 15,
+    marginTop: screenHeight / 50,
+    marginBottom: screenHeight / 20,
+  },
   titleText: {
-    top: 78,
     fontSize: 20,
     fontFamily: 'GmarketSansTTFMedium',
+    color: '#414FFD',
+    // marginLeft: screenWidth / 25,
+    // backgroundColor: 'pink',
   },
   continer: {
     justifyContent: 'center',
+    marginTop: screenHeight / 40,
   },
   marketContainer: {
     flexDirection: 'row',
     backgroundColor: 'white',
     width: screenWidth,
     justifyContent: 'space-between',
-    height: 77,
-    top: 120,
+    // height: 77,
+    height: screenHeight / 9,
+    // top: 120,
     borderRadius: 20,
-    marginBottom: 7,
+    // marginBottom: 7,
+    // padding: 10,
   },
   marketText: {
     paddingHorizontal: 36,
     // backgroundColor: 'cyan',
     // width: 200,
-    paddingTop: 20,
+    paddingTop: 12,
     color: '#363636',
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
     fontSize: 14,
     // backgroundColor: 'blue',
-    paddingVertical: 10,
+    // paddingVertical: 10,
     // top: -10,
   },
   arrowButton: {
     resizeMode: 'contain',
-    marginTop: 29,
+    marginTop: 23,
     height: 20,
     width: 40,
     paddingHorizontal: 36,
@@ -187,4 +229,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UseCoupon;
+export default CouponDetail;

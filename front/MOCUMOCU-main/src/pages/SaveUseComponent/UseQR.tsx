@@ -2,10 +2,10 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {Text, StyleSheet, View, Dimensions} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import {LoggedInUserParamList} from '../../App';
+import {LoggedInUserParamList} from '../../../App';
 
 type UseQRScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'UseQR'>;
-const screenHeight = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('window').height;
 function UseQR({route}: UseQRScreenProps) {
   return (
     <View style={styles.container}>

@@ -1,12 +1,12 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-function CouponInfo() {
+function PushNotice() {
   return (
     <View>
-      <Text>쿠폰 상세보기</Text>
+      <Text>푸시 알림</Text>
     </View>
   );
 }
 
-export default CouponInfo;
+export default PushNotice;

@@ -1,4 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {LoggedInUserParamList} from '../../../App';
 import React, {useCallback, useState} from 'react';
 import {
   View,
@@ -11,15 +12,14 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import {LoggedInUserParamList} from '../../../App';
+
+type SelectCustomizingScreenProps = NativeStackScreenProps<
+  LoggedInUserParamList,
+  'SelectCustomizing'
+>;
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-
-type CustomShopScreenProps = NativeStackScreenProps<
-  LoggedInUserParamList,
-  'MyPointLog'
->;
 
 const customizingBoardImage = [
   {
@@ -99,7 +99,9 @@ const customizingStampImage = [
   },
 ];
 
-function CustomShop({navigation}: CustomShopScreenProps) {
+function SelectCustomizing({navigation, route}: SelectCustomizingScreenProps) {
+  const selectedCouponId = route.params.couponId;
+  const selectCustomerId = route.params.customerId;
   const [select, setSelect] = useState('board');
   const [point, setPoint] = useState(0);
   const [clickElement, setClickElement] = useState(-1);
@@ -140,12 +142,13 @@ function CustomShop({navigation}: CustomShopScreenProps) {
     // console.log(newArr);
     setIsPress(newArr);
   };
-  const getPurchaseContent = useCallback(() => {
-    Alert.alert('구매 완료');
+  const getApplyContent = useCallback(() => {
+    Alert.alert('적용 완료');
     setClickElement(-1);
     setPoint(0);
     setIsPress(Array(customizingStampImage.length).fill(false));
-  }, []);
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
   return (
     <>
       <StatusBar hidden={true} />
@@ -228,6 +231,7 @@ function CustomShop({navigation}: CustomShopScreenProps) {
                     if (isPress[index]) {
                       if (index === clickElement) {
                         setPoint(0);
+                        console.log(point, clickElement);
                       } else {
                         changeIsPress(index);
                         setPoint(stampImage.point);
@@ -287,47 +291,32 @@ function CustomShop({navigation}: CustomShopScreenProps) {
               );
             })}
       </ScrollView>
-      <View
+      {/* <View
+        style={
+          clickElement < 0
+            ? styles.applyContainer
+            : [styles.applyContainer, {backgroundColor: '#414FFD'}]
+        }> */}
+      <Pressable
         style={
           point <= 0
-            ? styles.purchaseContainer
-            : [styles.purchaseContainer, {backgroundColor: '#414FFD'}]
-        }>
-        <View style={styles.purchaseText}>
-          <Image
-            source={require('../../assets/icon/shoppingCart.png')}
-            style={styles.cartImage}
-          />
-          <Text
-            style={{
-              fontFamily: 'GmarketSansTTF',
-              // fontSize: 15,
-              // textAlign: 'center',
-              // textAlignVertical: 'center',
-              // backgroundColor: 'white',
-              height: screenHeight / 30,
-              color: 'white',
-              fontWeight: '700',
-            }}>
-            {point}P
-          </Text>
-        </View>
-
-        <Pressable
-          style={styles.purchaseButton}
-          disabled={point <= 0 ? true : false}
-          onPress={getPurchaseContent}>
-          <Text
-            style={{
-              fontFamily: 'GmarketSansTTF',
-              fontSize: 15,
-              color: 'white',
-              fontWeight: '700',
-            }}>
-            구매하기
-          </Text>
-        </Pressable>
-      </View>
+            ? styles.applyButton
+            : [styles.applyButton, {backgroundColor: '#414FFD'}]
+        }
+        disabled={point <= 0 ? true : false}
+        onPress={getApplyContent}>
+        <Text
+          style={{
+            fontFamily: 'GmarketSansTTF',
+            fontSize: 15,
+            color: 'white',
+            fontWeight: '700',
+            textAlign: 'center',
+          }}>
+          적용
+        </Text>
+      </Pressable>
+      {/* </View> */}
     </>
   );
 }
@@ -422,40 +411,37 @@ const styles = StyleSheet.create({
   },
 
   // 커마 구매 탭
-  purchaseContainer: {
+  applyContainer: {
     // marginTop: 10,
     height: screenHeight / 10,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    width: screenWidth,
+    // marginHorizontal: 10,
+    borderRadius: 15,
     backgroundColor: '#cecece',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  cartImage: {
-    // flex: 1,
-    width: 20,
-    resizeMode: 'contain',
-    // flex: 1 / 3,
-    // marginHorizontal: 15,
-    height: 20,
-    // marginRight: screenWidth / 100,
-    // backgroundColor: 'pink',
-  },
-  purchaseText: {
+  applyText: {
     width: screenWidth / 7,
     // backgroundColor: 'blue',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginLeft: screenWidth / 17,
   },
-  purchaseButton: {
-    marginRight: screenWidth / 15,
+  applyButton: {
+    // marginRight: screenWidth / 15,
+    // alignItems: 'center',
+    // backgroundColor: 'pink',
+    // textAlign: 'center',
+    width: screenWidth / 1.2,
+    height: screenHeight / 12,
+    marginBottom: screenHeight / 16,
+    marginLeft: screenWidth / 12,
+    backgroundColor: '#cecece',
+    justifyContent: 'center',
+    borderRadius: 12,
   },
 });
 
-export default CustomShop;
-
-/**
- *
- */
+export default SelectCustomizing;

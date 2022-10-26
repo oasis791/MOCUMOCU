@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingVertical: 6,
     paddingHorizontal: 20,
-    width: 280,
+    width: screenWidth / 1.29,
     fontWeight: 'bold',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },

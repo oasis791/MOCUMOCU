@@ -31,8 +31,8 @@ export interface Store {
   activityData: Array<AcitivityData>;
 }
 
-const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 type SaveUpOwnerProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-around',
   },
   headerSetting: {
+    // marginTop: screenHeight / 25,
     resizeMode: 'contain',
     width: 20,
     height: 20,

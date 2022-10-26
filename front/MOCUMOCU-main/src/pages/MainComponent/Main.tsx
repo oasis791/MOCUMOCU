@@ -1,6 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import axios, {AxiosError} from 'axios';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -16,24 +16,26 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Carousel from 'react-native-snap-carousel';
-import {LoggedInUserParamList} from '../../App';
-import couponSlice, {Coupon} from '../slices/coupon';
-import {useAppDispatch} from '../store';
+import {LoggedInUserParamList} from '../../../App';
+import couponSlice, {Coupon} from '../../slices/coupon';
+import {useAppDispatch} from '../../store';
 import {useSelector} from 'react-redux';
-import {RootState} from '../store/reducer';
+import {RootState} from '../../store/reducer';
 import {useFocusEffect} from '@react-navigation/native';
-
-const screenWidth = Dimensions.get('screen').width;
+import AttendanceModal from '../../components/AttendanceModal';
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 const data = [
   {
     id: 1,
-    url: 'https://i.ibb.co/pjxqR6Q/111111.png',
+    url: 'https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/temp/banner1.png',
   },
   {
     id: 2,
-    url: 'https://i.ibb.co/x7jBdVh/222222.png',
+    url: 'https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/temp/banner2.png',
   },
 ];
+let myPoint = 500;
 
 type MainScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'Main'>;
 function Main({navigation}: MainScreenProps) {
@@ -42,6 +44,8 @@ function Main({navigation}: MainScreenProps) {
   const customerIdTest = useSelector((state: RootState) => state.userTest.id);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [isAttandance, setIsAttandance] = useState(0);
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -82,25 +86,33 @@ function Main({navigation}: MainScreenProps) {
     (state: RootState) => state.userTest.name,
   );
   const coupons = useSelector((state: RootState) => state.coupon.coupons);
-  const myPoint = 1000;
   const toSettings = useCallback(() => {
     navigation.navigate('Settings');
   }, [navigation]);
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
-  };
+  const toPushNotice = useCallback(() => {
+    navigation.navigate('PushNotice');
+  }, [navigation]);
+  const toMyPointLog = useCallback(() => {
+    navigation.navigate('MyPointLog');
+  }, [navigation]);
+  const toQna = useCallback(() => {
+    navigation.navigate('QnA');
+  }, [navigation]);
+  const toNotice = useCallback(() => {
+    navigation.navigate('Notice');
+  }, [navigation]);
+
   const onSubmitAttendance = () => {
-    Alert.alert('알림', '출석체크 완료');
+    // 모달 창으로 출석체크 완료!
+    setShowModal(true);
   };
   const onSubmitEvent = () => {
     Alert.alert('알림', '이벤트');
   };
-
   // 쿠폰 등록 관련 로직
-
-  const toCouponList = () => {
-    Alert.alert('알림', '쿠폰 리스트 화면으로 이동');
-  };
+  const toCouponDetail = useCallback(() => {
+    navigation.navigate('CouponDetail');
+  }, [navigation]);
   const renderCoupon =
     coupons.length !== 0 ? (
       coupons.map(coupon => {
@@ -138,38 +150,41 @@ function Main({navigation}: MainScreenProps) {
   return (
     <>
       <SafeAreaView style={styles.scrollView}>
+        <AttendanceModal
+          isVisible={showModal}
+          onBackdropPress={() => {
+            setShowModal(false);
+            isAttandance <= 0 ? (myPoint += 10) : myPoint;
+            setIsAttandance(1);
+          }}
+          hideModal={() => setShowModal(false)}
+          animationIn="fadeIn"
+          animationOut="fadeOut"
+          coverScreen={false}
+          deviceHeight={Dimensions.get('window').height}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>출석체크 완료!</Text>
+            <Text style={[styles.modalText, {color: '#414FFD'}]}>+10P</Text>
+          </View>
+        </AttendanceModal>
         <ScrollView fadingEdgeLength={10}>
           <StatusBar hidden={true} />
           <View style={[styles.header, {position: 'absolute'}]}>
             <Image
               style={styles.headerLogo}
-              source={require('../assets/blueLogo.png')}
+              source={require('../../assets/blueLogo.png')}
             />
             <View style={styles.headerButtonWrapper}>
-              <Pressable onPress={onSubmitAttendance}>
-                <Image
-                  source={require('../assets/icon/attendanceIcon.png')}
-                  style={styles.headerAttendance}
-                />
-              </Pressable>
-              <Pressable
-                onPress={toSettings}
-                style={{width: 20, marginHorizontal: 15}}>
-                <Image
-                  source={require('../assets/icon/mainSetting.png')}
-                  style={styles.headerSetting}
-                />
-              </Pressable>
-              <Pressable onPress={onSubmitAlarm}>
-                <Image
-                  source={
-                    isAlarm
-                      ? require('../assets/icon/mainAlarmActive.png')
-                      : require('../assets/icon/mainAlarm.png')
-                  }
-                  style={styles.headerAlarm}
-                />
-              </Pressable>
+              {isAttandance <= 0 ? (
+                <Pressable onPress={onSubmitAttendance}>
+                  <Image
+                    source={require('../../assets/icon/attendanceIcon.png')}
+                    style={styles.headerAttendance}
+                  />
+                </Pressable>
+              ) : (
+                <></>
+              )}
             </View>
           </View>
           <View style={styles.myInfo}>
@@ -182,7 +197,23 @@ function Main({navigation}: MainScreenProps) {
             </Text>
             <View style={styles.myInfoPoint}>
               <Text style={styles.myInfoPointText}>
-                내 포인트 {'\n'}
+                <Pressable
+                  style={styles.toMyPointButton}
+                  onPress={toMyPointLog}>
+                  <Text
+                    style={{
+                      marginRight: 8,
+                      fontFamily: 'GmarketSansTTFBold',
+                      color: '#9b9b9b',
+                      fontSize: 14,
+                    }}>
+                    내 포인트
+                  </Text>
+                  <Image
+                    source={require('../../assets/icon/arrowGray.png')}
+                    style={styles.toMyPointImg}
+                  />
+                </Pressable>
                 <Text style={{color: '#414FFD', fontSize: 24}}>
                   {myPoint} P
                 </Text>
@@ -208,7 +239,7 @@ function Main({navigation}: MainScreenProps) {
               <Text style={styles.myCouponText}>내 쿠폰함</Text>
               <Pressable
                 style={styles.myCouponboxButton}
-                onPress={toCouponList}>
+                onPress={toCouponDetail}>
                 <Text style={styles.myCouponboxButtonText}>전체 +</Text>
               </Pressable>
             </View>
@@ -226,12 +257,14 @@ function Main({navigation}: MainScreenProps) {
             <View style={styles.footerButtonWrapper}>
               <TouchableOpacity
                 style={styles.footerButtonLeft}
-                activeOpacity={0.7}>
+                activeOpacity={0.7}
+                onPress={toQna}>
                 <Text style={styles.footerButtonText}>Q&A</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.footerButtonRight}
-                activeOpacity={0.7}>
+                activeOpacity={0.7}
+                onPress={toNotice}>
                 <Text style={styles.footerButtonText}>공지사항</Text>
               </TouchableOpacity>
             </View>
@@ -254,7 +287,6 @@ function Main({navigation}: MainScreenProps) {
   );
 }
 const styles = StyleSheet.create({
-  event: {},
   header: {
     backgroundColor: 'white',
     width: screenWidth,
@@ -279,11 +311,12 @@ const styles = StyleSheet.create({
   headerAttendance: {
     // flex: 1,
     resizeMode: 'contain',
-    width: 20,
+    width: screenWidth / 7,
     height: 19,
     // backgroundColor: 'cyan',
   },
   headerSetting: {
+    // marginTop: screenHeight / 25,
     // flex: 1,
     width: 20,
     resizeMode: 'contain',
@@ -316,7 +349,6 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     fontFamily: 'GmarketSansTTFMedium',
     color: '#363636',
-    width: 160,
   },
   myInfoPoint: {
     // flexDirection: 'row',
@@ -327,8 +359,9 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     marginRight: 30,
     // alignItems: 'baseline',
-    width: 87,
-    height: 40,
+    width: screenWidth / 4,
+    // width: 87,
+    // height: 40,
     // borderRadius: 10,
   },
   myInfoPointText: {
@@ -336,12 +369,13 @@ const styles = StyleSheet.create({
     // paddingVertical: 5,
     fontFamily: 'GmarketSansTTFBold',
     color: '#9b9b9b',
-    height: 50,
+    height: screenHeight / 10,
     lineHeight: 25,
     // backgroundColor: 'black',
   },
   eventBanner: {
-    height: 210,
+    // height: 210,
+    // height: screenHeight / 10,
     width: screenWidth,
   },
   pointButtonWrapper: {
@@ -352,6 +386,22 @@ const styles = StyleSheet.create({
   pointButton: {
     marginLeft: 45,
     flex: 1,
+  },
+  toMyPointButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 12,
+    // marginBottom: 10,
+  },
+  toMyPointImg: {
+    resizeMode: 'contain',
+    height: 15,
+    width: 12,
+    marginBottom: 1,
+    // top: -100,
+    // marginLeft: 20,
+    // backgroundColor: 'pink',
   },
   pointButtonText: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
@@ -414,14 +464,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // alignItems: 'baseline',
     width: 260,
-    height: 139,
+    // height: 139,
+    height: screenHeight / 4.3,
     borderRadius: 10,
     elevation: 12,
   },
   scrollItemNone: {
     // backgroundColor: 'pink',
     width: screenWidth,
-    height: 139,
+    height: screenHeight / 4.3,
+    // height: 139,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -451,7 +503,7 @@ const styles = StyleSheet.create({
   },
   ScrollViewWrapper: {
     width: screenWidth,
-    height: 170,
+    height: screenHeight / 3.5,
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'pink',
@@ -525,6 +577,21 @@ const styles = StyleSheet.create({
     color: '#aeaeae',
     fontSize: 10,
     lineHeight: 30,
+  },
+  modalContent: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    height: 85,
+    borderRadius: 20,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // marginHorizontal: 10,
+  },
+  modalText: {
+    fontFamily: 'GmarketSansTTFBold',
+    color: '#aeaeae',
+    marginHorizontal: 30,
+    fontSize: 18,
   },
 });
 export default Main;

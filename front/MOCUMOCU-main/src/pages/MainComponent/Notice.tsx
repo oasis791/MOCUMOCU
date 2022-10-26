@@ -1,12 +1,11 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-function Privacy() {
+function Notice() {
   return (
     <View>
-      <Text>이용약관</Text>
+      <Text>Notice</Text>
     </View>
   );
 }
-
-export default Privacy;
+export default Notice;

@@ -12,13 +12,13 @@ import {
 
 import SaveUpQR from './SaveUpQR';
 // import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootState} from '../store/reducer';
+import {RootState} from '../../store/reducer';
 import {useSelector} from 'react-redux';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {LoggedInUserParamList} from '../../App';
+import {LoggedInUserParamList} from '../../../App';
 import BottomSheet from '@gorhom/bottom-sheet';
 // import {SaveUseParamList} from './SaveUseWrapper';
-const window = Dimensions.get('screen');
+const window = Dimensions.get('window');
 
 type SaveUseCouponScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
@@ -98,7 +98,7 @@ function SaveUseCoupon({navigation}: SaveUseCouponScreenProps) {
           <View style={styles.buttonWrapper}>
             <Pressable onPress={toSaveCoupon} style={styles.button}>
               <Image
-                source={require('../assets/icon/couponSaveIcon.png')}
+                source={require('../../assets/icon/couponSaveIcon.png')}
                 style={styles.couponIcon}
               />
               <Text style={styles.buttonText}>쿠폰 적립</Text>
@@ -109,12 +109,12 @@ function SaveUseCoupon({navigation}: SaveUseCouponScreenProps) {
               style={styles.button}>
               {couponExist ? (
                 <Image
-                  source={require('../assets/icon/couponUseIcon.png')}
+                  source={require('../../assets/icon/couponUseIcon.png')}
                   style={styles.couponIcon}
                 />
               ) : (
                 <Image
-                  source={require('../assets/icon/couponUseIconDisabled.png')}
+                  source={require('../../assets/icon/couponUseIconDisabled.png')}
                   style={styles.couponIcon}
                 />
               )}
