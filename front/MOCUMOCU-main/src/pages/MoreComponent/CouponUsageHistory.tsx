@@ -1,5 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useCallback, useState} from 'react';
+import axios from 'axios';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   Text,
@@ -10,124 +11,239 @@ import {
   ScrollView,
   SafeAreaView,
   Image,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
-import {LoggedInUserParamList} from '../../../App';
+import {historygedInUserParamList} from '../../../App';
+export type History = {
+  marketName: String;
+  month: Number;
+  date: Number;
+  hour: Number;
+  minute: Number;
+  stamp: Number;
+};
+export interface userType {
+  [key: string]: any;
+}
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const today = new Date().toLocaleTimeString();
-
 const couponUsageHistoryTest = [
-  [
-    {
-      date: '5월 16일',
-      action: '카페현욱 쿠폰 5개 사용',
-      time: '16:32',
-      point: -5,
-    },
-    {
-      // date: '5월 16일',
-      action: '커피맛을 아는 승민 1개 적립',
-      time: '16:02',
-      point: +1,
-    },
-    {
-      date: '5월 15일',
-      action: '노무현 버거 쿠폰 2개 적립',
-      time: '17:02',
-      point: +2,
-    },
-  ],
-  [
-    {
-      // date: '5월 15일',
-      action: '김현욱 길 가다 삥 뜯김',
-      time: '16:02',
-      point: -5,
-    },
-    {
-      date: '5월 14일',
-      action: '리어카 끌고 가는 할머니 도와줌',
-      time: '16:02',
-      point: +2,
-    },
-    {
-      action: '몰라',
-      time: '16:02',
-      point: +2,
-    },
-    {
-      date: '5월 13일',
-      action: '리어카 끌고 가는 할머니 도와줌',
-      time: '16:02',
-      point: +2,
-    },
-    {
-      action: '몰라',
-      time: '16:02',
-      point: +2,
-    },
-  ],
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 16,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    stamp: -5,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 16,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    stamp: -5,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 15,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    stamp: 5,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 15,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    stamp: 5,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 14,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    stamp: 5,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 14,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    stamp: -5,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 13,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    stamp: 5,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 13,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    stamp: -5,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 12,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    stamp: 5,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 12,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    stamp: -5,
+  },
 ];
 
 type couponUsageHistoryScreenProps = NativeStackScreenProps<
-  LoggedInUserParamList,
+  historygedInUserParamList,
   'CouponUsageHistory'
 >;
 function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
+  const [couponHistory, setCouponHistory] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const toBack = useCallback(() => {
     navigation.popToTop(); // 뒤로 가기
   }, [navigation]);
   const toSettings = useCallback(() => {
     navigation.navigate('Settings');
   }, [navigation]);
+  const mappingCouponDate: userType = couponUsageHistoryTest.reduce(
+    (acc: userType, cur) => {
+      let key = `${cur.month}.${cur.date}`;
+      acc[key] = [...(acc[key] || []), cur];
+      return acc;
+    },
+    {},
+  );
+  /** mappingCouponDate
+   *  {
+   *    "5.14": [{"date": 14, "hour": 16, "marketName": "카페현욱", "minute": 32, "month": 5, "stamp": -5}],
+   *    "5.15": [{"date": 15, "hour": 16, "marketName": "카페현욱", "minute": 32, "month": 5, "stamp": 5}],
+   *    "5.16": [{"date": 16, "hour": 16, "marketName": "카페현욱", "minute": 32, "month": 5, "stamp": -5}]
+   *  }
+   */
 
-  const renderHistory = couponUsageHistoryTest.map(historyList =>
-    historyList.map(history => {
+  const getData = () => {
+    setIsLoading(true);
+    // axios
+    //   .get(`https://randomuser.me/api/?page=${currentPage}&results=10`)
+    //   .then(res => {
+    //     //setUsers(res.data.results);
+    //     setCouponHistory([...couponHistory, ...res.data.results]);
+    //     setIsLoading(false);
+    //   });
+  };
+  const renderItem = ({item}) => {
+    return (
+      <View
+        style={{
+          // height: screenHeight / 10,
+          flexGrow: 0,
+        }}>
+        {item}
+      </View>
+    );
+  };
+  const renderLoader = () => {
+    return isLoading ? (
+      <View style={styles.loaderStyle}>
+        <ActivityIndicator size="large" color="#eeeeee" />
+      </View>
+    ) : null;
+  };
+  const loadMoreItem = () => {
+    setCurrentPage(currentPage + 1);
+    console.log(currentPage);
+  };
+  useEffect(() => {
+    getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
+
+  const renderMappingCouponDateKey = Object.keys(mappingCouponDate).map(
+    date => {
       return (
         <View style={styles.historyContent}>
-          {history.date ? (
-            <Text style={{fontWeight: 'bold'}}>{history.date}</Text>
-          ) : (
-            <></>
-          )}
-          <View style={styles.historyText}>
-            <Text style={{fontFamily: '', fontWeight: 'bold'}}>
-              {history.action} {'\n'}
-              <Text
-                style={{
-                  fontFamily: 'GmarketSansTTF',
-                  fontSize: 15,
-                  color: 'lightgray',
-                }}>
-                {history.time}
+          <Text style={{fontWeight: 'bold'}}>{date}</Text>
+          {mappingCouponDate[date].map((history: History) => (
+            // <View style={styles.historyContent}>
+            <View style={styles.historyText}>
+              <Text style={{fontWeight: 'bold'}}>
+                {history.marketName} {'\n'}
+                <Text
+                  style={{
+                    fontFamily: '',
+                    fontSize: 15,
+                    color: 'lightgray',
+                  }}>
+                  {`${history.hour}:${history.minute}`}
+                </Text>
               </Text>
-            </Text>
-            <Text>
-              {history.point <= 0 ? (
-                <Text
-                  style={{
-                    color: '#363636',
-                    fontFamily: '',
-                    fontWeight: 'bold',
-                  }}>
-                  {`-도장 ${Math.abs(history.point)}`}개
-                </Text>
-              ) : (
-                <Text
-                  style={{
-                    color: '#414FFD',
-                    fontFamily: '',
-                    fontWeight: 'bold',
-                  }}>
-                  {`+도장 ${history.point}`}개
-                </Text>
-              )}
-            </Text>
-          </View>
+              <Text>
+                {history.stamp <= 0 ? (
+                  <Text
+                    style={{
+                      color: '#363636',
+                      fontFamily: '',
+                      fontWeight: 'bold',
+                    }}>
+                    {`-도장 ${Math.abs(Number(history.stamp))}`}개
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      color: '#414FFD',
+                      fontFamily: '',
+                      fontWeight: 'bold',
+                    }}>
+                    {`+도장 ${history.stamp}`}개
+                  </Text>
+                )}
+              </Text>
+            </View>
+          ))}
         </View>
       );
-    }),
+    },
   );
   return (
     <>
@@ -156,7 +272,6 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
               <View
                 style={{
                   flexDirection: 'row',
-                  // width: screenWidth / 4,
                 }}>
                 <Text style={styles.buttonText}>전체</Text>
                 <Image
@@ -166,9 +281,13 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
               </View>
             </Pressable>
           </View>
-          <ScrollView style={styles.scrollView}>
-            <View style={styles.historyContainer}>{renderHistory}</View>
-          </ScrollView>
+          <FlatList
+            data={renderMappingCouponDateKey}
+            renderItem={renderItem}
+            ListFooterComponent={renderLoader}
+            onEndReached={loadMoreItem}
+            onEndReachedThreshold={0.1}
+          />
         </View>
       </SafeAreaView>
     </>
@@ -176,12 +295,6 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    // backgroundColor: 'white',
-    // width: screenWidth,
-    // flex: 1,
-    // height: screenHeight,
-  },
   header: {
     height: screenHeight / 12,
     // backgroundColor: 'orange',
@@ -192,7 +305,7 @@ const styles = StyleSheet.create({
     // marginHorizontal: 10,
   },
   headerButton: {
-    marginHorizontal: 10,
+    marginHorizontal: screenHeight / 60,
   },
   headerSetting: {
     // flex: 1,
@@ -204,20 +317,20 @@ const styles = StyleSheet.create({
     height: 18,
   },
   arrowDown: {
-    width: 15,
+    // width: 15,
+    width: screenWidth / 23,
     resizeMode: 'contain',
-    height: 15,
+    height: screenHeight / 40,
     marginTop: screenHeight / 160,
     marginLeft: screenWidth / 80,
   },
   couponUsageHistoryMain: {
     backgroundColor: 'white',
-    height: screenHeight - 50,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
+    height: screenHeight / 1.09,
   },
   mainButtonContainer: {
-    // backgroundColor: 'pink',
     width: screenWidth,
     height: screenHeight / 10,
     flexDirection: 'row',
@@ -226,36 +339,35 @@ const styles = StyleSheet.create({
   },
   filterButton: {
     fontSize: 20,
-    marginHorizontal: 10,
-    // backgroundColor: 'green',
+    marginHorizontal: screenHeight / 60,
   },
   refreshButton: {
-    // backgroundColor: 'green',
-    marginHorizontal: 10,
+    marginHorizontal: screenHeight / 60,
   },
   buttonText: {
     marginLeft: screenWidth / 20,
     fontSize: 15,
-    // backgroundColor: 'blue',
+
     fontWeight: 'bold',
   },
   historyContainer: {
     width: screenWidth,
-    // height: screenHeight / 6,
   },
   historyContent: {
-    marginHorizontal: 20,
-    marginVertical: 5,
+    marginHorizontal: screenHeight / 30,
+    marginVertical: screenHeight / 110,
+    // height: screenHeight / 5,
     // backgroundColor: 'pink',
-    height: screenHeight / 9,
   },
   historyText: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 15,
-    marginVertical: 15,
-    // backgroundColor: 'orange',
-    // fontSize: 20,
+    marginHorizontal: screenHeight / 40,
+    marginVertical: screenHeight / 40,
+  },
+  loaderStyle: {
+    marginVertical: screenHeight / 40,
+    alignItems: 'center',
   },
 });
 export default CouponUsageHistory;

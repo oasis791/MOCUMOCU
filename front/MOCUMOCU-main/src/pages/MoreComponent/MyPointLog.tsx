@@ -1,5 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useCallback} from 'react';
+import axios from 'axios';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   Text,
@@ -10,62 +11,138 @@ import {
   Pressable,
   Image,
   TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {LoggedInUserParamList} from '../../../App';
+import {userType} from './CouponUsageHistory';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const today = new Date().toLocaleTimeString();
+
+type Log = {
+  marketName: String;
+  month: Number;
+  date: Number;
+  hour: Number;
+  minute: Number;
+  point: Number;
+};
+
 type MyPointScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
   'MyPointLog'
 >;
 
 const logListTest = [
-  [
-    {
-      date: '5월 15일',
-      action: '쿠폰 판 스킨 구매',
-      time: '16:02',
-      point: -300,
-    },
-    {
-      date: '5월 15일',
-      action: '출석 체크',
-      time: '16:02',
-      point: +10,
-    },
-  ],
-  [
-    {
-      date: '5월 16일',
-      action: '쿠폰 판 스킨 구매',
-      time: '16:02',
-      point: -300,
-    },
-    {
-      date: '5월 16일',
-      action: '출석 체크',
-      time: '16:02',
-      point: +10,
-    },
-    {
-      date: '5월 16일',
-      action: '출석 체크',
-      time: '16:02',
-      point: +10,
-    },
-    {
-      date: '5월 16일',
-      action: '출석 체크',
-      time: '16:02',
-      point: +10,
-    },
-  ],
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 16,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    point: -500,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 16,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    point: -500,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 15,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    point: 500,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 15,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    point: 500,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 14,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    point: 500,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 14,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    point: -500,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 13,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    point: 500,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 13,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    point: -500,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 12,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    point: 500,
+  },
+  {
+    // date: '5월 16일',
+    marketName: '카페현욱',
+    month: 5,
+    date: 12,
+    hour: 16,
+    minute: 32,
+    // time: '16:32',
+    point: -500,
+  },
 ];
 function MyPointLog({navigation}: MyPointScreenProps) {
+  const [pointLog, setPointLog] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const toBack = useCallback(() => {
     navigation.pop(); // 뒤로 가기
   }, [navigation]);
@@ -75,44 +152,97 @@ function MyPointLog({navigation}: MyPointScreenProps) {
   const toCustomShop = useCallback(() => {
     navigation.navigate('CustomShop');
   }, [navigation]);
-  const renderLog = logListTest.map(logList =>
-    logList.map(log => {
+  const mappingPointLogDate: userType = logListTest.reduce(
+    (acc: userType, cur) => {
+      let key = `${cur.month}.${cur.date}`;
+      acc[key] = [...(acc[key] || []), cur];
+      return acc;
+    },
+    {},
+  );
+  const getData = () => {
+    setIsLoading(true);
+    // axios
+    //   .get(`https://randomuser.me/api/?page=${currentPage}&results=10`)
+    //   .then(res => {
+    //     setPointLog([...pointLog, ...res.data.results]);
+    //     setIsLoading(false);
+    //   });
+  };
+  const renderItem = ({item}) => {
+    return (
+      <View
+        style={{
+          height: screenHeight / 4,
+          flexGrow: 0,
+        }}>
+        {item}
+      </View>
+    );
+  };
+  const renderLoader = () => {
+    return isLoading ? (
+      <View style={styles.loaderStyle}>
+        <ActivityIndicator size="large" color="black" />
+      </View>
+    ) : null;
+  };
+  const loadMoreItem = () => {
+    setCurrentPage(currentPage + 1);
+    console.log(currentPage);
+  };
+  useEffect(() => {
+    getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
+  const renderMappingPointLogDateKey = Object.keys(mappingPointLogDate).map(
+    date => {
       return (
         <View style={styles.logContent}>
-          <Text style={{fontWeight: 'bold'}}>{log.date}</Text>
-          <View style={styles.logText}>
-            <Text style={{fontWeight: 'bold'}}>
-              {log.action} {'\n'}
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 15,
-                  color: 'lightgray',
-                }}>
-                {log.time}
-              </Text>
-            </Text>
-            <Text>
-              {log.point <= 0 ? (
+          <Text style={{fontWeight: 'bold'}}>{date}</Text>
+          {mappingPointLogDate[date].map((log: Log) => (
+            // <View style={styles.historyContent}>
+            <View style={styles.logText}>
+              <Text style={{fontWeight: 'bold'}}>
+                {log.marketName} {'\n'}
                 <Text
                   style={{
-                    color: '#363636',
-                    fontFamily: 'GmarketSansTTFBold',
+                    fontFamily: '',
+                    fontSize: 15,
+                    color: 'lightgray',
                   }}>
-                  {log.point}P
+                  {`${log.hour}:${log.minute}`}
                 </Text>
-              ) : (
-                <Text style={{color: '#414FFD', fontWeight: 'bold'}}>
-                  {`+ ${log.point}`}P
-                </Text>
-              )}
-            </Text>
-          </View>
+              </Text>
+              <Text>
+                {log.point <= 0 ? (
+                  <Text
+                    style={{
+                      color: '#363636',
+                      fontFamily: '',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                    }}>
+                    {log.point}P
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      color: '#414FFD',
+                      fontFamily: '',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                    }}>
+                    {`+ ${log.point}`}P
+                  </Text>
+                )}
+              </Text>
+            </View>
+          ))}
         </View>
       );
-    }),
+    },
   );
-  // console.log(renderLog[0]);
   return (
     <>
       <SafeAreaView>
@@ -172,7 +302,6 @@ function MyPointLog({navigation}: MyPointScreenProps) {
               <View
                 style={{
                   flexDirection: 'row',
-                  // width: screenWidth / 4,
                 }}>
                 <Text style={styles.buttonText}>전체</Text>
                 <Image
@@ -182,9 +311,13 @@ function MyPointLog({navigation}: MyPointScreenProps) {
               </View>
             </Pressable>
           </View>
-          <ScrollView>
-            <View style={styles.logContainer}>{renderLog}</View>
-          </ScrollView>
+          <FlatList
+            data={renderMappingPointLogDateKey}
+            renderItem={renderItem}
+            ListFooterComponent={renderLoader}
+            onEndReached={loadMoreItem}
+            onEndReachedThreshold={0.1}
+          />
         </View>
       </SafeAreaView>
     </>
@@ -202,15 +335,12 @@ const styles = StyleSheet.create({
     // marginHorizontal: 10,
   },
   headerButton: {
-    marginHorizontal: 10,
+    marginHorizontal: screenHeight / 60,
   },
   headerSetting: {
     // flex: 1,
     width: 18,
     resizeMode: 'contain',
-    // marginTop: screenHeight / 25,
-    // flex: 1 / 3,
-    // marginHorizontal: 15,
     height: 18,
   },
   myPointTop: {
@@ -240,7 +370,7 @@ const styles = StyleSheet.create({
   topButton: {
     width: screenWidth / 5,
     height: screenWidth / 5,
-    marginHorizontal: 20,
+    marginHorizontal: screenHeight / 30,
     borderRadius: 10,
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -249,9 +379,9 @@ const styles = StyleSheet.create({
   },
   myPointMain: {
     backgroundColor: 'white',
-    height: screenHeight - 170,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
+    height: screenHeight / 1.4,
   },
   mainButtonContainer: {
     // backgroundColor: 'pink',
@@ -264,12 +394,12 @@ const styles = StyleSheet.create({
   },
   filterButton: {
     fontSize: 20,
-    marginHorizontal: 10,
+    marginHorizontal: screenHeight / 60,
     // backgroundColor: 'green',
   },
   refreshButton: {
     // backgroundColor: 'green',
-    marginHorizontal: 10,
+    marginHorizontal: screenHeight / 60,
   },
   buttonText: {
     marginLeft: screenWidth / 20,
@@ -278,29 +408,34 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   arrowDown: {
-    width: 15,
+    width: screenWidth / 23,
+    // width: 15,
     resizeMode: 'contain',
-    height: 15,
+    height: screenHeight / 40,
+    // height: 15,
     marginTop: screenHeight / 160,
     marginLeft: screenWidth / 80,
   },
-  logContainer: {
-    width: screenWidth,
-    // backgroundColor: 'pink'
-  },
   logContent: {
-    marginHorizontal: 20,
-    marginVertical: 5,
-    // backgroundColor: 'pink',
-    height: screenHeight / 9,
+    // marginHorizontal: 20,
+    height: screenHeight / 8.5,
+    marginHorizontal: screenHeight / 30,
+    marginVertical: screenHeight / 110,
+    // width: screenWidth,
   },
   logText: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 15,
-    marginVertical: 15,
+    // marginHorizontal: 15,
+    marginHorizontal: screenHeight / 40,
+    // marginVertical: 15,
+    marginVertical: screenHeight / 60,
     // backgroundColor: 'orange',
     // fontSize: 20,
+  },
+  loaderStyle: {
+    marginVertical: screenHeight / 40,
+    alignItems: 'center',
   },
 });
 export default MyPointLog;
