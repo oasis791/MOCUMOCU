@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
@@ -8,17 +8,16 @@ import {
   StyleSheet,
   Pressable,
   StatusBar,
-  ScrollView,
   SafeAreaView,
   Image,
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import {historygedInUserParamList} from '../../../App';
+import {LoggedInUserParamList} from '../../../App';
 export type History = {
   marketName: String;
   month: Number;
-  date: Number;
+  day: Number;
   hour: Number;
   minute: Number;
   stamp: Number;
@@ -29,115 +28,74 @@ export interface userType {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const couponUsageHistoryTest = [
+const couponHistoryTestList = [
   {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 16,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    stamp: -5,
+    '5.14': [
+      {
+        date: 14,
+        hour: 16,
+        marketName: '카페현욱',
+        minute: 32,
+        month: 5,
+        stamp: -5,
+      },
+    ],
+    '5.15': [
+      {
+        date: 15,
+        hour: 16,
+        marketName: '카페현욱',
+        minute: 32,
+        month: 5,
+        stamp: 5,
+      },
+    ],
+    '5.16': [
+      {
+        date: 16,
+        hour: 16,
+        marketName: '카페현욱',
+        minute: 32,
+        month: 5,
+        stamp: -5,
+      },
+    ],
+  },
+];
+
+const responseData = [
+  {
+    day: 27,
+    hour: 13,
+    marketName: '민수네 가게',
+    minute: 4,
+    month: 10,
+    stamp: 231,
   },
   {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 16,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    stamp: -5,
+    day: 27,
+    hour: 13,
+    marketName: '민수네 가게',
+    minute: 4,
+    month: 10,
+    stamp: 231,
   },
   {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 15,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    stamp: 5,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 15,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    stamp: 5,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 14,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    stamp: 5,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 14,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    stamp: -5,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 13,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    stamp: 5,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 13,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    stamp: -5,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 12,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    stamp: 5,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 12,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    stamp: -5,
+    day: 27,
+    hour: 13,
+    marketName: '민수네 가게',
+    minute: 4,
+    month: 10,
+    stamp: 231,
   },
 ];
 
 type couponUsageHistoryScreenProps = NativeStackScreenProps<
-  historygedInUserParamList,
+  LoggedInUserParamList,
   'CouponUsageHistory'
 >;
 function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
-  const [couponHistory, setCouponHistory] = useState([]);
+  const [couponHistoryList, setCouponHistoryList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const toBack = useCallback(() => {
@@ -146,14 +104,16 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
   const toSettings = useCallback(() => {
     navigation.navigate('Settings');
   }, [navigation]);
-  const mappingCouponDate: userType = couponUsageHistoryTest.reduce(
-    (acc: userType, cur) => {
-      let key = `${cur.month}.${cur.date}`;
-      acc[key] = [...(acc[key] || []), cur];
-      return acc;
-    },
-    {},
-  );
+
+  // const mappingCouponDate: userType = useCallback(() => {
+  //   console.log('mapping', couponHistory);
+  //   couponHistory.reduce((acc: userType, cur) => {
+  //     let key = `${cur.month}.${cur.day}`;
+  //     acc[key] = [...(acc[key] || []), cur];
+  //     return acc;
+  //   }, {});
+  // }, [couponHistory]);
+
   /** mappingCouponDate
    *  {
    *    "5.14": [{"date": 14, "hour": 16, "marketName": "카페현욱", "minute": 32, "month": 5, "stamp": -5}],
@@ -161,17 +121,31 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
    *    "5.16": [{"date": 16, "hour": 16, "marketName": "카페현욱", "minute": 32, "month": 5, "stamp": -5}]
    *  }
    */
+  async function getData() {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(
+        'https://aa2d-2001-2d8-6715-79fb-c946-ae04-da44-c084.jp.ngrok.io/couponlog/customer/scroll/?page=0&size=2&sort=id&customerId=2',
+      );
+      console.log('resData: ', response.data);
+      const mappingCouponDate: userType = response.data.reduce(
+        (acc: userType, cur: {month: number; day: number}) => {
+          let key = `${cur.month}.${cur.day}`;
+          acc[key] = [...(acc[key] || []), cur];
+          return acc;
+        },
+        [],
+      );
+      setCouponHistoryList([...couponHistoryList, mappingCouponDate]);
+    } catch (error) {
+      const errorResponse = (error as AxiosError<any>).response;
+      if (errorResponse) {
+        console.log(errorResponse);
+        setIsLoading(false);
+      }
+    }
+  }
 
-  const getData = () => {
-    setIsLoading(true);
-    // axios
-    //   .get(`https://randomuser.me/api/?page=${currentPage}&results=10`)
-    //   .then(res => {
-    //     //setUsers(res.data.results);
-    //     setCouponHistory([...couponHistory, ...res.data.results]);
-    //     setIsLoading(false);
-    //   });
-  };
   const renderItem = ({item}) => {
     return (
       <View
@@ -196,15 +170,25 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
   };
   useEffect(() => {
     getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
-
-  const renderMappingCouponDateKey = Object.keys(mappingCouponDate).map(
-    date => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // const mappingCouponDate: userType = couponHistoryList.reduce(
+  //   (acc: userType, cur: {month: number; day: number}) => {
+  //     let key = `${cur.month}.${cur.day}`;
+  //     acc[key] = [...(acc[key] || []), cur];
+  //     return acc;
+  //   },
+  //   [],
+  // );
+  // console.log('mapping', mappingCouponDate);
+  const renderMappingCouponDateKey = couponHistoryList.map(couponHistory => {
+    console.log('couponHistory:', couponHistory);
+    return Object.keys(couponHistory).map((date: string) => {
+      console.log('date', date);
       return (
         <View style={styles.historyContent}>
           <Text style={{fontWeight: 'bold'}}>{date}</Text>
-          {mappingCouponDate[date].map((history: History) => (
+          {couponHistory[date].map((history: History) => (
             // <View style={styles.historyContent}>
             <View style={styles.historyText}>
               <Text style={{fontWeight: 'bold'}}>
@@ -243,8 +227,8 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
           ))}
         </View>
       );
-    },
-  );
+    });
+  });
   return (
     <>
       <SafeAreaView>

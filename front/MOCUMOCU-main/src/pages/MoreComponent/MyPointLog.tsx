@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
@@ -140,7 +140,7 @@ const logListTest = [
   },
 ];
 function MyPointLog({navigation}: MyPointScreenProps) {
-  const [pointLog, setPointLog] = useState([]);
+  const [pointLogList, setPointLogList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const toBack = useCallback(() => {
@@ -160,15 +160,30 @@ function MyPointLog({navigation}: MyPointScreenProps) {
     },
     {},
   );
-  const getData = () => {
-    setIsLoading(true);
-    // axios
-    //   .get(`https://randomuser.me/api/?page=${currentPage}&results=10`)
-    //   .then(res => {
-    //     setPointLog([...pointLog, ...res.data.results]);
-    //     setIsLoading(false);
-    //   });
-  };
+  async function getData() {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(
+        'https://aa2d-2001-2d8-6715-79fb-c946-ae04-da44-c084.jp.ngrok.io/couponlog/customer/scroll/?page=0&size=2&sort=id&customerId=2',
+      );
+      console.log('resData: ', response.data);
+      const mappingPointDate: userType = response.data.reduce(
+        (acc: userType, cur: {month: number; day: number}) => {
+          let key = `${cur.month}.${cur.day}`;
+          acc[key] = [...(acc[key] || []), cur];
+          return acc;
+        },
+        [],
+      );
+      setPointLogList([...pointLogList, mappingPointDate]);
+    } catch (error) {
+      const errorResponse = (error as AxiosError<any>).response;
+      if (errorResponse) {
+        console.log(errorResponse);
+        setIsLoading(false);
+      }
+    }
+  }
   const renderItem = ({item}) => {
     return (
       <View
@@ -195,8 +210,8 @@ function MyPointLog({navigation}: MyPointScreenProps) {
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
-  const renderMappingPointLogDateKey = Object.keys(mappingPointLogDate).map(
-    date => {
+  const renderMappingPointLogDateKey = pointLogList.map(poingLog => {
+    return Object.keys(poingLog).map(date => {
       return (
         <View style={styles.logContent}>
           <Text style={{fontWeight: 'bold'}}>{date}</Text>
@@ -241,8 +256,8 @@ function MyPointLog({navigation}: MyPointScreenProps) {
           ))}
         </View>
       );
-    },
-  );
+    });
+  });
   return (
     <>
       <SafeAreaView>
