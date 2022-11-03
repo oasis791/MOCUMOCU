@@ -17,6 +17,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
+import ModalDropdown from 'react-native-modal-dropdown';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -25,8 +26,9 @@ type FindIdScreenProps = NativeStackScreenProps<RootStackParamList, 'FindId'>;
 function FindId({navigation}: FindIdScreenProps) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [select, setSelect] = useState(-1);
   const [question, setQuestion] = useState('');
-
+  const [modalVisible, setModalVisible] = useState(false);
   const nameRef = useRef<TextInput | null>(null);
   const questionRef = useRef<TextInput | null>(null);
 
@@ -99,23 +101,58 @@ function FindId({navigation}: FindIdScreenProps) {
               ref={nameRef}
               onSubmitEditing={() => questionRef.current?.focus()}
             />
-          </View>
-          <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="본인 확인 질문"
-              placeholderTextColor="#c4c4c4"
-              onChangeText={onChangeQuestion}
-              value={question}
-              keyboardType={
-                Platform.OS === 'android' ? 'default' : 'ascii-capable'
-              }
-              textContentType="countryName"
-              returnKeyType="send"
-              clearButtonMode="while-editing"
-              ref={questionRef}
-              blurOnSubmit={false}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: 'white',
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: '#c5c5c5',
+                height: screenHeight / 15,
+                marginTop: screenHeight / 100,
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                width: screenWidth / 1.29,
+              }}>
+              <ModalDropdown
+                options={[
+                  '나의 고향은?',
+                  '나의 출신 초등학교는?',
+                  '김현욱 쥬지 길이는?',
+                ]}
+                defaultValue={'본인 확인 질문'}
+                textStyle={styles.dropDownWrapper}
+                dropdownStyle={styles.listStyle}
+                adjustFrame={() => ({
+                  top: screenHeight / 3.23,
+                  left: screenWidth / 8.4,
+                })}
+                onSelect={idx => {
+                  setSelect(Number(idx));
+                }}
+              />
+              <Image
+                source={require('../assets/icon/arrowDown.png')}
+                style={styles.arrowDown}
+              />
+            </View>
+            {select > 0 ? (
+              <TextInput
+                style={[styles.textInput, {marginTop: screenHeight / 100}]}
+                placeholder="질문에 대한 답변을 입력하세요."
+                placeholderTextColor="#c4c4c4"
+                onChangeText={onChangeQuestion}
+                value={question}
+                keyboardType={
+                  Platform.OS === 'android' ? 'default' : 'ascii-capable'
+                }
+                returnKeyType="send"
+                clearButtonMode="while-editing"
+                ref={questionRef}
+              />
+            ) : (
+              <></>
+            )}
           </View>
           <View style={styles.buttonZone}>
             <TouchableHighlight
@@ -177,6 +214,39 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
+  textDropDown: {
+    padding: 5,
+    marginTop: 1,
+    borderColor: '#e5e5e5',
+    paddingVertical: 6,
+    paddingHorizontal: 20,
+    width: screenWidth / 1.5,
+    right: screenWidth / 20,
+    fontWeight: 'bold',
+    height: screenHeight / 15,
+    textAlignVertical: 'center',
+  },
+
+  arrowButton: {
+    marginTop: screenHeight / 230,
+    resizeMode: 'contain',
+    height: 20,
+    width: 20,
+    // backgroundColor: 'pink',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    width: screenWidth / 1.29,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: screenHeight / 13,
+    paddingVertical: 6,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
+  },
   textDisableInput: {
     padding: 5,
     marginTop: 1,
@@ -221,6 +291,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'pink',
     padding: 5,
     alignItems: 'center',
+    // flexDirection: 'row',
     // height: screenHeight / 12,
   },
   bottomSheetWrapper: {
@@ -256,17 +327,22 @@ const styles = StyleSheet.create({
     color: '#414FFD',
   },
   buttonZone: {
-    // position: 'absolute',
     marginTop: screenHeight / 2.3,
     alignItems: 'center',
+    backgroundColor: 'pink',
   },
   modifyUserAccountButton: {
+    position: 'absolute',
+    bottom: screenHeight / 200,
+    left: screenWidth / 8.5,
+    // right: 10,
     backgroundColor: '#E6E6E6',
     paddingHorizontal: '34%',
     // paddingVertical: 10,
     borderRadius: 5,
     marginTop: '4%',
     width: screenWidth / 1.29,
+    alignItems: 'center',
   },
   modifyUserAccountButtonActive: {
     backgroundColor: '#414FFD',
@@ -358,6 +434,79 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     marginRight: 8,
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  // 모달창 css
+  modalContainer: {
+    height: screenHeight / 2,
+    width: screenWidth / 1.1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10,
+  },
+  buttonClose: {
+    flex: 1,
+    // backgroundColor: 'tranparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textInputStyle: {
+    // height: screenHeight / 5,
+    width: screenWidth / 1.2,
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 15,
+    height: screenHeight / 15,
+    textAlignVertical: 'center',
+    borderRadius: 10,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'gray',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  // 드랍다운 박스
+  dropDownWrapper: {
+    padding: 5,
+    borderColor: '#e5e5e5',
+    width: screenWidth / 1.5,
+    fontWeight: 'bold',
+  },
+  listStyle: {
+    width: screenWidth / 1.32,
+    height: screenHeight / 8.5,
+    borderRadius: 9,
+  },
+  arrowDown: {
+    // width: 15,
+    width: screenWidth / 23,
+    resizeMode: 'contain',
+    height: screenHeight / 40,
   },
 });
 
