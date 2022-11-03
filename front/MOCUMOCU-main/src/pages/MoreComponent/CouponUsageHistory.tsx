@@ -96,8 +96,9 @@ type couponUsageHistoryScreenProps = NativeStackScreenProps<
 >;
 function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
   const [couponHistoryList, setCouponHistoryList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLast, setIsLast] = useState(false);
   const toBack = useCallback(() => {
     navigation.popToTop(); // 뒤로 가기
   }, [navigation]);
@@ -125,10 +126,10 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        'https://aa2d-2001-2d8-6715-79fb-c946-ae04-da44-c084.jp.ngrok.io/couponlog/customer/scroll/?page=0&size=2&sort=id&customerId=2',
+        `https://3b5d-165-229-90-40.jp.ngrok.io/couponlog/customer/scroll/?page=${currentPage}&size=2&sort=id&customerId=2`,
       );
       console.log('resData: ', response.data);
-      const mappingCouponDate: userType = response.data.reduce(
+      const mappingCouponDate: userType = response.data.content.reduce(
         (acc: userType, cur: {month: number; day: number}) => {
           let key = `${cur.month}.${cur.day}`;
           acc[key] = [...(acc[key] || []), cur];
@@ -136,7 +137,9 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
         },
         [],
       );
+      console.log('mapping:', mappingCouponDate);
       setCouponHistoryList([...couponHistoryList, mappingCouponDate]);
+      setIsLast(response.data.last);
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
@@ -165,13 +168,13 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
     ) : null;
   };
   const loadMoreItem = () => {
-    setCurrentPage(currentPage + 1);
-    console.log(currentPage);
+    isLast ? null : setCurrentPage(currentPage + 1);
   };
   useEffect(() => {
-    getData();
-  }, [currentPage]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    isLast === false ? getData() : setIsLoading(false);
+    console.log(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, isLast]);
   // const mappingCouponDate: userType = couponHistoryList.reduce(
   //   (acc: userType, cur: {month: number; day: number}) => {
   //     let key = `${cur.month}.${cur.day}`;

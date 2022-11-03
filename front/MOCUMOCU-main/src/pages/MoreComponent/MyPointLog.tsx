@@ -15,7 +15,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useSelector} from 'react-redux';
 import {LoggedInUserParamList} from '../../../App';
+import {RootState} from '../../store/reducer';
 import {userType} from './CouponUsageHistory';
 
 const screenWidth = Dimensions.get('window').width;
@@ -37,129 +39,129 @@ type MyPointScreenProps = NativeStackScreenProps<
   'MyPointLog'
 >;
 
-const logListTest = [
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 16,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    point: -500,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 16,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    point: -500,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 15,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    point: 500,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 15,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    point: 500,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 14,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    point: 500,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 14,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    point: -500,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 13,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    point: 500,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 13,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    point: -500,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 12,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    point: 500,
-  },
-  {
-    // date: '5월 16일',
-    marketName: '카페현욱',
-    month: 5,
-    date: 12,
-    hour: 16,
-    minute: 32,
-    // time: '16:32',
-    point: -500,
-  },
-];
+// const logListTest = [
+//   {
+//     // date: '5월 16일',
+//     marketName: '카페현욱',
+//     month: 5,
+//     date: 16,
+//     hour: 16,
+//     minute: 32,
+//     // time: '16:32',
+//     point: -500,
+//   },
+//   {
+//     // date: '5월 16일',
+//     marketName: '카페현욱',
+//     month: 5,
+//     date: 16,
+//     hour: 16,
+//     minute: 32,
+//     // time: '16:32',
+//     point: -500,
+//   },
+//   {
+//     // date: '5월 16일',
+//     marketName: '카페현욱',
+//     month: 5,
+//     date: 15,
+//     hour: 16,
+//     minute: 32,
+//     // time: '16:32',
+//     point: 500,
+//   },
+//   {
+//     // date: '5월 16일',
+//     marketName: '카페현욱',
+//     month: 5,
+//     date: 15,
+//     hour: 16,
+//     minute: 32,
+//     // time: '16:32',
+//     point: 500,
+//   },
+//   {
+//     // date: '5월 16일',
+//     marketName: '카페현욱',
+//     month: 5,
+//     date: 14,
+//     hour: 16,
+//     minute: 32,
+//     // time: '16:32',
+//     point: 500,
+//   },
+//   {
+//     // date: '5월 16일',
+//     marketName: '카페현욱',
+//     month: 5,
+//     date: 14,
+//     hour: 16,
+//     minute: 32,
+//     // time: '16:32',
+//     point: -500,
+//   },
+//   {
+//     // date: '5월 16일',
+//     marketName: '카페현욱',
+//     month: 5,
+//     date: 13,
+//     hour: 16,
+//     minute: 32,
+//     // time: '16:32',
+//     point: 500,
+//   },
+//   {
+//     // date: '5월 16일',
+//     marketName: '카페현욱',
+//     month: 5,
+//     date: 13,
+//     hour: 16,
+//     minute: 32,
+//     // time: '16:32',
+//     point: -500,
+//   },
+//   {
+//     // date: '5월 16일',
+//     marketName: '카페현욱',
+//     month: 5,
+//     date: 12,
+//     hour: 16,
+//     minute: 32,
+//     // time: '16:32',
+//     point: 500,
+//   },
+//   {
+//     // date: '5월 16일',
+//     marketName: '카페현욱',
+//     month: 5,
+//     date: 12,
+//     hour: 16,
+//     minute: 32,
+//     // time: '16:32',
+//     point: -500,
+//   },
+// ];
 function MyPointLog({navigation}: MyPointScreenProps) {
   const [pointLogList, setPointLogList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLast, setIsLast] = useState(false);
   const toBack = useCallback(() => {
     navigation.pop(); // 뒤로 가기
-  }, [navigation]);
-  const toSettings = useCallback(() => {
-    navigation.navigate('Settings');
   }, [navigation]);
   const toCustomShop = useCallback(() => {
     navigation.navigate('CustomShop');
   }, [navigation]);
-  const mappingPointLogDate: userType = logListTest.reduce(
-    (acc: userType, cur) => {
-      let key = `${cur.month}.${cur.date}`;
-      acc[key] = [...(acc[key] || []), cur];
-      return acc;
-    },
-    {},
-  );
+  // const mappingPointLogDate: userType = logListTest.reduce(
+  //   (acc: userType, cur) => {
+  //     let key = `${cur.month}.${cur.date}`;
+  //     acc[key] = [...(acc[key] || []), cur];
+  //     return acc;
+  //   },
+  //   {},
+  // );
+
+  const customerPoint = useSelector((state: RootState) => state.userTest.point);
   async function getData() {
     try {
       setIsLoading(true);
@@ -167,7 +169,7 @@ function MyPointLog({navigation}: MyPointScreenProps) {
         'https://aa2d-2001-2d8-6715-79fb-c946-ae04-da44-c084.jp.ngrok.io/couponlog/customer/scroll/?page=0&size=2&sort=id&customerId=2',
       );
       console.log('resData: ', response.data);
-      const mappingPointDate: userType = response.data.reduce(
+      const mappingPointDate: userType = response.data.content.reduce(
         (acc: userType, cur: {month: number; day: number}) => {
           let key = `${cur.month}.${cur.day}`;
           acc[key] = [...(acc[key] || []), cur];
@@ -176,6 +178,7 @@ function MyPointLog({navigation}: MyPointScreenProps) {
         [],
       );
       setPointLogList([...pointLogList, mappingPointDate]);
+      setIsLast(response.data.last);
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
@@ -203,19 +206,18 @@ function MyPointLog({navigation}: MyPointScreenProps) {
     ) : null;
   };
   const loadMoreItem = () => {
-    setCurrentPage(currentPage + 1);
-    console.log(currentPage);
+    isLast ? null : setCurrentPage(currentPage + 1);
   };
   useEffect(() => {
-    getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+    isLast === false ? getData() : setIsLoading(false);
+    console.log(currentPage);
+  }, [currentPage, isLast]);
   const renderMappingPointLogDateKey = pointLogList.map(poingLog => {
     return Object.keys(poingLog).map(date => {
       return (
         <View style={styles.logContent}>
           <Text style={{fontWeight: 'bold'}}>{date}</Text>
-          {mappingPointLogDate[date].map((log: Log) => (
+          {poingLog[date].map((log: Log) => (
             // <View style={styles.historyContent}>
             <View style={styles.logText}>
               <Text style={{fontWeight: 'bold'}}>
@@ -282,7 +284,7 @@ function MyPointLog({navigation}: MyPointScreenProps) {
                   fontFamily: 'GmarketSansTTFBold',
                   fontSize: 25,
                 }}>
-                500P
+                {customerPoint}P
               </Text>
             </Text>
             <TouchableOpacity
