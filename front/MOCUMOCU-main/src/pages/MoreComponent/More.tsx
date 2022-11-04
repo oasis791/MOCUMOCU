@@ -1,16 +1,21 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Dimensions,
   Image,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
+  TouchableHighlight,
   View,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import {useAppDispatch} from '../../store';
@@ -23,26 +28,29 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {LoggedInUserParamList} from '../../../App';
 
 const screenWidth = Dimensions.get('window').width;
-
+const screenHeight = Dimensions.get('window').height;
 type MoreScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'More'>;
 
 function More({navigation}: MoreScreenProps) {
   // const accessToken = useSelector((state: RootState) => state.user.accessToken);
-  const isLoggedIn = useSelector(
-    (state: RootState) => state.userTest.isLoggedIn,
-  );
+  // const isLoggedIn = useSelector((state: RootState) => state.userTest.isLogIn);
   const dispatch = useAppDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState('');
+  const passwordRef = useRef<TextInput | null>(null);
+
   const onLogout = useCallback(async () => {
     try {
-      await axios.post(
-        `${Config.API_URL}/logout`,
-        {},
-        {
-          headers: {
-            // Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      // await axios.post(
+      //   `${Config.API_URL}/logout`,
+      //   {},
+      //   {
+      //     headers: {
+      //       // Authorization: `Bearer ${accessToken}`,
+      //     },
+      //   },
+      // );
       Alert.alert('알림', '로그아웃 되었습니다.');
       dispatch(
         userSliceTest.actions.setUserInfoTest({
@@ -65,8 +73,9 @@ function More({navigation}: MoreScreenProps) {
     navigation.navigate('MyPointLog');
   }, [navigation]);
   const toModifyUserAccount = useCallback(() => {
-    navigation.navigate('ModifyUserAccount');
-  }, [navigation]);
+    setModalVisible(!modalVisible);
+    // navigation.navigate('ModifyUserAccount');
+  }, [modalVisible]);
   const toCouponUsageHistory = useCallback(() => {
     navigation.navigate('CouponUsageHistory');
   }, [navigation]);
@@ -76,6 +85,52 @@ function More({navigation}: MoreScreenProps) {
   const toDevInfo = useCallback(() => {
     navigation.navigate('DevInfo');
   }, [navigation]);
+
+  const onChangePassword = useCallback(text => {
+    setPassword(text.trim());
+  }, []);
+  const onSubmit = useCallback(async () => {
+    // if (loading) {
+    //   return;
+    // }
+    // if (!password || !password.trim()) {
+    //   return Alert.alert('알림', '비밀번호를 입력해주세요.');
+    // }
+    // if (!/^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@^!%*#?&]).{8,50}$/.test(password)) {
+    //   return Alert.alert(
+    //     '알림',
+    //     '비밀번호는 영문,숫자,특수문자($@^!%*#?&)를 모두 포함하여 8자 이상 입력해야합니다.',
+    //   );
+    // }
+    // try {
+    // setLoading(true);
+    // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
+    // const response = await axios.post(
+    //   'http://54.180.91.167:8080/user/changePassword',
+    //   {
+    //     customerPassword: password,
+    //   },
+    // ); //비동기 요청이므로 await가 필요
+    // console.log(response);
+    console.log('http://54.180.91.167:8080');
+    setModalVisible(!modalVisible);
+    setPassword('');
+    navigation.navigate('ModifyUserAccount');
+    // } catch (error) {
+    //   const errorResponse = (error as AxiosError<any>).response;
+    //   if (errorResponse) {
+    //     Alert.alert('알림', errorResponse.data.message);
+    //     setLoading(false);
+    //   }
+    // }
+  }, [loading, modalVisible, navigation, password]);
+  // const requestPassword = () => {
+  //   const canGoNext = password;
+  //   return (
+  //   );
+  // };
+  const canGoNext = password;
+  const customerPoint = useSelector((state: RootState) => state.userTest.point);
   return (
     <>
       <SafeAreaView style={styles.scrollView}>
@@ -90,7 +145,7 @@ function More({navigation}: MoreScreenProps) {
                     styles.myPointBoxText,
                     {color: '#414FFD', fontSize: 20},
                   ]}>
-                  1000 P
+                  {customerPoint} P
                 </Text>
               </View>
               <View style={styles.pointButtonZone}>
@@ -149,6 +204,61 @@ function More({navigation}: MoreScreenProps) {
             </Pressable>
           </View>
         </ScrollView>
+        {modalVisible ? (
+          <View>
+            <Modal
+              isVisible={modalVisible}
+              backdropOpacity={0.5}
+              onBackdropPress={() => setModalVisible(false)}>
+              <View style={styles.inputModalWrapper}>
+                {/* <Text style={styles.label}>비밀번호</Text> */}
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="비밀번호"
+                  placeholderTextColor="#c4c4c4"
+                  onChangeText={onChangePassword}
+                  value={password}
+                  autoFocus
+                  keyboardType={
+                    Platform.OS === 'android' ? 'default' : 'ascii-capable'
+                  }
+                  textContentType="password"
+                  secureTextEntry
+                  returnKeyType="next"
+                  clearButtonMode="while-editing"
+                  ref={passwordRef}
+                />
+                <View style={styles.modalButtonZone}>
+                  <TouchableHighlight
+                    underlayColor={'#c4c4c4'}
+                    style={
+                      canGoNext
+                        ? StyleSheet.compose(
+                            styles.modifyUserAccountButton,
+                            styles.modifyUserAccountButtonActive,
+                          )
+                        : styles.modifyUserAccountButton
+                    }
+                    disabled={!canGoNext || loading}
+                    onPress={onSubmit}>
+                    {loading ? (
+                      <ActivityIndicator
+                        style={styles.indicator}
+                        color="white"
+                      />
+                    ) : (
+                      <Text style={styles.modifyUserAccountButtonText}>
+                        확인
+                      </Text>
+                    )}
+                  </TouchableHighlight>
+                </View>
+              </View>
+            </Modal>
+          </View>
+        ) : (
+          <></>
+        )}
       </SafeAreaView>
     </>
   );
@@ -202,8 +312,14 @@ const styles = StyleSheet.create({
   },
   buttonZone: {
     // backgroundColor: 'blue',
-    marginTop: 60,
-    paddingTop: 20,
+    marginTop: screenHeight / 10,
+    paddingTop: screenHeight / 40,
+    fontSize: 18,
+    borderRadius: 10,
+  },
+  modalButtonZone: {
+    // backgroundColor: 'blue',
+    paddingTop: screenHeight / 20,
     fontSize: 18,
     borderRadius: 10,
   },
@@ -256,6 +372,67 @@ const styles = StyleSheet.create({
     height: 20,
     width: 40,
     paddingHorizontal: 36,
+  },
+  textInput: {
+    padding: 5,
+    marginTop: 1,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
+    backgroundColor: 'white',
+    paddingVertical: 6,
+    paddingHorizontal: 20,
+    width: screenWidth / 1.29,
+    fontWeight: 'bold',
+    // fontFamily: 'NotoSansCJKkr-Black (TTF)',
+  },
+  inputWrapper: {
+    // backgroundColor: 'pink',
+    padding: 5,
+    alignItems: 'center',
+    // height: screenHeight / 12,
+  },
+  inputModalWrapper: {
+    backgroundColor: 'white',
+    padding: 20,
+    alignItems: 'center',
+    borderRadius: 10,
+    // height: screenHeight / 12,
+  },
+  indicator: {
+    backgroundColor: 'transpaent',
+    paddingHorizontal: '11%',
+    // paddingVertical: 10,
+    borderRadius: 5,
+    // marginTop: '4%',
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modifyUserAccountButton: {
+    backgroundColor: '#E6E6E6',
+    paddingHorizontal: '34%',
+    // paddingVertical: 10,
+    borderRadius: 5,
+    marginTop: '4%',
+    width: screenWidth / 1.29,
+  },
+  modifyUserAccountButtonActive: {
+    backgroundColor: '#414FFD',
+  },
+  modifyUserAccountButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+    textAlign: 'center',
+  },
+  modal: {
+    // height: screenHeight / 100,
+    // width: screenWidth / 1.1,
+    // backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    // borderWidth: 1,
+    // borderColor: 'black',
+    // backgroundColor: 'black',
   },
 });
 
