@@ -8,6 +8,8 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  Pressable,
+  Image,
 } from 'react-native';
 import Config from 'react-native-config';
 import {LoggedInOwnerParamList} from '../../App';
@@ -54,9 +56,22 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
       }
     }
   }, [amount, customerId, loading, marketId, navigation]);
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
   return (
     <View style={styles.stampAmountWrapper}>
       {/* <Text>{customerId}</Text> */}
+      <View style={styles.mainHeader}>
+        <View style={styles.headerButtonWrapper}>
+          <Pressable style={styles.headerButton} onPress={toBack}>
+            <Image
+              source={require('../assets/icon/arrowBack.png')}
+              style={styles.headerSetting}
+            />
+          </Pressable>
+        </View>
+      </View>
       <View style={styles.stampAmountTitleWrapper}>
         <Text style={styles.stampAmountTitleText}>
           적립할 개수를 입력해 주세요
@@ -91,6 +106,28 @@ const styles = StyleSheet.create({
   stampAmountWrapper: {
     flex: 1,
     backgroundColor: '#F7F7F7',
+  },
+
+  mainHeader: {
+    width: screenWidth,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  headerButtonWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 19,
+    marginTop: 5,
+    // justifyContent: 'space-around',
+  },
+  headerSetting: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+  },
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
   },
 
   stampAmountTitleWrapper: {

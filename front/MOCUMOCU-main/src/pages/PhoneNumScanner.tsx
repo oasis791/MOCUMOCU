@@ -6,6 +6,8 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -68,6 +70,10 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     }
   }, [loading, navigation, phoneNumber, marketId]);
 
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
+
   useEffect(() => {
     setPhoneNumber(phoneNumber.trim());
     // setPhoneNumber(phoneNumber.replace('-', ''));
@@ -84,6 +90,15 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
 
   return (
     <View style={styles.stampAmountWrapper}>
+       <View style={styles.mainHeader}>
+          <View style={styles.headerButtonWrapper}>
+            <Pressable style={styles.headerButton} onPress={toBack}>
+              <Image
+                source={require('../assets/icon/arrowBack.png')}
+                style={styles.headerSetting}/>
+            </Pressable>
+          </View>
+        </View>
       <View style={styles.stampAmountTitleWrapper}>
         <Text style={styles.stampAmountTitleText}>전화번호를 입력해주세요</Text>
       </View>
@@ -120,15 +135,39 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
   );
 }
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
   stampAmountWrapper: {
     flex: 1,
     backgroundColor: '#F7F7F7',
   },
+   mainHeader: {
+    width: screenWidth,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  headerButtonWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 19,
+    marginTop: 5,
+    // justifyContent: 'space-around',
+  },
+  headerSetting: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+  },
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
+  },
 
   stampAmountTitleWrapper: {
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     flex: 1,
     // backgroundColor: 'red',
   },
