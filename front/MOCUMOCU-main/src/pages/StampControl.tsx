@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     width: screenWidth,
     paddingVertical: 15,
     flexDirection: 'row',
-    marginBottom: 85,
+    marginBottom: 35,
   },
   headerLogo: {
     resizeMode: 'contain',
