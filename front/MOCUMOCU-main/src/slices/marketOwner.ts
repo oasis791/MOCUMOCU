@@ -180,7 +180,6 @@ const marketOwnerSlice = createSlice({
     },
 
     setBannerURL(state, action) {
-      console.log(action.payload.bannerURL);
       state.markets[action.payload.index].bannerURL = action.payload.bannerURL;
     },
     setDetailURL(state, action) {
