@@ -52,19 +52,14 @@ function AddMarket({navigation, route}: AddStoreProps) {
     }
     try {
       setLoading(true);
-
-      const response = await axios.post(
-        'http://15.164.100.68:8080/owner/store',
-        {
-          businessNum,
-          marketPhoneNum,
-          marketName,
-          ownerId,
-        },
-      );
+      const response = await axios.post(`${Config.API_URL}/market/store`, {
+        businessNum,
+        marketPhoneNum,
+        marketName,
+        ownerId,
+      });
       Alert.alert('알림', '매장 등록에 성공했습니다.');
       setLoading(false);
-
       navigation.navigate('MainOwner');
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;

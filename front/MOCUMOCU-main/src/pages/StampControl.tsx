@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -24,31 +24,18 @@ function StampControl({navigation, route}: StampControlProps) {
   const [marketId, setMarketId] = useState(route.params.marketId);
   const [isAlarm, setIsAlarm] = useState(false);
 
-  const onSubmitSetting = () => {
-    Alert.alert('알림', '설정');
-  };
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
-  };
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
 
   return (
     <View style={styles.screen}>
       <StatusBar hidden={true} />
       <View style={styles.mainHeader}>
         <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitAlarm}>
+          <Pressable style={styles.headerButton} onPress={toBack}>
             <Image
-              source={
-                isAlarm
-                  ? require('../assets/icon/mainAlarmActive.png')
-                  : require('../assets/icon/mainAlarm.png')
-              }
-              style={styles.buttonIcon}
-            />
-          </Pressable>
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
+              source={require('../assets/icon/arrowBack.png')}
               style={styles.headerSetting}
             />
           </Pressable>
@@ -131,9 +118,7 @@ const styles = StyleSheet.create({
     width: screenWidth,
     paddingVertical: 15,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     marginBottom: 85,
-    left: 15,
   },
   headerLogo: {
     resizeMode: 'contain',
@@ -155,6 +140,9 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: 15,
+  },
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
   },
 
   selectStoreListTitle: {

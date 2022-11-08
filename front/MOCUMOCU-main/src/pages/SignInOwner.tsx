@@ -19,6 +19,7 @@ import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import userSliceTest from '../slices/userTest';
+import Config from 'react-native-config';
 type SignInOwnerScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SignInOwner'
@@ -45,13 +46,10 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
     }
     try {
       // setLoading(true); `${Config.API_URL}/login`
-      const response = await axios.post(
-        'http://15.164.100.68:8080/owner/login',
-        {
-          ownerEmail,
-          ownerPassword,
-        },
-      );
+      const response = await axios.post(`${Config.API_URL}/owner/login`, {
+        ownerEmail,
+        ownerPassword,
+      });
       console.log(response.data);
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
@@ -75,6 +73,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
       const errorResponse = (error as AxiosError).response;
       if (errorResponse) {
         Alert.alert('알림', '회원정보와 일치하지 않습니다.');
+        console.log(errorResponse.status);
       }
     }
   }, [loading, dispatch, ownerEmail, ownerPassword]);

@@ -22,6 +22,7 @@ import axios, {AxiosError} from 'axios';
 import {useAppDispatch} from '../store';
 import marketOwnerSlice from '../slices/marketOwner';
 import {useIsFocused} from '@react-navigation/native';
+import Config from 'react-native-config';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('window').height;
@@ -47,13 +48,6 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
     ringSize: 14,
   };
 
-  const onSubmitSetting = () => {
-    navigation.navigate('SettingsOwner');
-  };
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
-  };
-
   const toAddMarket = () => {
     navigation.navigate('AddMarket');
   };
@@ -73,9 +67,9 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
   const onGetMarkets = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://15.164.100.68:8080/owner/${ownerId}/market-list`,
+        `${Config.API_URL}/market/${ownerId}/market-list/?day=0`,
       );
-      console.log('market', response.data);
+      // console.log('market', response.data[0]);
       dispatch(
         marketOwnerSlice.actions.setMarket({
           markets: response.data,
@@ -93,7 +87,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
     async storeId => {
       try {
         const response = await axios.delete(
-          `http://15.164.100.68:8080/owner/store/${storeId}`,
+          `${Config.API_URL}/owner/store/${storeId}`,
         );
         onGetMarkets();
         Alert.alert('알림', '매장이 삭제되었습니다.');
@@ -112,7 +106,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
 
   useEffect(() => {
     onGetMarkets();
-  }, [isFocused, onGetMarkets]);
+  }, [isFocused]);
 
   return (
     <ScrollView style={styles.mainBackground}>
@@ -122,26 +116,6 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
           source={require('../assets/mainLogoOwner.png')}
           style={styles.headerLogo}
         />
-
-        <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitAlarm}>
-            <Image
-              source={
-                isAlarm
-                  ? require('../assets/icon/mainAlarmActive.png')
-                  : require('../assets/icon/mainAlarm.png')
-              }
-              style={styles.headerAlarm}
-            />
-          </Pressable>
-
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
-              style={styles.headerSetting}
-            />
-          </Pressable>
-        </View>
       </View>
 
       <View style={styles.ownerInfoWrapper}>
@@ -245,16 +219,17 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
             showsHorizontalScrollIndicator={true}
             style={styles.storeAnalysisScrollView}>
             {markets.map((market, i) => {
-              market.male === market.female
-                ? ((market.activityData[0].value = 0.5),
-                  (market.activityData[0].color = '#363636'))
-                : market.male > market.female
-                ? ((market.activityData[0].value =
-                    market.male / (market.male + market.female)),
-                  (market.activityData[0].color = '#3F83D3'))
-                : ((market.activityData[0].value =
-                    market.female / (market.male + market.female)),
-                  (market.activityData[0].color = '#DD4435'));
+              // market.genderDTO.male === market.genderDTO.female
+              //   ? ((market.activityData[0].value = 0.5),
+              //     (market.activityData[0].color = '#363636'))
+              //   : market.genderDTO.male > market.genderDTO.female
+              //   ? ((market.activityData[0].value =
+              //       market.genderDTO.male /
+              //       (market.genderDTO.male + market.genderDTO.female)),
+              //     (market.activityData[0].color = '#3F83D3'))
+              //   : ((market.activityData[0].value =
+              //       market.female / (market.male + market.female)),
+              //     (market.activityData[0].color = '#DD4435'));
               return (
                 <TouchableOpacity
                   style={styles.analysisCard}
@@ -273,47 +248,73 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
                           오늘 방문자 수
                         </Text>
                         <Text style={[styles.todaysText, {bottom: 10}]}>
-                          {market.today}명
+                          {market.genderDTO.female + market.genderDTO.male}명
                         </Text>
                       </View>
 
                       <View>
                         <ActivityRings
-                          data={market.activityData}
+                          data={[
+                            {
+                              label: 'ACTIVITY',
+                              value:
+                                market.genderDTO.female ===
+                                market.genderDTO.male
+                                  ? 1
+                                  : market.genderDTO.female >
+                                    market.genderDTO.male
+                                  ? market.genderDTO.female /
+                                    (market.genderDTO.female +
+                                      market.genderDTO.male)
+                                  : market.genderDTO.male /
+                                    (market.genderDTO.female +
+                                      market.genderDTO.male),
+                              color:
+                                market.genderDTO.female ===
+                                market.genderDTO.male
+                                  ? '#c6c6c6'
+                                  : market.genderDTO.male >
+                                    market.genderDTO.female
+                                  ? '#3F83D3'
+                                  : '#DD4435',
+                            },
+                          ]}
+                          // config={activityConfig}
                           config={activityConfig}
                         />
                       </View>
 
                       <View style={{right: 15}}>
-                        {market.male > market.female ? (
+                        {market.genderDTO.male > market.genderDTO.female ? (
                           <>
                             <Text style={[styles.todaysText, {top: 10}]}>
                               <Text style={{fontSize: 10}}>🔵 </Text>
-                              남자 {market.male}
+                              남자 {market.genderDTO.male}
                             </Text>
                             <Text style={[styles.todaysText, {bottom: 10}]}>
-                              &nbsp; &nbsp; &nbsp;여자 {market.female}
+                              &nbsp; &nbsp; &nbsp;여자 {market.genderDTO.female}
                             </Text>
                           </>
-                        ) : market.male === market.female ? (
+                        ) : market.genderDTO.male ===
+                          market.genderDTO.female ? (
                           <>
                             <Text style={[styles.todaysText, {top: 10}]}>
                               <Text style={{fontSize: 10}}>🔵 </Text>
-                              남자 {market.male}
+                              남자 {market.genderDTO.male}
                             </Text>
                             <Text style={[styles.todaysText, {bottom: 10}]}>
                               <Text style={{fontSize: 10}}>🔴 </Text>
-                              여자 {market.female}
+                              여자 {market.genderDTO.female}
                             </Text>
                           </>
                         ) : (
                           <>
                             <Text style={[styles.todaysText, {top: 10}]}>
                               <Text style={{fontSize: 10}}>🔴 </Text>
-                              여자 {market.female}
+                              여자 {market.genderDTO.female}
                             </Text>
                             <Text style={[styles.todaysText, {bottom: 10}]}>
-                              &nbsp; &nbsp; &nbsp;남자 {market.male}
+                              &nbsp; &nbsp; &nbsp;남자 {market.genderDTO.male}
                             </Text>
                           </>
                         )}

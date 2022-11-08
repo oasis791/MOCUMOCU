@@ -32,10 +32,10 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post('http://15.164.100.68:8080/owner/phoneNum', {
+      const response = await axios.post(`${Config.API_URL}/owner/phoneNum`, {
         phoneNumber,
       });
-
+      console.log(response.data);
       Alert.alert('알림', `${response.data.name}님이 맞는지 확인해주세요`, [
         // The "Yes" button
         {
@@ -72,9 +72,6 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     setPhoneNumber(phoneNumber.trim());
     // setPhoneNumber(phoneNumber.replace('-', ''));
 
-    if (phoneNumber.length === 11) {
-      setPhoneNumber(phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
-    }
     if (phoneNumber.length === 11) {
       setPhoneNumber(
         phoneNumber

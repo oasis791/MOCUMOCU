@@ -1,15 +1,12 @@
 /* eslint-disable prettier/prettier */
-import BottomSheet, { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import axios, { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
     Alert,
-    Animated,
-    Button,
     Dimensions,
     Image,
-    Modal,
     Pressable,
     StatusBar,
     StyleSheet,
@@ -40,8 +37,6 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
       const marketName = useSelector(
     (state: RootState) => state.marketOwner.markets[marketIndex].name,
   );
-
-
     const dispatch = useAppDispatch();
     const marketId = useSelector(
         (state: RootState) => state.marketOwner.markets[marketIndex].id
@@ -58,16 +53,9 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
     const [rewardName, setRewardName] = useState('');
     const [couponRequire, setCouponRequire] = useState('');
 
-
-    const isAlarm = false;
-
-    const onSubmitSetting = () => {
-        // Alert.alert('알림', '설정');
-        navigation.navigate('SettingsOwner');
-    };
-    const onSubmitAlarm = () => {
-        Alert.alert('알림', '알람');
-    };
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
 
     const changeRewardName = useCallback(text => {
         setRewardName(text);
@@ -78,15 +66,14 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
 
     const onGetRewardSubmit = useCallback(async () => {
         try {
-            const response = await axios.get(`http://15.164.100.68:8080/owner/${marketId}/reward-list/`);
-            console.log('get rewardList:', response.data, '\nrewardList :', typeof (response.data.rewardList));
-
+            const response = await axios.get(`${Config.API_URL}/reward/${marketId}/reward-list/`);
+            // console.log('get rewardList:', response.data, '\nrewardList :', typeof (response.data.rewardList));
+            console.log(response.data);
             dispatch(
                 marketOwnerSlice.actions.setReward({
-                    marketId: marketId,
+                    index: marketIndex,
                     rewardList: response.data,
                 })
-
             );
         } catch (error) {
             const errorResponse = (error as AxiosError<any>).response;
@@ -96,11 +83,11 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
             console.log('error catch');
 
         }
-    }, [dispatch, marketId]);
+    }, []);
 
     const onAddRewardSubmit = useCallback(async () => {
         try {
-            const response = await axios.post('http://15.164.100.68:8080/owner/store/reward', {
+            const response = await axios.post(`${Config.API_URL}/reward/store`, {
                 marketId,
                 rewardName,
                 couponRequire: Number(couponRequire),
@@ -126,7 +113,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
             text: '확인',
             onPress: async () => {
                 try {
-                    const response = await axios.delete(`http://15.164.100.68:8080/owner/${ownerId}/store/${marketId}/reward/${rewardId}`);
+                    const response = await axios.delete(`${Config.API_URL}/reward/remove/${rewardId}`);
                     onGetRewardSubmit();
                     Alert.alert('알림', '리워드가 삭제되었습니다.');
                 } catch (error) {
@@ -146,9 +133,10 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
 
     }, [marketId, onGetRewardSubmit, ownerId]);
 
-    // useEffect(() => {
-    //     onGetRewardSubmit();
-    // }, [onGetRewardSubmit]);
+      const isFocused = useIsFocused();
+    useEffect(() => {
+        onGetRewardSubmit();
+    },[isFocused]);
 
     return (
             <View style={styles.mainBackground}>
@@ -156,20 +144,9 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
 
                 <View style={styles.mainHeader}>
                     <View style={styles.headerButtonWrapper}>
-                        <Pressable onPress={onSubmitAlarm}>
+                        <Pressable style={styles.headerButton} onPress={toBack}>
                             <Image
-                                source={
-                                    isAlarm
-                                        ? require('../assets/icon/mainAlarmActive.png')
-                                        : require('../assets/icon/mainAlarm.png')
-                                }
-                                style={styles.headerAlarm}
-                            />
-                        </Pressable>
-
-                        <Pressable onPress={onSubmitSetting}>
-                            <Image
-                                source={require('../assets/icon/mainSetting.png')}
+                                source={require('../assets/icon/arrowBack.png')}
                                 style={styles.headerSetting}
                             />
                         </Pressable>
@@ -178,13 +155,11 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
 
                 <View style={styles.marketTitleWrapper}>
                     <Text style={styles.marketTitleText}>리워드 관리</Text>
-                            <Text style={[styles.marketTitleText, {fontSize: 12}]}>
-          {marketName}
-        </Text>
+                    <Text style={[styles.marketTitleText, {fontSize: 12}]}> {marketName}</Text>
                 </View>
 
                 <View style={styles.marketRewardListWrapper}>
-                    {rewardList.length === 0
+                    {rewardList?.length === 0
                         ?
                         (
                             <View style={[styles.scrollRewardWrapper, { alignItems: 'center', justifyContent: 'center' }]}>
@@ -193,7 +168,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                         )
                         : (
                             <ScrollView style={styles.scrollRewardWrapper}>
-                                {rewardList.map(reward => {
+                                {rewardList?.map(reward => {
                                     return (
                                         <View key={reward.id} style={styles.rewardWrapper}>
                                             <Text style={styles.rewardText}>
@@ -299,7 +274,6 @@ const styles = StyleSheet.create({
         width: screenWidth,
         paddingVertical: 15,
         flexDirection: 'row',
-        justifyContent: 'flex-end',
         marginBottom: 10,
     },
 
@@ -315,12 +289,9 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
     },
-    headerAlarm: {
-        resizeMode: 'contain',
-        width: 20,
-        height: 20,
-        marginRight: 15,
-    },
+    headerButton: {
+        marginHorizontal: screenHeight / 60,
+        },
 
     marketTitleWrapper: {
         marginLeft: 30,

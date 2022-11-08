@@ -15,6 +15,9 @@ import MarketAnalysis from './MarketAnalysis';
 import ModifyMarket from './ModifyMarket';
 import MarketCouponLog from './MarketCouponLog';
 import AddEvent from './AddEvent';
+import ModifyOwnerAccount from './ModifyOwnerAccount';
+import PrivacyPolicyOwner from './PrivacyPolicyOwner';
+import ModifyOwnerPassword from './ModifyOwnerPassword';
 const Stack = createNativeStackNavigator();
 function StackOwnerWrapper() {
   return (
@@ -118,6 +121,23 @@ function StackOwnerWrapper() {
       <Stack.Screen
         name="QRCodeScanner"
         component={QRCodeScanner}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="ModifyOwnerAccount"
+        component={ModifyOwnerAccount}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="ModifyOwnerPassword"
+        component={ModifyOwnerPassword}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PrivacyPolicyOwner"
+        component={PrivacyPolicyOwner}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -17,9 +17,9 @@ interface initialStateTest {
 }
 
 const initialState: initialStateTest = {
-  name: '',
+  name: '김준서',
   id: 0,
-  email: '',
+  email: 'jykim9868@gmail.com',
   userType: '',
   isLogIn: false,
 };

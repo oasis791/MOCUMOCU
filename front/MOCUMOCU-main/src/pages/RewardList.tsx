@@ -14,6 +14,7 @@ import {LoggedInUserParamList} from '../../App';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
 import {useFocusEffect} from '@react-navigation/native';
+import Config from 'react-native-config';
 
 const screenWidth = Dimensions.get('screen').width;
 type RewardListScreenProps = NativeStackScreenProps<
@@ -62,7 +63,7 @@ function RewardList({navigation, route}: RewardListScreenProps) {
       const getRewardList = async () => {
         try {
           const response = await axios.get(
-            'http://15.164.100.68:8080/user/reward-list',
+            `${Config.API_URL}/user/reward-list`,
             {
               headers: {
                 // authorization: `Bearer ${accessToken}`,

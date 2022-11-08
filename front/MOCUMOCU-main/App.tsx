@@ -36,12 +36,17 @@ export type LoggedInOwnerParamList = {
   StampControl: undefined;
   SettingsOwner: undefined;
   AddMarket: undefined;
+  AddStore: undefined;
   MarketReward: {marketIndex: number};
   MarketInfo: {marketIndex: number};
   EventControl: {marketIndex: number};
   NoticeOwner: undefined;
   ModifyStore: undefined;
-  AddEvent: {marketIndex: number};
+  AddEvent: {
+    marketIndex: number | null;
+    bannerImage: string | null;
+    bannerDetailImage: string | null;
+  };
   MarektAnalysis: undefined;
   PrivacyOwner: undefined;
   HelpOwner: undefined;
@@ -53,6 +58,9 @@ export type LoggedInOwnerParamList = {
   SaveUp: undefined;
   MarketFunc: undefined;
   MoreOwner: undefined;
+  ModifyOwnerAccount: undefined;
+  PrivacyPolicyOwner: undefined;
+  ModifyOwnerPassword: undefined;
   // orderId : parameter 칸 => 주문에 고유한 ID가 부여되어 있음 이걸 변수처럼 사용하기 위해서 넣어줌
 };
 

@@ -85,8 +85,8 @@ function AppInner() {
     getTokenAndRefresh();
   }, [dispatch, isLogIn, userType]);
 
-  return !isLogIn ? (
-    userType !== 'Owner' ? (
+  return isLogIn ? (
+    userType === 'Owner' ? (
       // <OwnerWrapper />
       <StackOwnerWrapper />
     ) : (

@@ -61,11 +61,6 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
 
     if (ownerPhoneNum.length === 11) {
       setOwnerPhoneNumber(
-        ownerPhoneNum.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'),
-      );
-    }
-    if (ownerPhoneNum.length === 11) {
-      setOwnerPhoneNumber(
         ownerPhoneNum
           .replace(/-/g, '')
           .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
@@ -115,16 +110,13 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
     try {
       setLoading(true);
       // http method : get, put, patch, post, delete, head, options 가 주로 쓰임 ${Config.API_URL}/owner/signup
-      const response = await axios.post(
-        'http://15.164.100.68:8080/owner/signup ',
-        {
-          ownerEmail,
-          ownerName,
-          ownerPassword,
-          ownerCheckPassword,
-          ownerPhoneNum,
-        },
-      ); //비동기 요청이므로 await가 필요
+      const response = await axios.post(`${Config.API_URL}/owner/signup`, {
+        ownerEmail,
+        ownerName,
+        ownerPassword,
+        ownerCheckPassword,
+        ownerPhoneNum,
+      }); //비동기 요청이므로 await가 필요
       console.log(response);
       console.log(Config.API_URL);
       Alert.alert('알림', '회원가입 되었습니다.');

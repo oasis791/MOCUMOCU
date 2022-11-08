@@ -43,33 +43,18 @@ function SaveUpOwner({navigation}: SaveUpOwnerProps) {
   const markets = useSelector((state: RootState) => state.marketOwner.markets);
   const isAlarm = false;
 
-  const onSubmitSetting = () => {
-    // Alert.alert('알림', '설정');
-    navigation.navigate('SettingsOwner');
-  };
-
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
-  };
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
 
   return (
     <View style={styles.screen}>
       <StatusBar hidden={true} />
       <View style={styles.mainHeader}>
         <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitAlarm}>
+          <Pressable style={styles.headerButton} onPress={toBack}>
             <Image
-              source={
-                isAlarm
-                  ? require('../assets/icon/mainAlarmActive.png')
-                  : require('../assets/icon/mainAlarm.png')
-              }
-              style={styles.headerAlarm}
-            />
-          </Pressable>
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
+              source={require('../assets/icon/arrowBack.png')}
               style={styles.headerSetting}
             />
           </Pressable>
@@ -126,7 +111,6 @@ const styles = StyleSheet.create({
     width: screenWidth,
     paddingVertical: 15,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
   },
   headerLogo: {
     resizeMode: 'contain',
@@ -148,12 +132,8 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  headerAlarm: {
-    resizeMode: 'contain',
-    // backgroundColor: 'black',
-    width: 20,
-    height: 20,
-    marginRight: 15,
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
   },
 
   selectMarketListTitle: {

@@ -1,29 +1,34 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Dimensions,
   Image,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
-import userSlice from '../slices/user';
 import userSliceTest from '../slices/userTest';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {LoggedInOwnerParamList} from '../../App';
+import marketOwnerSlice from '../slices/marketOwner';
+import Modal from 'react-native-modal';
 
 const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 type MoreOwnerScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
@@ -31,116 +36,198 @@ type MoreOwnerScreenProps = NativeStackScreenProps<
 >;
 
 function MoreOwner({navigation, route}: MoreOwnerScreenProps) {
-  const isAlarm = false;
-  const onSubmitSetting = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const id = useSelector((state: RootState) => state.userTest.id);
+  const [password, setPassword] = useState('');
+  const passwordRef = useRef<TextInput | null>(null);
+  const canGoNext = password;
+  const onChangePassword = useCallback(text => {
+    setPassword(text.trim());
+  }, []);
+  const toModifyOwnerAccount = () => {
     // Alert.alert('알림', '설정');
-    navigation.navigate('SettingsOwner');
+    navigation.navigate('ModifyOwnerAccount');
   };
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
+
+  const toPrivacyPolicyOwner = () => {
+    // Alert.alert('알림', '설정');
+    navigation.navigate('PrivacyPolicyOwner');
   };
+
   // const accessToken = useSelector((state: RootState) => state.user.accessToken);
-  const isLoggedIn = useSelector(
-    (state: RootState) => state.userTest.isLoggedIn,
-  );
   const dispatch = useAppDispatch();
-  const onLogout = useCallback(async () => {
-    try {
-      await axios.post(
-        `${Config.API_URL}/logout`,
-        {},
-        {
-          headers: {
-            // Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      Alert.alert('알림', '로그아웃 되었습니다.');
-      dispatch(
-        userSliceTest.actions.setUserInfoTest({
-          name: '',
-          email: '',
-          id: null,
-          isLoggedIn: false,
-        }),
-      );
-      await EncryptedStorage.removeItem('refreshToken');
-    } catch (error) {
-      const errorResponse = (error as AxiosError).response;
-      console.error(errorResponse);
+  const onSubmit = useCallback(async () => {
+    if (loading) {
+      return;
     }
+    if (!password || !password.trim()) {
+      return Alert.alert('알림', '비밀번호를 입력해주세요.');
+    }
+    if (!/^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@^!%*#?&]).{8,50}$/.test(password)) {
+      return Alert.alert(
+        '알림',
+        '비밀번호는 영문,숫자,특수문자($@^!%*#?&)를 모두 포함하여 8자 이상 입력해야합니다.',
+      );
+    }
+    try {
+      setLoading(true);
+      const response = await axios.post(`${Config.API_URL}/owner/auth`, {
+        id,
+        password,
+      });
+      setModalVisible(!modalVisible);
+      setPassword('');
+      toModifyOwnerAccount();
+    } catch (error) {
+      const errorResponse = (error as AxiosError<any>).response;
+      if (errorResponse) {
+        Alert.alert('알림', '비밀번호가 일치하지 않습니다.');
+        setLoading(false);
+      }
+    }
+  }, [loading, modalVisible, password]);
+
+  const onLogout = useCallback(async () => {
+    Alert.alert('알림', '로그아웃 되었습니다.');
+    dispatch(
+      userSliceTest.actions.setUserInfoTest({
+        name: '',
+        email: '',
+        id: null,
+        isLoggedIn: false,
+      }),
+    );
+    dispatch(marketOwnerSlice.actions.setMarket({markets: []}));
   }, [dispatch]);
+
+  const [logoutButtonActive, setLogoutButtonActive] = useState(false);
   return (
     <>
       <StatusBar hidden={true} />
 
       <View style={styles.mainHeader}>
-        <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitAlarm}>
-            <Image
-              source={
-                isAlarm
-                  ? require('../assets/icon/mainAlarmActive.png')
-                  : require('../assets/icon/mainAlarm.png')
-              }
-              style={styles.headerAlarm}
-            />
-          </Pressable>
-
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
-              style={styles.headerSetting}
-            />
-          </Pressable>
-        </View>
+        <View style={styles.headerButtonWrapper} />
       </View>
       <SafeAreaView style={styles.scrollView}>
         <ScrollView fadingEdgeLength={1}>
           <StatusBar hidden={true} />
           <View style={styles.buttonZone}>
-            <Pressable style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => setModalVisible(!modalVisible)}>
               <Text style={styles.buttonText}>회원정보 수정</Text>
               <Image
                 style={styles.arrowButton}
                 source={require('../assets/icon/arrowNormal.png')}
               />
-            </Pressable>
-            <Pressable style={styles.buttonContainer}>
-              <Text style={styles.buttonText}>쿠폰 적립 및 사용 내역</Text>
-              <Image
-                style={styles.arrowButton}
-                source={require('../assets/icon/arrowNormal.png')}
-              />
-            </Pressable>
-            <Pressable style={styles.buttonContainer}>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={toPrivacyPolicyOwner}>
               <Text style={styles.buttonText}>개인정보 수집 및 이용 약관</Text>
               <Image
                 style={styles.arrowButton}
                 source={require('../assets/icon/arrowNormal.png')}
               />
-            </Pressable>
-            <Pressable style={styles.buttonContainer}>
-              <Text style={styles.buttonText}>개발자 소개</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.buttonContainer}>
+              <Text style={styles.buttonText}>도움말</Text>
               <Image
                 style={styles.arrowButton}
                 source={require('../assets/icon/arrowNormal.png')}
               />
-            </Pressable>
+            </TouchableOpacity>
+
             <View style={styles.buttonContainer}>
               <Text style={styles.buttonText}>앱 버전</Text>
               <Text style={styles.buttonText}>1.00</Text>
             </View>
-            <Pressable style={styles.buttonContainer} onPress={onLogout}>
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => {
+                setLogoutButtonActive(true);
+              }}>
               <Text style={styles.logOutButtonText}>로그아웃</Text>
-              <Image
+              {/* <Image
                 style={styles.arrowButton}
                 source={require('../assets/icon/arrowNormal.png')}
-              />
-            </Pressable>
+              /> */}
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </SafeAreaView>
+      {logoutButtonActive ? (
+        <View style={styles.container}>
+          <View style={styles.addRewardInputWrapper}>
+            <Text style={styles.comfirmLogoutText}>로그아웃 하시겠습니까?</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setLogoutButtonActive(false);
+              }}>
+              <TouchableOpacity onPress={onLogout}>
+                <Text style={styles.comfirmLogoutText}>확인</Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={styles.addRewardBackground}
+            onPress={() => {
+              setLogoutButtonActive(false);
+            }}
+          />
+        </View>
+      ) : null}
+      {modalVisible ? (
+        <View>
+          <Modal
+            isVisible={modalVisible}
+            backdropOpacity={0.5}
+            onBackdropPress={() => setModalVisible(false)}>
+            <View style={styles.inputModalWrapper}>
+              {/* <Text style={styles.label}>비밀번호</Text> */}
+              <TextInput
+                style={styles.textInput}
+                placeholder="비밀번호"
+                placeholderTextColor="#c4c4c4"
+                onChangeText={onChangePassword}
+                value={password}
+                autoFocus
+                keyboardType={
+                  Platform.OS === 'android' ? 'default' : 'ascii-capable'
+                }
+                textContentType="password"
+                secureTextEntry
+                returnKeyType="next"
+                clearButtonMode="while-editing"
+                ref={passwordRef}
+              />
+              <View style={styles.modalButtonZone}>
+                <TouchableHighlight
+                  underlayColor={'#c4c4c4'}
+                  style={
+                    canGoNext
+                      ? StyleSheet.compose(
+                          styles.modifyUserAccountButton,
+                          styles.modifyUserAccountButtonActive,
+                        )
+                      : styles.modifyUserAccountButton
+                  }
+                  disabled={!canGoNext || loading}
+                  onPress={onSubmit}>
+                  {loading ? (
+                    <ActivityIndicator style={styles.indicator} color="white" />
+                  ) : (
+                    <Text style={styles.modifyUserAccountButtonText}>확인</Text>
+                  )}
+                </TouchableHighlight>
+              </View>
+            </View>
+          </Modal>
+        </View>
+      ) : null}
     </>
   );
 }
@@ -185,44 +272,7 @@ const styles = StyleSheet.create({
     height: '100%',
     // height: '120%',
   },
-  myPointZone: {
-    top: 40,
-    // backgroundColor: 'pink',
-    width: screenWidth - 40,
-    marginLeft: 20,
-    marginRight: 20,
-  },
-  myPointBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 30,
-    borderWidth: 2,
-    borderRadius: 10,
-    borderColor: '#414FFD',
-    height: 60,
-    alignItems: 'center',
-    backgroundColor: 'white',
-  },
-  myPointBoxText: {fontFamily: 'GmarketSansTTFBold', color: '#363636'},
-  pointButtonZone: {
-    marginTop: 30,
-    flexDirection: 'row',
-    // backgroundColor: 'green',
-    justifyContent: 'center',
-  },
-  pointUseInfoButton: {
-    marginRight: 30,
-    fontFamily: 'GmarketSansTTFMedium',
-    color: '#cecece',
-    fontSize: 15,
-    // backgroundColor: 'gray',
-  },
-  pointShopButton: {
-    marginLeft: 20,
-    fontFamily: 'GmarketSansTTFMedium',
-    color: '#cecece',
-    fontSize: 15,
-  },
+
   buttonZone: {
     // backgroundColor: 'blue',
 
@@ -245,7 +295,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'cyan',
     // width: 200,
     // paddingTop: 20,
-    color: '#363636',
+    color: '#FA6072',
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
     fontSize: 14,
     // backgroundColor: 'blue',
@@ -279,6 +329,97 @@ const styles = StyleSheet.create({
     height: 20,
     width: 40,
     paddingHorizontal: 36,
+  },
+
+  container: {
+    width: screenWidth,
+    // height: '85%',
+    height: screenHeight * 0.93,
+    position: 'absolute',
+    // padding: 24,
+    // justifyContent: 'center',
+    // backgroundColor: 'pink',
+    flexDirection: 'column-reverse',
+  },
+  addRewardBackground: {
+    flex: 1,
+  },
+  addRewardInputWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+    paddingHorizontal: 25,
+    borderTopLeftRadius: 20,
+    borderTopEndRadius: 20,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 3.84,
+    elevation: 7,
+    backgroundColor: '#FA6072',
+  },
+  comfirmLogoutText: {
+    color: 'white',
+    fontSize: 18,
+    fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+  },
+
+  inputModalWrapper: {
+    backgroundColor: 'white',
+    padding: 20,
+    alignItems: 'center',
+    borderRadius: 10,
+    // height: screenHeight / 12,
+  },
+  indicator: {
+    backgroundColor: 'transpaent',
+    paddingHorizontal: '11%',
+    // paddingVertical: 10,
+    borderRadius: 5,
+    // marginTop: '4%',
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modifyUserAccountButton: {
+    backgroundColor: '#E6E6E6',
+    paddingHorizontal: '34%',
+    // paddingVertical: 10,
+    borderRadius: 5,
+    marginTop: '4%',
+    width: screenWidth / 1.29,
+  },
+  modifyUserAccountButtonActive: {
+    backgroundColor: '#FA6072',
+  },
+  modifyUserAccountButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontFamily: 'NotoSansCJKkr-Black (TTF)',
+    textAlign: 'center',
+  },
+  modalButtonZone: {
+    // backgroundColor: 'blue',
+    paddingTop: screenHeight / 20,
+    fontSize: 18,
+    borderRadius: 10,
+  },
+  textInput: {
+    padding: 5,
+    marginTop: 1,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
+    backgroundColor: 'white',
+    paddingVertical: 6,
+    paddingHorizontal: 20,
+    width: screenWidth / 1.29,
+    fontWeight: 'bold',
+    // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
 });
 

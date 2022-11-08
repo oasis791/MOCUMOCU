@@ -1,5 +1,8 @@
+import {useIsFocused} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import AWS from 'aws-sdk';
+import axios, {AxiosError} from 'axios';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -11,8 +14,8 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import Config from 'react-native-config';
 import {useSelector} from 'react-redux';
-
 import {LoggedInOwnerParamList} from '../../App';
 import {RootState} from '../store/reducer';
 
@@ -26,44 +29,119 @@ function EventControl({navigation, route}: EventControlScreenProps) {
   const marketName = useSelector(
     (state: RootState) => state.marketOwner.markets[marketIndex].name,
   );
-  const isAlarm = false;
+  const marketId = useSelector(
+    (state: RootState) => state.marketOwner.markets[marketIndex].id,
+  );
+
   const [checkDeleteModalState, setCheckDeleteModalState] = useState(false);
-  const onSubmitSetting = () => {
-    // Alert.alert('알림', '설정');
-    navigation.navigate('SettingsOwner');
-  };
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
-  };
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
+
+  const [bannerImage, setBannerImage] = useState(null);
+  const [bannerDetailImage, setBannerDetailImage] = useState(null);
 
   const toAddEvent = () => {
     // Alert.alert('알림', 'Addevent로 이동');
-    navigation.navigate('AddEvent', {marketIndex});
+    navigation.navigate('AddEvent', {
+      marketIndex,
+      bannerImage,
+      bannerDetailImage,
+    });
   };
 
-  const checkDelete = () => {
-    Alert.alert('미구현', '이벤트 삭제 확인');
+  const checkDelete = async () => {
+    const S3_BUCKET = 'mocumocu-bucket';
+    const REGION = 'ap-northeast-2';
+    const ACCESS_KEY = `${Config.ACCESS_KEY}`;
+    const SECRET_ACCESS_KEY = `${Config.SECRET_ACCESS_KEY}`;
+
+    AWS.config.update({
+      accessKeyId: ACCESS_KEY,
+      secretAccessKey: SECRET_ACCESS_KEY,
+    });
+
+    const myBucket = new AWS.S3({
+      params: {Bucket: S3_BUCKET},
+      region: REGION,
+    });
+    const bannerImageFile = {
+      Bucket: S3_BUCKET,
+      Key: `${marketId}/banner.png`,
+    };
+
+    myBucket.deleteObject(bannerImageFile, function (err, data) {
+      if (err) {
+        console.log(err, err.stack);
+      } else {
+        console.log('s3 배너 삭제완료', data);
+      }
+    });
+
+    const bannerDetailImageFile = {
+      Bucket: S3_BUCKET,
+      Key: `${marketId}/detail.png`,
+    };
+
+    myBucket.deleteObject(bannerDetailImageFile, function (err, data) {
+      if (err) {
+        console.log(err, err.stack);
+      } else {
+        console.log('s3 디테일 삭제 완료', data);
+      }
+    });
+    try {
+      await axios.delete(`${Config.API_URL}/market/${marketId}/event/remove`);
+    } catch (error) {
+      const errorResponse = (error as AxiosError<any>).response;
+      if (errorResponse) {
+        Alert.alert('알림', '이벤트 삭제에 실패하였습니다');
+        console.log(errorResponse.status);
+      }
+    }
+    getImage();
+    setCheckDeleteModalState(!checkDeleteModalState);
   };
+
+  const getImage = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `${Config.API_URL}/market/${marketId}/event/show`,
+      );
+      let bannerURL = response.data.bigImage;
+      let detailURL = response.data.smallImage;
+      console.log(response.data);
+
+      // const bannerURL =
+      //   'https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/1/banner.png';
+      // const detailURL =
+      //   'https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/1/detail.png';
+      // console.log(response.data);
+      setBannerImage({uri: bannerURL});
+      setBannerDetailImage({uri: detailURL});
+    } catch (error) {
+      const errorResponse = (error as AxiosError).response;
+      if (errorResponse) {
+        // Alert.alert('알림', errorResponse.data.message);
+        Alert.alert('알림', '이벤트 불러오기에 실패하였습니다.');
+      }
+    }
+  }, []);
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    getImage();
+  }, [isFocused]);
+
   return (
     <View style={styles.mainBackground}>
       <StatusBar hidden={true} />
 
       <View style={styles.mainHeader}>
         <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitAlarm}>
+          <Pressable style={styles.headerButton} onPress={toBack}>
             <Image
-              source={
-                isAlarm
-                  ? require('../assets/icon/mainAlarmActive.png')
-                  : require('../assets/icon/mainAlarm.png')
-              }
-              style={styles.headerAlarm}
-            />
-          </Pressable>
-
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
+              source={require('../assets/icon/arrowBack.png')}
               style={styles.headerSetting}
             />
           </Pressable>
@@ -82,18 +160,21 @@ function EventControl({navigation, route}: EventControlScreenProps) {
           onPress={toAddEvent}>
           <Text style={[styles.buttonText, {color: 'white'}]}>이벤트 등록</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setCheckDeleteModalState(!checkDeleteModalState)}
-          style={[styles.eventControlButton, {backgroundColor: 'white'}]}>
-          <Text style={[styles.buttonText, {color: '#FA6072'}]}>
-            이벤트 삭제
-          </Text>
-        </TouchableOpacity>
-      </View>
 
+        {bannerImage?.uri || bannerDetailImage?.uri ? (
+          <TouchableOpacity
+            onPress={() => setCheckDeleteModalState(!checkDeleteModalState)}
+            style={[styles.eventControlButton, {backgroundColor: 'white'}]}
+            disabled={!bannerImage?.uri || !bannerDetailImage?.uri}>
+            <Text style={[styles.buttonText, {color: '#FA6072'}]}>
+              이벤트 삭제
+            </Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
       {checkDeleteModalState ? (
         <View style={styles.modalWrapper}>
-          <Pressable
+          <TouchableOpacity
             style={styles.modalBackground}
             onPress={() => setCheckDeleteModalState(!checkDeleteModalState)}
           />
@@ -121,7 +202,7 @@ const styles = StyleSheet.create({
     width: screenWidth,
     paddingVertical: 15,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+
     marginBottom: 10,
   },
   headerButtonWrapper: {
@@ -136,11 +217,8 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  headerAlarm: {
-    resizeMode: 'contain',
-    width: 20,
-    height: 20,
-    marginRight: 15,
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
   },
 
   marketTitleWrapper: {

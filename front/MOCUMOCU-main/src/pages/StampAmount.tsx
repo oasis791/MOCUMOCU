@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import Config from 'react-native-config';
 import {LoggedInOwnerParamList} from '../../App';
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('window').height;
@@ -37,21 +38,18 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(
-        'http://15.164.100.68:8080/owner/stamp',
-        {
-          marketId,
-          customerId,
-          amount,
-        },
-      );
+      const response = await axios.post(`${Config.API_URL}/coupon/stamp`, {
+        marketId,
+        customerId,
+        amount,
+      });
       Alert.alert('알림', '적립되었습니다');
       setLoading(false);
       navigation.navigate('SaveUpOwner');
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
-        Alert.alert('알림', '적립에 실패하였습니다.');
+        Alert.alert('알림', `${errorResponse.status}`);
         setLoading(false);
       }
     }

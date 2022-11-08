@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -10,63 +10,130 @@ import {
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {LoggedInOwnerParamList} from '../../App';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {RootState} from '../store/reducer';
 import {useSelector} from 'react-redux';
+import axios, {AxiosError} from 'axios';
+import AWS from 'aws-sdk';
+import {Buffer} from 'buffer';
+import Config from 'react-native-config';
+
 type AddEventScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
   'AddEvent'
 >;
 
 function AddEvent({navigation, route}: AddEventScreenProps) {
-  useEffect(() => {
-    Alert.alert('미구현', '등록된 이미지 불러오기');
-  }, []);
-
   const marketIndex = route.params.marketIndex;
   const marketName = useSelector(
     (state: RootState) => state.marketOwner.markets[marketIndex].name,
   );
-  const isAlarm = false;
+  const marketId = useSelector(
+    (state: RootState) => state.marketOwner.markets[marketIndex].id,
+  );
 
-  const [bannerImage, setBannerImage] = useState(null);
-  const [bannerDetailImage, setBannerDetailImage] = useState(null);
+  const [bannerImage, setBannerImage] = useState(route.params.bannerImage);
+  const [bannerDetailImage, setBannerDetailImage] = useState(
+    route.params.bannerDetailImage,
+  );
 
-  const onSubmitSetting = () => {
-    // Alert.alert('알림', '설정');
-    navigation.navigate('SettingsOwner');
-  };
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
-  };
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
 
-  const uploadImage = async (type: string) => {
-    let options = {
-      includeBase64: true,
+  const selectImage = useCallback(async (type: string) => {
+    const options = {
       storageOptions: {
         skipBackup: true,
         path: 'images',
       },
+      includeBase64: true,
     };
     launchImageLibrary(options, response => {
-      console.log('Response = ', response);
-
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorCode) {
         console.log('ImagePicker Error: ', response.error);
       } else {
+        // image.uri = response.assets[0].uri.replace('file://', '');
         if (type === '배너 이미지') {
-          setBannerImage(response.assets[0].base64);
+          setBannerImage(response.assets[0]);
         } else {
-          setBannerDetailImage(response.assets[0].base64);
+          setBannerDetailImage(response.assets[0]);
         }
       }
     });
-  };
+  }, []);
+
+  const uploadImages = useCallback(async () => {
+    const S3_BUCKET = 'mocumocu-bucket';
+    const REGION = 'ap-northeast-2';
+    const ACCESS_KEY = `${Config.ACCESS_KEY}`;
+    const SECRET_ACCESS_KEY = `${Config.SECRET_ACCESS_KEY}`;
+
+    AWS.config.update({
+      accessKeyId: ACCESS_KEY,
+      secretAccessKey: SECRET_ACCESS_KEY,
+    });
+
+    const myBucket = new AWS.S3({
+      params: {Bucket: S3_BUCKET},
+      region: REGION,
+    });
+    const bannerImageFile = {
+      Body: Buffer.from(bannerImage?.base64, 'base64'),
+      Bucket: S3_BUCKET,
+      Key: `${marketId}/banner.png`,
+    };
+
+    myBucket
+      .putObject(bannerImageFile)
+      .on('httpUploadProgress', evt => {
+        console.log(Math.round((evt.loaded / evt.total) * 100));
+      })
+      .send(err => {
+        if (err) {
+          console.log('err: ', JSON.stringify(err));
+        }
+      });
+
+    const bannerDetailImageFile = {
+      Body: Buffer.from(bannerDetailImage?.base64, 'base64'),
+      Bucket: S3_BUCKET,
+      Key: `${marketId}/detail.png`,
+    };
+
+    myBucket
+      .putObject(bannerDetailImageFile)
+      .on('httpUploadProgress', evt => {
+        console.log(Math.round((evt.loaded / evt.total) * 100));
+      })
+      .send(err => {
+        if (err) {
+          console.log('err: ', JSON.stringify(err));
+        }
+      });
+
+    try {
+      await axios.post(`${Config.API_URL}/market/event/add`, {
+        id: marketId,
+        bigImage: `https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/${marketId}/banner.png`,
+        smallImage: `https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/${marketId}/detail.png`,
+      });
+      Alert.alert('알림', '이벤트 등록에 성공했습니다.');
+      toBack();
+    } catch (error) {
+      const errorResponse = (error as AxiosError).response;
+      if (errorResponse) {
+        // Alert.alert('알림', errorResponse.data.message);
+        Alert.alert('알림', '이벤트 등록에 실패하였습니다.');
+      }
+    }
+  }, [bannerImage?.base64, marketId, bannerDetailImage?.base64]);
 
   return (
     <ScrollView style={styles.mainBackground}>
@@ -74,20 +141,9 @@ function AddEvent({navigation, route}: AddEventScreenProps) {
 
       <View style={styles.mainHeader}>
         <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitAlarm}>
+          <Pressable style={styles.headerButton} onPress={toBack}>
             <Image
-              source={
-                isAlarm
-                  ? require('../assets/icon/mainAlarmActive.png')
-                  : require('../assets/icon/mainAlarm.png')
-              }
-              style={styles.headerAlarm}
-            />
-          </Pressable>
-
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
+              source={require('../assets/icon/arrowBack.png')}
               style={styles.headerSetting}
             />
           </Pressable>
@@ -107,11 +163,11 @@ function AddEvent({navigation, route}: AddEventScreenProps) {
         </View>
 
         <View style={styles.bannerImageWrapper}>
-          <TouchableWithoutFeedback onPress={() => uploadImage('배너 이미지')}>
+          <TouchableWithoutFeedback onPress={() => selectImage('배너 이미지')}>
             <Image
               source={
-                bannerImage
-                  ? {uri: 'data:image/jpeg;base64,' + bannerImage}
+                bannerImage.uri
+                  ? {uri: bannerImage.uri}
                   : require('../assets/bannerImage_default.png')
               }
               style={{width: screenWidth, height: 300}}
@@ -126,17 +182,30 @@ function AddEvent({navigation, route}: AddEventScreenProps) {
 
           <View style={[styles.bannerImageWrapper, {marginBottom: 0}]}>
             <TouchableWithoutFeedback
-              onPress={() => uploadImage('배너 상세 이미지')}>
+              onPress={() => selectImage('배너 상세 이미지')}>
               <Image
                 source={
-                  bannerDetailImage
-                    ? {uri: 'data:image/jpeg;base64,' + bannerDetailImage}
+                  bannerDetailImage.uri
+                    ? {uri: bannerDetailImage.uri}
                     : require('../assets/bannerDetailImage_default.png')
                 }
                 style={{width: screenWidth, height: 300}}
               />
             </TouchableWithoutFeedback>
           </View>
+          {/* <Image
+            source={require('')}
+            style={{width: screenWidth, height: 300}}
+          /> */}
+        </View>
+
+        <View style={styles.buttonWrapper}>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={uploadImages}
+            disabled={false}>
+            <Text style={styles.buttonText}>등록</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -155,8 +224,13 @@ const styles = StyleSheet.create({
     width: screenWidth,
     paddingVertical: 15,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
     marginBottom: 10,
+  },
+  headerSetting: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
   },
   headerButtonWrapper: {
     flexDirection: 'row',
@@ -165,16 +239,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     // justifyContent: 'space-around',
   },
-  headerSetting: {
-    resizeMode: 'contain',
-    width: 20,
-    height: 20,
-  },
-  headerAlarm: {
-    resizeMode: 'contain',
-    width: 20,
-    height: 20,
-    marginRight: 15,
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
   },
 
   marketTitleWrapper: {
@@ -199,6 +265,27 @@ const styles = StyleSheet.create({
   },
   innerImageTitleText: {
     color: 'black',
+  },
+
+  buttonWrapper: {
+    marginVertical: 20,
+    alignItems: 'center',
+  },
+  addButton: {
+    backgroundColor: '#FA6072',
+    borderColor: '#FA6072',
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 20,
+    width: screenWidth * 0.8,
+    height: screenHeight * 0.08,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+    fontSize: 16,
+    color: 'white',
   },
 });
 export default AddEvent;

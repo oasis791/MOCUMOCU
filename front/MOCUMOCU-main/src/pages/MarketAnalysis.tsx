@@ -1,5 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {LogBox} from 'react-native';
 import {
   Alert,
   Dimensions,
@@ -9,12 +10,25 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {LoggedInOwnerParamList} from '../../App';
 import {RootState} from '../store/reducer';
-import {BarChart, PieChart, LineChart} from 'react-native-chart-kit';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryTheme,
+  VictoryPie,
+  VictoryTooltip,
+  VictoryAxis,
+} from 'victory-native';
+import {range} from 'lodash';
+import {Circle} from 'react-native-svg';
+import axios, {AxiosError} from 'axios';
+import Config from 'react-native-config';
+
+LogBox.ignoreLogs(['Require cycle: node_modules/victory-vendor']);
 
 type MarketAnalysislScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
@@ -25,213 +39,138 @@ function MarketAnalysis(
   this: any,
   {navigation, route}: MarketAnalysislScreenProps,
 ) {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, []);
-
   const marketIndex = route.params.marketIndex;
   const marketName = useSelector(
     (state: RootState) => state.marketOwner.markets[marketIndex].name,
   );
-  const isAlarm = false;
+  const marketId = useSelector(
+    (state: RootState) => state.marketOwner.markets[marketIndex].id,
+  );
+  const [timeData, setTimeData] = useState([]);
+  const [maxTimeCount, setMaxTimeData] = useState(0);
+  const [dayData, setDayData] = useState([]);
+  const [maxDayCount, setMaxDayCount] = useState(0);
+  const [monthData, setMonthData] = useState([]);
+  const [maxMonthCount, setMaxMonthCount] = useState(0);
+  const [genderData, setGenderData] = useState([
+    {x: 1, y: 0, placement: '남자'},
+    {x: 2, y: 0, placement: '여자'},
+  ]);
 
-  const onSubmitSetting = () => {
-    // Alert.alert('알림', '설정');
-    navigation.navigate('SettingsOwner');
-  };
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
-  };
+  //임시데이터;
+  // const timeData = [
+  //   {time: '1', count: 13},
+  //   {time: '2', count: 23},
+  //   {time: '3', count: 1},
+  //   {time: '4', count: 15},
+  //   {time: '5', count: 40},
+  //   {time: '6', count: 30},
+  //   {time: '7', count: 23},
+  //   {time: '8', count: 54},
+  //   {time: '9', count: 45},
+  //   {time: '10', count: 23},
+  //   {time: '11', count: 45},
+  //   {time: '12', count: 13},
+  //   {time: '13', count: 34},
+  //   {time: '14', count: 56},
+  //   {time: '15', count: 80},
+  //   {time: '16', count: 21},
+  //   {time: '17', count: 56},
+  //   {time: '18', count: 28},
+  //   {time: '19', count: 30},
+  //   {time: '20', count: 23},
+  //   {time: '21', count: 54},
+  //   {time: '22', count: 45},
+  //   {time: '23', count: 23},
+  //   {time: '24', count: 45},
+  // ];
+  // const maxTimeCount = 80;
 
-  const defaultColor = () => '#bbbbbb';
-  const redColor = () => '#FA6072';
+  // const dayData = [
+  //   {day: '월', count: 13},
+  //   {day: '화', count: 23},
+  //   {day: '수', count: 12},
+  //   {day: '목', count: 11},
+  //   {day: '금', count: 8},
+  //   {day: '토', count: 6},
+  //   {day: '일', count: 2},
+  // ];
 
-  const tempTimeData = [
-    10, 20, 50, 30, 40, 15, 20, 10, 20, 60, 30, 40, 15, 20, 10, 20, 50, 30, 40,
-    15, 20, 50, 30, 40,
-  ];
-  const tempTimeDataMax = Math.max.apply(null, tempTimeData);
-  // const tempTimeDataMax = 0;
-  const timeChartData = {
-    labels: tempTimeData.reduce((arr, value, i) => {
-      if ((i + 1) % 2 === 1) {
-        arr.push('');
-      } else {
-        arr.push(i + 1 + '');
+  // const maxDayCount = 23;
+
+  // const monthData = [
+  //   {month: '1월', count: 100},
+  //   {month: '2월', count: 123},
+  //   {month: '3월', count: 132},
+  //   {month: '4월', count: 111},
+  //   {month: '5월', count: 68},
+  //   {month: '6월', count: 56},
+  //   {month: '7월', count: 42},
+  //   {month: '8월', count: 113},
+  //   {month: '9월', count: 123},
+  //   {month: '10월', count: 112},
+  //   {month: '11월', count: 111},
+  //   {month: '12월', count: 18},
+  // ];
+
+  // const maxMonthCount = 132;
+
+  // const genderData = [
+  //   {x: 1, y: 5, placement: '남자'},
+  //   {x: 2, y: 6, placement: '여자'},
+  // ];
+  // 임시데이터 끝
+
+  function getMaxCount(data: Array<Object>) {
+    let count = 0;
+    for (let i = 0; i < data.length; i++) {
+      if (count > data[i].count) {
+        count = data[i].count;
       }
-      return arr;
-    }, []),
-    datasets: [
-      {
-        data: tempTimeData,
-        colors: tempTimeData.reduce((arr, value: number) => {
-          if (tempTimeDataMax === value) {
-            arr.push(redColor);
-          } else {
-            arr.push(defaultColor);
-          }
-          return arr;
-        }, []),
-      },
-    ],
+    }
+    return count;
+  }
+
+  const getChartData = async () => {
+    try {
+      const response = await axios.get(
+        `${Config.API_URL}/couponlog/market/analysis/?marketId=${marketId}&day=0`,
+      );
+      setTimeData(response.data.timeAnalysisDTOS);
+      setMaxTimeData(getMaxCount(response.data.timeAnalysisDTOS));
+
+      setDayData(response.data.dayOfWeekAnalysisDTOS);
+      setMaxDayCount(getMaxCount(response.data.dayOfWeekAnalysisDTOS));
+
+      setMonthData(response.data.monthAnalysisDTOS);
+      setMaxMonthCount(getMaxCount(response.data.monthAnalysisDTOS));
+
+      setGenderData(response.data.genderAnalysisDTOS);
+      console.log(response.data);
+    } catch (error) {
+      const errorResponse = (error as AxiosError<any>).response;
+      if (errorResponse) {
+        Alert.alert('알림', '리워드 목록을 불러오는데 실패했습니다.');
+      }
+    }
   };
-
-  const tempDayData = [10, 20, 50, 30, 40, 15, 20];
-  const tempDayDataMax = Math.max.apply(null, tempDayData);
-  // const tempDayDataMax = 0;
-  const [dayChartData, setDayChartData] = useState({
-    labels: ['일', '월', '화', '수', '목', '금', '토'],
-    datasets: [
-      {
-        data: tempDayData,
-        colors: tempDayData.reduce((arr, value: number) => {
-          if (tempDayDataMax === value) {
-            arr.push(redColor);
-          } else {
-            arr.push(defaultColor);
-          }
-          return arr;
-        }, []),
-      },
-    ],
-  });
-
-  const tempMonthData = [99, 45, 28, 80, 20, 43, 20, 45, 28, 80, 70, 43];
-  const tempMonthDataMax = Math.max.apply(null, tempMonthData);
-  // const tempMonthDataMax = 0;
-  const [monthChartData, setMonthChartData] = useState({
-    labels: tempMonthData.reduce((arr, value, i) => {
-      arr.push(i + 1 + '월');
-      return arr;
-    }, []),
-    datasets: [
-      {
-        data: tempMonthData,
-        colors: tempMonthData.reduce((arr, value: number) => {
-          if (tempMonthDataMax === value) {
-            arr.push(redColor);
-          } else {
-            arr.push(defaultColor);
-          }
-          return arr;
-        }, []),
-      },
-    ],
-  });
-
-  useMemo(() => {
-    console.log('asdf');
-  }, [timeChartData]);
-  const genderChartData = [
-    {
-      name: '남자',
-      population: 60,
-      color: '#FA6072',
-      legendFontColor: '#7F7F7F',
-      legendFontSize: 12,
-    },
-    {
-      name: '여자',
-      population: 40,
-      color: '#e5e5e5',
-      legendFontColor: '#7F7F7F',
-      legendFontSize: 12,
-    },
-  ];
-
-  const timeChartConfig = {
-    backgroundGradientFrom: '#F7F7F7',
-    backgroundGradientTo: '#F7F7F7',
-    // color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // 글자색
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    color: (opacity = 1) => `rgba(12, 12, 12, ${opacity})`,
-    strokeWidth: 2, // optional, default 3
-    barPercentage: 0.15,
-    useShadowColorFromDataset: false, // optional
-    barRadius: 2,
-    decimalPlaces: 0,
-    propsForVerticalLabels: {
-      fontSize: 10,
-      fontFamily: 'NotoSansCJKkr-Medium (TTF)',
-    },
-    withVerticalLabels: false,
-  };
-
-  const monthChartConfig = {
-    backgroundGradientFrom: '#F7F7F7',
-    backgroundGradientTo: '#F7F7F7',
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // 글자색
-    strokeWidth: 2, // optional, default 3
-    barPercentage: 0.3,
-    useShadowColorFromDataset: false, // optional
-    barRadius: 7,
-    decimalPlaces: 0,
-    propsForVerticalLabels: {
-      fontSize: 10,
-      fontFamily: 'NotoSansCJKkr-Medium (TTF)',
-    },
-  };
-
-  const dayChartConfig = {
-    backgroundGradientFrom: '#F7F7F7',
-    backgroundGradientTo: '#F7F7F7',
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // 글자색
-    strokeWidth: 2, // optional, default 3
-    barPercentage: 0.38,
-    useShadowColorFromDataset: false, // optional
-    barRadius: 7,
-    decimalPlaces: 0,
-    propsForVerticalLabels: {
-      fontSize: 10,
-      fontFamily: 'NotoSansCJKkr-Medium (TTF)',
-    },
-  };
-
-  const genderChartConfig = {
-    backgroundGradientFrom: '#F7F7F7',
-    backgroundGradientTo: '#F7F7F7',
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // 글자색
-    strokeWidth: 2, // optional, default 3
-    useShadowColorFromDataset: false, // optional
-    barRadius: 7,
-    propsForLabels: {
-      // 안먹음
-      fontSize: 10,
-      fontFamily: 'NotoSansCJKkr-Medium (TTF)',
-      color: 'black',
-    },
-  };
+  useEffect(() => {
+    getChartData();
+  }, []);
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
 
   return (
     <ScrollView>
-      {isLoading ? (
-        <View style={styles.loadingModal}>
-          <Text> 로딩중 입니다.</Text>
-        </View>
-      ) : null}
       <View style={styles.mainBackground}>
         <StatusBar hidden={true} />
 
         <View style={styles.mainHeader}>
           <View style={styles.headerButtonWrapper}>
-            <Pressable onPress={onSubmitAlarm}>
+            <Pressable style={styles.headerButton} onPress={toBack}>
               <Image
-                source={
-                  isAlarm
-                    ? require('../assets/icon/mainAlarmActive.png')
-                    : require('../assets/icon/mainAlarm.png')
-                }
-                style={styles.headerAlarm}
-              />
-            </Pressable>
-
-            <Pressable onPress={onSubmitSetting}>
-              <Image
-                source={require('../assets/icon/mainSetting.png')}
+                source={require('../assets/icon/arrowBack.png')}
                 style={styles.headerSetting}
               />
             </Pressable>
@@ -248,74 +187,149 @@ function MarketAnalysis(
         <View>
           <View style={styles.chartTitleWrapper}>
             <Text style={styles.innerChartTitleText}>시간대 별 방문자 수</Text>
-            <BarChart
-              style={styles.graphStyle}
-              data={timeChartData}
-              width={screenWidth * 0.8}
-              height={screenHeight * 0.35}
-              fromZero={true}
-              yAxisSuffix="명"
-              chartConfig={timeChartConfig}
-              withInnerLines={false}
-              showBarTops={false}
-              showValuesOnTopOfBars={true}
-              withCustomBarColorFromData={true}
-              flatColor={true}
-              // withHorizontalLabels={false}
-            />
+            <VictoryChart
+              width={screenWidth}
+              theme={VictoryTheme.material}
+              domainPadding={{x: 10}}
+              padding={{top: 50, bottom: 50, left: 35, right: 50}}>
+              <VictoryAxis
+                dependentAxis
+                style={{
+                  // axis: {stroke: 'transparent'},
+                  ticks: {stroke: 'transparent'},
+                  tickLabels: {fontSize: 12, padding: 5},
+                }}
+              />
+
+              <VictoryAxis
+                crossAxis
+                style={{
+                  // axis: {stroke: 'transparent'},
+                  // ticks: {stroke: 'transparent'},
+                  tickLabels: {fontSize: 10, padding: 5},
+                }}
+                tickValues={range(0, 24)}
+                tickFormat={value => `${value}시`}
+                tickCount={12}
+              />
+
+              <VictoryBar
+                style={{
+                  data: {
+                    fill: ({datum}) =>
+                      datum.count === maxTimeCount ? '#FA6072' : 'lightgray',
+                  },
+                }}
+                data={timeData}
+                x="time"
+                y="count"
+                // animate={{
+                //   duration: 2000,
+                //   onLoad: {duration: 1500},
+                // }}
+                barRatio={0.4}
+                labels={({datum}) => `${datum.count}명`}
+                cornerRadius={3}
+              />
+            </VictoryChart>
           </View>
+
           <View style={styles.chartTitleWrapper}>
             <Text style={styles.innerChartTitleText}>요일 별 방문자 수</Text>
-            <BarChart
-              style={styles.graphStyle}
-              data={dayChartData}
-              width={screenWidth * 0.8}
-              height={screenHeight * 0.35}
-              fromZero={true}
-              yAxisSuffix="명"
-              chartConfig={dayChartConfig}
-              withInnerLines={false}
-              showBarTops={false}
-              showValuesOnTopOfBars={true}
-              withCustomBarColorFromData={true}
-              flatColor={true}
-              // withHorizontalLabels={false}
-            />
+            <VictoryChart
+              width={screenWidth}
+              theme={VictoryTheme.material}
+              domainPadding={{x: 20}}
+              padding={{top: 50, bottom: 50, left: 35, right: 50}}>
+              <VictoryBar
+                style={{
+                  data: {
+                    fill: ({datum}) =>
+                      datum.count === maxDayCount ? '#FA6072' : 'lightgray',
+                  },
+                }}
+                data={dayData}
+                x="day"
+                y="count"
+                // animate={{
+                //   duration: 2000,
+                //   onLoad: {duration: 1500},
+                // }}
+                barRatio={0.2}
+                labels={({datum}) => `${datum.count}명`}
+                cornerRadius={6}
+              />
+            </VictoryChart>
           </View>
 
           <View style={styles.chartTitleWrapper}>
             <Text style={styles.innerChartTitleText}>월 별 방문자 수</Text>
-            <BarChart
-              style={styles.graphStyle}
-              data={monthChartData}
-              width={screenWidth * 0.8}
-              height={screenHeight * 0.35}
-              fromZero={true}
-              yAxisSuffix="명"
-              chartConfig={monthChartConfig}
-              withInnerLines={false}
-              showBarTops={false}
-              showValuesOnTopOfBars={true}
-              // withHorizontalLabels={false}
-              withCustomBarColorFromData={true}
-              flatColor={true}
-            />
+            <VictoryChart
+              width={screenWidth}
+              theme={VictoryTheme.material}
+              domainPadding={{x: 30}}
+              padding={{top: 50, bottom: 50, left: 35, right: 50}}>
+              <VictoryBar
+                style={{
+                  data: {
+                    fill: ({datum}) =>
+                      datum.count === maxMonthCount ? '#FA6072' : 'lightgray',
+                  },
+                }}
+                data={monthData}
+                x="month"
+                y="count"
+                // animate={{
+                //   duration: 2000,
+                //   onLoad: {duration: 1500},
+                // }}
+                barRatio={0.3}
+                labels={({datum}) => `${datum.count}명`}
+                cornerRadius={4}
+              />
+            </VictoryChart>
           </View>
-
           <View style={styles.chartTitleWrapper}>
             <Text style={styles.innerChartTitleText}>고객 성비</Text>
-            <PieChart
-              style={styles.graphStyle}
-              data={genderChartData}
-              width={screenWidth * 0.85}
-              height={screenHeight * 0.3}
-              chartConfig={genderChartConfig}
-              accessor={'population'}
-              backgroundColor={'transparent'}
-              paddingLeft={'50'}
-              center={[0, -20]}
-              absolute
+          </View>
+          <View>
+            <VictoryPie
+              colorScale={
+                genderData[0].y > genderData[1].y
+                  ? ['#FA6072', 'lightgray']
+                  : ['lightgray', '#FA6072']
+              }
+              radius={125}
+              innerRadius={105}
+              style={{labels: {padding: 13, fontSize: 12}}}
+              data={genderData}
+              labels={
+                genderData.length === 0
+                  ? () => ''
+                  : ({datum}) => `${datum.placement} ${datum.y}명 `
+              }
+              // labelPlacement={({datum}) => datum.placement}
+              labelPosition="centroid"
+              padAngle={({datum}) => datum.y}
+              padding={{top: 0, bottom: 100}}
             />
+
+            {!genderData[0].y && !genderData[1].y ? (
+              <Text style={styles.pieChartNoDataText}>방문자가 없습니다.</Text>
+            ) : (
+              <Text style={styles.pieChartPersent}>
+                {genderData[0].y > genderData[1].y
+                  ? Math.floor(
+                      (genderData[0].y / (genderData[0].y + genderData[1].y)) *
+                        100,
+                    )
+                  : Math.floor(
+                      (genderData[1].y / (genderData[0].y + genderData[1].y)) *
+                        100,
+                    )}{' '}
+                %
+              </Text>
+            )}
           </View>
         </View>
       </View>
@@ -342,7 +356,6 @@ const styles = StyleSheet.create({
     width: screenWidth,
     paddingVertical: 15,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     marginBottom: 10,
   },
   headerButtonWrapper: {
@@ -357,11 +370,8 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  headerAlarm: {
-    resizeMode: 'contain',
-    width: 20,
-    height: 20,
-    marginRight: 15,
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
   },
 
   marketTitleWrapper: {
@@ -382,16 +392,31 @@ const styles = StyleSheet.create({
   },
   innerChartTitleText: {
     color: 'black',
-    marginBottom: 10,
+    marginBottom: -30,
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
   },
   graphStyle: {
-    // width: screenWidth,
-    // height: 300,
     borderColor: '#c8c8c8',
     borderWidth: 2,
     borderRadius: 10,
     paddingTop: 15,
+  },
+  pieChartPersent: {
+    position: 'absolute',
+    top: 85,
+    left: 145,
+    color: '#FA6072',
+    fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+    fontSize: 50,
+  },
+
+  pieChartNoDataText: {
+    position: 'absolute',
+    top: 155,
+    left: 155,
+    color: '#c6c6c6',
+    fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+    fontSize: 15,
   },
 });
 
