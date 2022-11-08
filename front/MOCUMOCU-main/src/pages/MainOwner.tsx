@@ -502,7 +502,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'white',
     marginBottom: 9,
-    // paddingVertical: 10,
   },
 
   bottomButton: {
