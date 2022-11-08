@@ -20,11 +20,9 @@ import {
   VictoryChart,
   VictoryTheme,
   VictoryPie,
-  VictoryTooltip,
   VictoryAxis,
 } from 'victory-native';
 import {range} from 'lodash';
-import {Circle} from 'react-native-svg';
 import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 
@@ -146,7 +144,6 @@ function MarketAnalysis(
       setMaxMonthCount(getMaxCount(response.data.monthAnalysisDTOS));
 
       setGenderData(response.data.genderAnalysisDTOS);
-      console.log(response.data);
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
@@ -304,7 +301,7 @@ function MarketAnalysis(
               style={{labels: {padding: 13, fontSize: 12}}}
               data={genderData}
               labels={
-                genderData.length === 0
+                genderData[0].y === 0 && genderData[1].y === 0
                   ? () => ''
                   : ({datum}) => `${datum.placement} ${datum.y}명 `
               }
