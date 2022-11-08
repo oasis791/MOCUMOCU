@@ -145,7 +145,7 @@ function MarketCouponLog({navigation, route}: MarketCouponLogScreenProps) {
         },
         [],
       );
-      console.log('mapping:', mappingCouponDate);
+      // console.log('mapping:', mappingCouponDate);
       setCouponHistoryList([...couponHistoryList, mappingCouponDate]);
       setIsLast(response.data.last);
     } catch (error) {
@@ -201,7 +201,7 @@ function MarketCouponLog({navigation, route}: MarketCouponLogScreenProps) {
           <Text style={{fontWeight: 'bold'}}>{date}</Text>
           {couponHistory[date].map((history: History) => (
             // <View style={styles.historyContent}>
-            <View style={styles.historyText}>
+            <View style={styles.historyText} key={history.toString()}>
               <Text style={{fontWeight: 'bold'}}>
                 {history.customerName} {'\n'}
                 <Text
