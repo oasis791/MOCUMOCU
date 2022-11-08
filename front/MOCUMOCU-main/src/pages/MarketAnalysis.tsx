@@ -119,10 +119,10 @@ function MarketAnalysis(
   // ];
   // 임시데이터 끝
 
-  function getMaxCount(data: Array<Object>) {
+  function getMaxCount(data) {
     let count = 0;
     for (let i = 0; i < data.length; i++) {
-      if (count > data[i].count) {
+      if (count < data[i].count) {
         count = data[i].count;
       }
     }
@@ -132,7 +132,7 @@ function MarketAnalysis(
   const getChartData = async () => {
     try {
       const response = await axios.get(
-        `${Config.API_URL}/couponlog/market/analysis/?marketId=${marketId}&day=0`,
+        `${Config.API_URL}/couponlog/market/analysis/?marketId=${marketId}&day=1`,
       );
       setTimeData(response.data.timeAnalysisDTOS);
       setMaxTimeData(getMaxCount(response.data.timeAnalysisDTOS));
