@@ -62,7 +62,6 @@ function FindPasswordOwner({navigation}: FindPasswordOwnerScreenProps) {
         },
       );
       setLoading(false);
-      console.log(response.data);
       toBack();
       Alert.alert('알림', `비밀번호는 ${response.data} 입니다.`);
     } catch (error) {
