@@ -78,7 +78,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
     } catch (error) {
       const errorResponse = (error as AxiosError).response;
       if (errorResponse) {
-        console.log('MainOwnerDebug', `${errorResponse.status}`);
+        Alert.alert('알림', `${errorResponse.status}`);
       }
     }
   }, [dispatch, ownerId]);

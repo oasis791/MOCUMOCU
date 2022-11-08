@@ -62,7 +62,6 @@ function ModifyMarket({navigation, route}: ModifyMarketScreenProps) {
     // Alert.alert('미구현', '매장정보 수정 api 송신');
     try {
       await axios.put(`${Config.API_URL}/market/update/market-num`);
-      console.log(newMarketPhoneNum);
     } catch (error) {
       const errorResponse = (error as AxiosError).response;
       if (errorResponse) {

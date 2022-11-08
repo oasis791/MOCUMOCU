@@ -117,8 +117,6 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
         ownerCheckPassword,
         ownerPhoneNum,
       }); //비동기 요청이므로 await가 필요
-      console.log(response);
-      console.log(Config.API_URL);
       Alert.alert('알림', '회원가입 되었습니다.');
       navigation.navigate('SignInOwner');
     } catch (error) {

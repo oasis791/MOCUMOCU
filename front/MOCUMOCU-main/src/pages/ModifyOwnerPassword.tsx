@@ -77,7 +77,6 @@ function ModifyOwnerAccount({navigation}: ModifyOwnerPasswordScreenProps) {
         },
       );
       navigation.navigate('MoreOwner');
-      console.log(id, password);
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {

@@ -80,8 +80,6 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
             if (errorResponse) {
                 Alert.alert('알림', '리워드 목록을 불러오는데 실패했습니다.');
             }
-            console.log('error catch');
-
         }
     }, []);
 

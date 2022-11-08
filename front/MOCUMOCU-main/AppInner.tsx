@@ -45,7 +45,6 @@ function AppInner() {
       try {
         const token = isLogIn;
         if (!token) {
-          console.log('!token');
           SplashScreen.hide();
           return;
         }

@@ -37,7 +37,9 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
       const response = await axios.post(`${Config.API_URL}/owner/phoneNum`, {
         phoneNumber,
       });
-      console.log(response.data);
+      if (response.data.name === undefined){
+        throw new Error();
+      }
       Alert.alert('알림', `${response.data.name}님이 맞는지 확인해주세요`, [
         // The "Yes" button
         {
@@ -57,13 +59,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
-        switch (errorResponse.status) {
-          case 400: // 404
             Alert.alert('알림', '등록되어 있지 않는 전화번호입니다');
-            break;
-          default:
-            Alert.alert('알림', `error code: ${errorResponse.status}`);
-            break;
         }
         setLoading(false);
       }
