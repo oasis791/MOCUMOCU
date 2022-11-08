@@ -33,7 +33,6 @@ type MainOwnerScreenProps = NativeStackScreenProps<
 >;
 
 function MainOwner({navigation}: MainOwnerScreenProps) {
-  const isAlarm = false;
   const ownerName = useSelector((state: RootState) => state.userTest.name);
   const ownerId = useSelector((state: RootState) => state.userTest.id);
   const [deleteButtonAcitive, setDeleteButtonActive] = useState(false);
@@ -86,9 +85,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
   const onDeleteSubmit = useCallback(
     async storeId => {
       try {
-        const response = await axios.delete(
-          `${Config.API_URL}/owner/store/${storeId}`,
-        );
+        await axios.delete(`${Config.API_URL}/owner/store/${storeId}`);
         onGetMarkets();
         Alert.alert('알림', '매장이 삭제되었습니다.');
       } catch (error) {
@@ -216,20 +213,8 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
           <ScrollView
             horizontal={true}
             pagingEnabled={true}
-            showsHorizontalScrollIndicator={true}
-            style={styles.storeAnalysisScrollView}>
+            showsHorizontalScrollIndicator={true}>
             {markets.map((market, i) => {
-              // market.genderDTO.male === market.genderDTO.female
-              //   ? ((market.activityData[0].value = 0.5),
-              //     (market.activityData[0].color = '#363636'))
-              //   : market.genderDTO.male > market.genderDTO.female
-              //   ? ((market.activityData[0].value =
-              //       market.genderDTO.male /
-              //       (market.genderDTO.male + market.genderDTO.female)),
-              //     (market.activityData[0].color = '#3F83D3'))
-              //   : ((market.activityData[0].value =
-              //       market.female / (market.male + market.female)),
-              //     (market.activityData[0].color = '#DD4435'));
               return (
                 <TouchableOpacity
                   style={styles.analysisCard}
@@ -279,7 +264,6 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
                                   : '#DD4435',
                             },
                           ]}
-                          // config={activityConfig}
                           config={activityConfig}
                         />
                       </View>
@@ -358,14 +342,12 @@ const styles = StyleSheet.create({
     height: 25,
     marginLeft: 27,
     marginTop: 5,
-    // justifyContent: 'flex-start',
   },
   headerButtonWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 19,
     marginTop: 5,
-    // justifyContent: 'space-around',
   },
   headerSetting: {
     resizeMode: 'contain',
@@ -431,7 +413,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomColor: '#D8D8D8',
     borderBottomWidth: 1,
-    // backgroundColor: 'pink',
   },
 
   marketTabText: {
@@ -480,28 +461,6 @@ const styles = StyleSheet.create({
   pointButtonBar: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: '#727272',
-    // marginLeft: 0,
-    // paddingLeft: 1,
-  },
-  myCoupon: {
-    // flex: 1,
-    backgroundColor: 'white',
-    height: 135,
-    // elevation: 30,
-  },
-  myCouponboxButton: {
-    justifyContent: 'center',
-    // alignItems: 'center',
-  },
-  myCouponboxButtonText: {
-    fontFamily: 'NotoSansCJKkr-Black (TTF)',
-    color: 'gray',
-    fontSize: 12,
-    marginRight: 20,
-  },
-  myCouponTextWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
 
   marketAnalysisWrapper: {
@@ -514,13 +473,10 @@ const styles = StyleSheet.create({
 
   marketAnalysisTitle: {
     marginTop: -10,
-    // marginLeft: 30,
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: 'black',
     fontSize: 18,
   },
-
-  storeAnalysisScrollView: {},
 
   analysisCard: {
     marginTop: 5,
