@@ -17,7 +17,6 @@ import {useSelector} from 'react-redux';
 import ActivityRings from 'react-native-activity-rings';
 import {LoggedInOwnerParamList} from '../../App';
 import {RootState} from '../store/reducer';
-// import Config from 'react-native-config';
 import axios, {AxiosError} from 'axios';
 import {useAppDispatch} from '../store';
 import marketOwnerSlice from '../slices/marketOwner';
