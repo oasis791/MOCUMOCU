@@ -43,23 +43,18 @@ function SaveUpOwner({navigation}: SaveUpOwnerProps) {
   const markets = useSelector((state: RootState) => state.marketOwner.markets);
   const isAlarm = false;
 
-  const toBack = useCallback(() => {
-    navigation.pop(); // 뒤로 가기
-  }, [navigation]);
+  const onSubmitSetting = () => {
+    // Alert.alert('알림', '설정');
+    navigation.navigate('SettingsOwner');
+  };
+
+  const onSubmitAlarm = () => {
+    Alert.alert('알림', '알람');
+  };
 
   return (
     <View style={styles.screen}>
       <StatusBar hidden={true} />
-      <View style={styles.mainHeader}>
-        <View style={styles.headerButtonWrapper}>
-          <Pressable style={styles.headerButton} onPress={toBack}>
-            <Image
-              source={require('../assets/icon/arrowBack.png')}
-              style={styles.headerSetting}
-            />
-          </Pressable>
-        </View>
-      </View>
       <View style={styles.selectMarketListTitle}>
         <Text style={styles.selectMarketListTitleText}>
           매장을 선택해 주세요
@@ -111,6 +106,7 @@ const styles = StyleSheet.create({
     width: screenWidth,
     paddingVertical: 15,
     flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   headerLogo: {
     resizeMode: 'contain',
@@ -132,8 +128,12 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  headerButton: {
-    marginHorizontal: screenHeight / 60,
+  headerAlarm: {
+    resizeMode: 'contain',
+    // backgroundColor: 'black',
+    width: 20,
+    height: 20,
+    marginRight: 15,
   },
 
   selectMarketListTitle: {
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     marginBottom: 20,
+    marginTop: 30,
   },
 
   selectMarketListTitleText: {
