@@ -22,7 +22,6 @@ export interface Market {
   phoneNum: string;
   name: string;
   rewardList: Array<Reward>;
-  todays: number;
   genderDTO: GenderDTO;
   activityData: Array<ActivityData>;
   bannerURL: string;
