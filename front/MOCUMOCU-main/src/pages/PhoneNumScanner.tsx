@@ -59,8 +59,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
-            Alert.alert('알림', '등록되어 있지 않는 전화번호입니다');
-        }
+        Alert.alert('알림', '등록되어 있지 않는 전화번호입니다');
         setLoading(false);
       }
     }
