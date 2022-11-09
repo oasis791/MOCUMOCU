@@ -134,7 +134,7 @@ function MarketCouponLog({navigation, route}: MarketCouponLogScreenProps) {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        `${Config.API_URL}/couponlog/market/scroll/?page=${currentPage}&size=2&sort=id&marketId=${marketId}&day=1`,
+        `${Config.API_URL}/couponlog/market/scroll/?page=${currentPage}&size=10&sort=id&marketId=${marketId}&day=1`,
       );
       console.log('resData: ', response.data);
       const mappingCouponDate: userType = response.data.content.reduce(
