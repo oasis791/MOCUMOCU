@@ -183,7 +183,13 @@ function MarketAnalysis(
 
         <View>
           <View style={styles.chartTitleWrapper}>
-            <Text style={styles.innerChartTitleText}>시간대 별 방문자 수</Text>
+            <Text style={styles.innerChartTitleText}>
+              시간대 별 방문자 수
+              <Text style={{fontSize: 10, color: '#c8c8c8'}}>
+                &nbsp;&nbsp;&nbsp;&nbsp; 전날 기준 데이터 입니다.
+              </Text>
+            </Text>
+
             <VictoryChart
               width={screenWidth}
               theme={VictoryTheme.material}
@@ -232,7 +238,13 @@ function MarketAnalysis(
           </View>
 
           <View style={styles.chartTitleWrapper}>
-            <Text style={styles.innerChartTitleText}>요일 별 방문자 수</Text>
+            <Text style={styles.innerChartTitleText}>
+              요일 별 방문자 수
+              <Text style={{fontSize: 10, color: '#c8c8c8'}}>
+                &nbsp;&nbsp;&nbsp;&nbsp; 지난 주 기준 데이터 입니다.
+              </Text>
+            </Text>
+
             <VictoryChart
               width={screenWidth}
               theme={VictoryTheme.material}
@@ -260,7 +272,13 @@ function MarketAnalysis(
           </View>
 
           <View style={styles.chartTitleWrapper}>
-            <Text style={styles.innerChartTitleText}>월 별 방문자 수</Text>
+            <Text style={styles.innerChartTitleText}>
+              월 별 방문자 수{' '}
+              <Text style={{fontSize: 10, color: '#c8c8c8'}}>
+                &nbsp;&nbsp;&nbsp;&nbsp; 작년 기준 데이터 입니다.
+              </Text>
+            </Text>
+
             <VictoryChart
               width={screenWidth}
               theme={VictoryTheme.material}
@@ -287,7 +305,12 @@ function MarketAnalysis(
             </VictoryChart>
           </View>
           <View style={styles.chartTitleWrapper}>
-            <Text style={styles.innerChartTitleText}>고객 성비</Text>
+            <Text style={styles.innerChartTitleText}>
+              고객 성비{' '}
+              <Text style={{fontSize: 10, color: '#c8c8c8'}}>
+                &nbsp;&nbsp;&nbsp;&nbsp; 전날 기준 데이터 입니다.
+              </Text>
+            </Text>
           </View>
           <View>
             <VictoryPie
