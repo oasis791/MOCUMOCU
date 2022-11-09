@@ -152,10 +152,10 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
           />
         </View>
         <View style={styles.inputBoxWrapper}>
-          {/* <Text style={styles.label}>이메일</Text> */}
           <TextInput
             style={styles.textInput}
             placeholder="이메일"
+            placeholderTextColor={'#c4c4c4'}
             value={ownerEmail}
             onChangeText={onChangeEmail}
             importantForAutofill="yes"
@@ -175,6 +175,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
           <TextInput
             style={styles.textInput}
             placeholder="비밀번호"
+            placeholderTextColor={'#c4c4c4'}
             value={ownerPassword}
             onChangeText={onChangePassword}
             secureTextEntry
@@ -287,6 +288,7 @@ const styles = StyleSheet.create({
   zZoneText: {
     marginLeft: 5,
     fontSize: 12,
+    color: '#c8c8c8',
   },
   indicator: {
     // backgroundColor: 'gray',

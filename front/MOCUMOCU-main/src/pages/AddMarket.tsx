@@ -83,18 +83,21 @@ function AddMarket({navigation, route}: AddStoreProps) {
         <TextInput
           style={styles.inputBox}
           placeholder="사업자등록번호"
+          placeholderTextColor={'#c4c4c4'}
           value={businessNum}
           onChangeText={changeCorporationNumber}
         />
         <TextInput
           style={styles.inputBox}
           placeholder="가게번호"
+          placeholderTextColor={'#c4c4c4'}
           value={marketPhoneNum}
           onChangeText={changeStorePhoneNumber}
         />
         <TextInput
           style={styles.inputBox}
           placeholder="가게이름"
+          placeholderTextColor={'#c8c8c8'}
           value={marketName}
           onChangeText={changeStoreName}
         />

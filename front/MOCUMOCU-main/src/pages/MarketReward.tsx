@@ -225,6 +225,7 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
                                    />
                                 <TextInput
                                 placeholder="물품"
+                                placeholderTextColor={'#c4c4c4'}
                                     value={rewardName}
                                     onChangeText={changeRewardName} />
 
