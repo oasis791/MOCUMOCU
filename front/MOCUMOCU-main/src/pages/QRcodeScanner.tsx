@@ -64,18 +64,18 @@ function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
     if (qrValue) {
       switch (route.params.type) {
         case 'saveUp': // 적립
-          setScaned(true);
+          setScaned(false);
           navigation.navigate('StampAmount', { marketId: marketId, customerId: qrValue.customerId });
           break;
         case 'use': // 사용
           try {
+            setScaned(false);
             const response = await axios.patch(`${Config.API_URL}/coupon/stamp`, {
               couponId: qrValue.couponId,
               couponRequire: qrValue.couponRequire,
             });
             Alert.alert('알림', '정상적으로 사용되었습니다.');
             navigation.navigate('SaveUpOwner');
-            setScaned(true);
           } catch (error) {
             const errorResponse = (error as AxiosError).response;
             if (errorResponse) {
