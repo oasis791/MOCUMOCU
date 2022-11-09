@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderWidth: 1,
     borderColor: '#e5e5e5',
+    color: 'black',
   },
 
   okButtonWrapper: {

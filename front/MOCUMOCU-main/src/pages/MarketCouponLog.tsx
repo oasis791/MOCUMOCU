@@ -198,11 +198,11 @@ function MarketCouponLog({navigation, route}: MarketCouponLogScreenProps) {
       // console.log('date', date);
       return (
         <View style={styles.historyContent}>
-          <Text style={{fontWeight: 'bold'}}>{date}</Text>
+          <Text style={{color: '#a0a0a0', fontWeight: 'bold'}}>{date}</Text>
           {couponHistory[date].map((history: History) => (
             // <View style={styles.historyContent}>
             <View style={styles.historyText} key={history.toString()}>
-              <Text style={{fontWeight: 'bold'}}>
+              <Text style={{color: '#a0a0a0', fontWeight: 'bold'}}>
                 {history.customerName} {'\n'}
                 <Text
                   style={{
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   buttonText: {
     marginLeft: screenWidth / 20,
     fontSize: 15,
-
+    color: '#a0a0a0',
     fontWeight: 'bold',
   },
   historyContainer: {
