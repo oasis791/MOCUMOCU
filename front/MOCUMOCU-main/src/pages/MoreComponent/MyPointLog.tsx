@@ -296,7 +296,10 @@ function MyPointLog({navigation}: MyPointScreenProps) {
               style={styles.topButton}
               activeOpacity={0.7}
               onPress={toCustomShop}>
-              <Text>이미지</Text>
+              <Image
+                source={require('../../assets/icon/store.png')}
+                style={styles.cartImage}
+              />
               <Text
                 style={{
                   fontFamily: 'GmarketSansTTFBold',
@@ -392,6 +395,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#414FFD',
     // opacity: 10,
+  },
+  cartImage: {
+    // flex: 1,
+    marginTop: screenHeight / 60,
+    width: screenHeight / 15,
+    resizeMode: 'contain',
+    // flex: 1 / 3,
+    // marginHorizontal: 15,
+    height: screenWidth / 15,
+    // marginRight: screenWidth / 100,
+    // backgroundColor: 'pink',
   },
   myPointMain: {
     backgroundColor: 'white',
