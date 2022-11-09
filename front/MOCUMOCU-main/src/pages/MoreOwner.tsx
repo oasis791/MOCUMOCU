@@ -133,14 +133,6 @@ function MoreOwner({navigation, route}: MoreOwnerScreenProps) {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonContainer}>
-              <Text style={styles.buttonText}>도움말</Text>
-              <Image
-                style={styles.arrowButton}
-                source={require('../assets/icon/arrowNormal.png')}
-              />
-            </TouchableOpacity>
-
             <View style={styles.buttonContainer}>
               <Text style={styles.buttonText}>앱 버전</Text>
               <Text style={styles.buttonText}>1.00</Text>
