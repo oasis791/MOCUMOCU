@@ -108,8 +108,8 @@ function EventControl({navigation, route}: EventControlScreenProps) {
       const response = await axios.get(
         `${Config.API_URL}/market/${marketId}/event/show`,
       );
-      let bannerURL = response.data.bigImage;
-      let detailURL = response.data.smallImage;
+      let bannerURL = response.data.smallImage;
+      let detailURL = response.data.bigImage;
       console.log(response.data);
 
       // const bannerURL =

@@ -121,8 +121,8 @@ function AddEvent({navigation, route}: AddEventScreenProps) {
     try {
       await axios.post(`${Config.API_URL}/market/event/add`, {
         id: marketId,
-        bigImage: `https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/${marketId}/banner.png`,
-        smallImage: `https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/${marketId}/detail.png`,
+        smallImage: `https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/${marketId}/banner.png`,
+        bigImage: `https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/${marketId}/detail.png`,
       });
       Alert.alert('알림', '이벤트 등록에 성공했습니다.');
       toBack();
