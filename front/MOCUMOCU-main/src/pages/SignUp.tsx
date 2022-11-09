@@ -26,6 +26,7 @@ import axios, {AxiosError} from 'axios';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {Portal, PortalHost} from '@gorhom/portal';
 import DatePicker from 'react-native-date-picker';
+import {Config} from 'react-native-config';
 
 type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
@@ -84,7 +85,6 @@ function SignUp({navigation}: SignUpScreenProps) {
   }, []);
   useEffect(() => {
     setTelephoneNumber(telephoneNumber.trim());
-    // setPhoneNumber(phoneNumber.replace('-', ''));
 
     if (telephoneNumber.length === 11) {
       setTelephoneNumber(
@@ -182,26 +182,24 @@ function SignUp({navigation}: SignUpScreenProps) {
     try {
       setLoading(true);
       // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
-      const response = await axios.post(
-        'http://54.180.91.167:8080/user/signup',
-        {
-          customerName: name,
-          customerPhoneNum: telephoneNumber,
-          customerEmail: email,
-          customerPassword: password,
-          customerCheckPassword: checkPassword,
-          customerBirth: sendDate,
-          customerGender: checkGender,
-        },
-      ); //비동기 요청이므로 await가 필요
+      const response = await axios.post(`${Config.API_URL}/customer/signup`, {
+        customerName: name,
+        customerPhoneNum: telephoneNumber,
+        customerEmail: email,
+        customerPassword: password,
+        customerCheckPassword: checkPassword,
+        customerBirth: sendDate,
+        customerGender: checkGender,
+      }); //비동기 요청이므로 await가 필요
       console.log(response);
-      console.log('http://54.180.91.167:8080');
+      console.log(`${Config.API_URL}/user/signup`);
       Alert.alert('알림', '회원가입 되었습니다.');
       navigation.navigate('SignIn');
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
         Alert.alert('알림', errorResponse.data.message);
+        console.log(Config.API_URL);
         setLoading(false);
       }
     }

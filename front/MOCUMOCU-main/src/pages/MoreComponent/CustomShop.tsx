@@ -1,5 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useCallback, useState} from 'react';
+import axios, {AxiosError} from 'axios';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,8 +11,13 @@ import {
   Image,
   ScrollView,
   Alert,
+  ActivityIndicator,
+  ImageBackground,
 } from 'react-native';
+import Config from 'react-native-config';
+import {useSelector} from 'react-redux';
 import {LoggedInUserParamList} from '../../../App';
+import {RootState} from '../../store/reducer';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -20,132 +26,223 @@ type CustomShopScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
   'MyPointLog'
 >;
+type Stamp = {
+  id: number;
+  smallImageUrl: string;
+  point: number;
+};
+type Board = {
+  id: number;
+  bigImageUrl: string;
+  smallImageUrl: string;
+  point: number;
+};
 
-const customizingBoardImage = [
-  {
-    imageName: 'defaultBoard',
-    point: 0,
-  },
-  {
-    imageName: '첫번째 요소',
-    point: 10,
-  },
-  {
-    imageName: '두번째 요소',
-    point: 30,
-  },
-  {
-    imageName: '세번째 요소',
-    point: 30,
-  },
-  {
-    imageName: '네번째 요소',
-    point: 30,
-  },
-  {
-    imageName: '다섯번째 요소',
-    point: 30,
-  },
-  {
-    imageName: '여섯번째 요소',
-    point: 30,
-  },
-  {
-    imageName: '일곱번째 요소',
-    point: 30,
-  },
-  {
-    imageName: '여덟번째 요소',
-    point: 30,
-  },
-];
+// const customizingBoardImage = [
+//   {
+//     imageName: 'defaultBoard',
+//     point: 0,
+//   },
+//   {
+//     imageName: '첫번째 요소',
+//     point: 10,
+//   },
+//   {
+//     imageName: '두번째 요소',
+//     point: 30,
+//   },
+//   {
+//     imageName: '세번째 요소',
+//     point: 30,
+//   },
+//   {
+//     imageName: '네번째 요소',
+//     point: 30,
+//   },
+//   {
+//     imageName: '다섯번째 요소',
+//     point: 30,
+//   },
+//   {
+//     imageName: '여섯번째 요소',
+//     point: 30,
+//   },
+// ];
 
-const customizingStampImage = [
-  {
-    imageName: 'defaultStamp',
-    point: 0,
-  },
-  {
-    imageName: '첫번째 스탬프',
-    point: 10,
-  },
-  {
-    imageName: '두번째 스탬프',
-    point: 30,
-  },
-  {
-    imageName: '세번째 스탬프',
-    point: 30,
-  },
-  {
-    imageName: '네번째 스탬프',
-    point: 30,
-  },
-  {
-    imageName: '다섯번째 스탬프',
-    point: 30,
-  },
-  {
-    imageName: '여섯번째 스탬프',
-    point: 30,
-  },
-  {
-    imageName: '일곱번째 스탬프',
-    point: 30,
-  },
-  {
-    imageName: '여덟번째 스탬프',
-    point: 30,
-  },
-];
+// const customizingStampImageTest = [
+//   {
+//     imageName: 'defaultStamp',
+//     point: 0,
+//   },
+//   {
+//     imageName: '첫번째 스탬프',
+//     point: 10,
+//   },
+//   {
+//     imageName: '두번째 스탬프',
+//     point: 30,
+//   },
+//   {
+//     imageName: '세번째 스탬프',
+//     point: 30,
+//   },
+//   {
+//     imageName: '네번째 스탬프',
+//     point: 30,
+//   },
+//   {
+//     imageName: '다섯번째 스탬프',
+//     point: 30,
+//   },
+//   {
+//     imageName: '여섯번째 스탬프',
+//     point: 30,
+//   },
+//   {
+//     imageName: '일곱번째 스탬프',
+//     point: 30,
+//   },
+//   {
+//     imageName: '여덟번째 스탬프',
+//     point: 30,
+//   },
+// ];
+const defaultBoardImage = {
+  id: -1,
+  bigImageUrl: require('../../assets/largeBoard.png'),
+  smallImageUrl: require('../../assets/smallBoard.png'),
+  point: 0,
+};
+const defaultStampImage = {
+  id: -1,
+  smallImageUrl: require('../../assets/smallBoard.png'),
+  point: 0,
+};
 
 function CustomShop({navigation}: CustomShopScreenProps) {
+  const [loading, setLoading] = useState(false);
   const [select, setSelect] = useState('board');
   const [point, setPoint] = useState(0);
-  const [clickElement, setClickElement] = useState(-1);
-  const [isPress, setIsPress] = useState(
-    Array(customizingStampImage.length).fill(false),
+  const [clickBoardElement, setClickBoardElement] = useState(0);
+  const [clickStampElement, setClickStampElement] = useState(0);
+  const [boardImage, setBoardImage] = useState([defaultBoardImage]);
+  const [stampImage, setStampImage] = useState([defaultStampImage]);
+  const customerIdTest = useSelector((state: RootState) => state.userTest.id);
+  const customerPoint = useSelector((state: RootState) => state.userTest.point);
+  const [isBoardPress, setIsBoardPress] = useState(
+    Array(boardImage.length).fill(false),
   );
-  // const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [isStampPress, setIsStampPress] = useState(
+    Array(stampImage.length).fill(false),
+  );
+  const [customId, setCustomId] = useState(0);
+  useEffect(() => {
+    // let isActive = true;
+    const getCustomizeInfo = async () => {
+      try {
+        const response = await axios.get(
+          `${Config.API_URL}/customize/customize-list/?type=${select}`,
+        );
+        console.log('select', select);
+        if (select === 'board') {
+          setBoardImage([defaultBoardImage, ...response.data]);
+        } else if (select === 'stamp') {
+          setStampImage([defaultStampImage, ...response.data]);
+        }
+        console.log('boardResponse', response.data);
+      } catch (error) {
+        const errorResponse = (error as AxiosError<any>).response;
+        if (errorResponse) {
+          Alert.alert('알림', 'Board || Stamp');
+          console.log(errorResponse);
+          setLoading(false);
+        }
+      }
+    };
+    // const getStampInfo = async () => {
+    //   try {
+    //     const response = await axios.get();
+    //     console.log('point', response.data);
+    //     setPoint(response.data);
+    //     setCustomizingStampImage(response.data);
+    //   } catch (error) {
+    //     const errorResponse = (error as AxiosError<any>).response;
+    //     if (errorResponse) {
+    //       Alert.alert('알림', 'Stamp');
+    //       setLoading(false);
+    //     }
+    //   }
+    // };
+    getCustomizeInfo();
+    // getStampInfo();
+    return () => {};
+  }, [select]);
 
-  const customizing = (props: number) => {
-    setClickElement(props);
-  };
   const toBack = useCallback(() => {
     navigation.pop(); // 뒤로 가기
     setPoint(0);
   }, [navigation]);
-  const toSettings = useCallback(() => {
-    navigation.navigate('Settings');
-    setIsPress(Array(customizingStampImage.length).fill(false));
-    setPoint(0);
-    setClickElement(-1);
-  }, [navigation]);
 
   const selectBoard = () => {
+    console.log('selectBoard Board', boardImage);
+    console.log('selectBoard Stamp', stampImage);
     setSelect('board');
-    setIsPress(Array(customizingStampImage.length).fill(false));
-    setClickElement(-1);
+    setIsBoardPress(Array(boardImage.length).fill(false));
+    setClickBoardElement(0);
     setPoint(0);
   };
   const selectStamp = () => {
     setSelect('stamp');
-    setIsPress(Array(customizingStampImage.length).fill(false));
-    setClickElement(-1);
+    console.log('selectStamp Board', boardImage);
+    console.log('selectStamp Stamp', stampImage);
+    setIsStampPress(Array(stampImage.length).fill(false));
+    setClickStampElement(0);
     setPoint(0);
   };
-  const changeIsPress = (props: number) => {
-    let newArr = [...isPress];
-    newArr[props] = !newArr[props];
-    // console.log(newArr);
-    setIsPress(newArr);
-  };
-  const getPurchaseContent = useCallback(() => {
-    Alert.alert('구매 완료');
-    setClickElement(-1);
-    setPoint(0);
-    setIsPress(Array(customizingStampImage.length).fill(false));
-  }, []);
+  const changeIsPress = useCallback(
+    (props: number) => {
+      if (select === 'board') {
+        let newArr = Array(isBoardPress.length).fill(false);
+        newArr[props] = !newArr[props];
+        setIsBoardPress(newArr);
+      } else {
+        let newArr = Array(isStampPress.length).fill(false);
+        newArr[props] = !newArr[props];
+        setIsStampPress(newArr);
+      }
+    },
+    [isBoardPress.length, isStampPress.length, select],
+  );
+  async function getPurchaseContent() {
+    try {
+      setLoading(true);
+      // console.log('customizeId', customId);
+      // console.log('customerId', customerIdTest);
+      const response = await axios.post(
+        `${Config.API_URL}/customize-customer/buy`,
+        {
+          customerId: customerIdTest,
+          customizeId: customId,
+        },
+      );
+      console.log('purchase', response.data);
+      Alert.alert('알림', '구매 완료');
+      setClickBoardElement(0);
+      setClickStampElement(0);
+      setPoint(0);
+      setIsBoardPress(Array(stampImage.length).fill(false));
+      setIsStampPress(Array(stampImage.length).fill(false));
+      setLoading(false);
+    } catch (error) {
+      const errorResponse = (error as AxiosError<any>).response;
+      if (errorResponse) {
+        console.log(errorResponse);
+        console.log('구매 오류');
+        setLoading(false);
+      }
+    }
+  }
+
   return (
     <>
       <StatusBar hidden={true} />
@@ -160,18 +257,44 @@ function CustomShop({navigation}: CustomShopScreenProps) {
         </View>
       </View>
       <View style={styles.viewCouponImageContainer}>
-        <View style={styles.viewCouponImage}>
-          <Text
-            style={{
-              fontFamily: 'NotoSansCJKkr-Medium (TTF)',
-              fontSize: 15,
-              textAlign: 'center',
-              textAlignVertical: 'center',
-              height: screenHeight / 4.8,
-            }}>
-            Coupon
-          </Text>
-        </View>
+        {select === 'board' ? (
+          <ImageBackground
+            source={{
+              uri: `${boardImage[clickBoardElement].bigImageUrl}`,
+            }}
+            resizeMode="contain"
+            resizeMethod="auto"
+            style={styles.viewCouponImage}
+          />
+        ) : (
+          <ImageBackground
+            source={{
+              uri: `${boardImage[clickBoardElement].bigImageUrl}`,
+            }}
+            resizeMode="contain"
+            resizeMethod="auto"
+            style={styles.viewCouponImage}>
+            <View style={styles.stampContainer}>
+              {stampImage.map(stamp => {
+                return (
+                  <Image
+                    source={{
+                      uri: `${stampImage[clickStampElement].smallImageUrl}`,
+                    }}
+                    style={{
+                      width: screenHeight / 25,
+                      resizeMode: 'contain',
+                      // flex: 1 / 3,
+                      // marginHorizontal: 15,
+                      height: screenHeight / 23,
+                      margin: 5,
+                    }}
+                  />
+                );
+              })}
+            </View>
+          </ImageBackground>
+        )}
       </View>
       <View style={styles.selectCustomizingButton}>
         <Pressable onPress={selectBoard}>
@@ -213,119 +336,122 @@ function CustomShop({navigation}: CustomShopScreenProps) {
         style={styles.imageContainer}
         contentContainerStyle={styles.imageContent}>
         {select === 'stamp'
-          ? customizingStampImage.map((stampImage, index) => {
+          ? stampImage.map((stamp: Stamp, index) => {
               return (
                 <Pressable
                   style={
-                    index === clickElement && isPress[index]
+                    index === clickStampElement && isStampPress[index]
                       ? [styles.boardContent, {borderColor: 'red'}]
                       : styles.boardContent
                   }
                   key={index}
                   onPress={() => {
-                    // console.log('최초', index, clickElement);
-                    // console.log('customizing 실행 후', index, clickElement);
-                    if (isPress[index]) {
-                      if (index === clickElement) {
-                        setPoint(0);
-                      } else {
-                        changeIsPress(index);
-                        setPoint(stampImage.point);
-                      }
+                    if (index === clickStampElement && isStampPress[index]) {
+                      setPoint(0);
+                      changeIsPress(index);
+                      setClickStampElement(0);
+                      setCustomId(0);
                     } else {
-                      setPoint(stampImage.point);
+                      changeIsPress(index);
+                      setClickStampElement(index);
+                      setPoint(stamp.point);
+                      setCustomId(stamp.id);
                     }
-                    changeIsPress(index);
-                    // console.log('changeIsPress 실행 후', index, clickElement);
-                    customizing(index);
-                    // console.log('최종', index, clickElement);
                   }}>
-                  <Text
-                    style={{
-                      width: screenWidth / 7.3,
-                      height: screenHeight / 15,
-                      textAlign: 'center',
-                      textAlignVertical: 'center',
-                      fontSize: 13,
-                    }}
-                    key={`${stampImage.imageName}${index}`}>
-                    {stampImage.imageName}
-                  </Text>
+                  <ImageBackground
+                    source={{uri: `${stamp.smallImageUrl}`}}
+                    // resizeMode="contain"
+                  >
+                    <Text
+                      style={{
+                        width: screenWidth / 7.3,
+                        height: screenHeight / 10.5,
+                        borderRadius: 10,
+                      }}
+                      key={`${stamp.id}${index}`}
+                    />
+                  </ImageBackground>
                 </Pressable>
               );
             })
-          : customizingBoardImage.map((boardImage, index) => {
+          : boardImage.map((board: Board, index) => {
               return (
                 <Pressable
                   style={
-                    index === clickElement && isPress[index]
+                    index === clickBoardElement && isBoardPress[index]
                       ? [styles.boardContent, {borderColor: 'red'}]
                       : styles.boardContent
                   }
                   key={index}
                   onPress={() => {
-                    isPress[index]
-                      ? index === clickElement
-                        ? setPoint(0)
-                        : setPoint(boardImage.point)
-                      : setPoint(boardImage.point);
-                    changeIsPress(index);
-                    customizing(index);
+                    if (index === clickBoardElement && isBoardPress[index]) {
+                      setPoint(0);
+                      changeIsPress(index);
+                      setClickBoardElement(0);
+                      setCustomId(0);
+                    } else {
+                      changeIsPress(index);
+                      setClickBoardElement(index);
+                      setPoint(board.point);
+                      setCustomId(board.id);
+                    }
                   }}>
-                  <Text
-                    style={{
-                      width: screenWidth / 7.3,
-                      height: screenHeight / 15,
-                      textAlign: 'center',
-                      textAlignVertical: 'center',
-                      fontSize: 13,
-                    }}
-                    key={`${boardImage.imageName}${index}`}>
-                    {boardImage.imageName}
-                  </Text>
+                  <ImageBackground
+                    source={{uri: `${board.smallImageUrl}`}}
+                    // resizeMode="contain"
+                  >
+                    <Text
+                      style={{
+                        width: screenWidth / 7.3,
+                        height: screenHeight / 10.5,
+                        borderRadius: 10,
+                      }}
+                      key={`${board.id}${index}`}
+                    />
+                  </ImageBackground>
                 </Pressable>
               );
             })}
       </ScrollView>
       <View
         style={
-          point <= 0
+          point <= 0 || customerPoint - point < 0
             ? styles.purchaseContainer
             : [styles.purchaseContainer, {backgroundColor: '#414FFD'}]
         }>
-        <View style={styles.purchaseText}>
-          <Image
-            source={require('../../assets/icon/shoppingCart.png')}
-            style={styles.cartImage}
-          />
-          <Text
-            style={{
-              fontFamily: 'GmarketSansTTF',
-              // fontSize: 15,
-              // textAlign: 'center',
-              // textAlignVertical: 'center',
-              // backgroundColor: 'white',
-              height: screenHeight / 30,
-              color: 'white',
-              fontWeight: '700',
-            }}>
-            {point}P
-          </Text>
-        </View>
-
         <Pressable
           style={styles.purchaseButton}
-          disabled={point <= 0 ? true : false}
+          disabled={point <= 0 || customerPoint - point < 0 ? true : false}
           onPress={getPurchaseContent}>
-          <Text
-            style={{
-              fontFamily: 'GmarketSansTTF',
-              fontSize: 15,
-              color: 'white',
-              fontWeight: '700',
-            }}>
-            구매하기
-          </Text>
+          <View style={styles.purchaseText}>
+            <Image
+              source={require('../../assets/icon/shoppingCart.png')}
+              style={styles.cartImage}
+            />
+            <Text
+              style={{
+                fontFamily: 'GmarketSansTTF',
+                height: screenHeight / 30,
+                color: 'white',
+                fontWeight: '700',
+              }}>
+              {point}P
+            </Text>
+          </View>
+          {loading ? (
+            <ActivityIndicator style={styles.indicator} color="white" />
+          ) : (
+            <Text
+              style={{
+                fontFamily: 'GmarketSansTTF',
+                fontSize: 15,
+                color: 'white',
+                fontWeight: '700',
+                marginRight: 15,
+              }}>
+              구매하기
+            </Text>
+          )}
         </Pressable>
       </View>
     </>
@@ -363,11 +489,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   viewCouponImage: {
-    width: screenWidth / 1.4,
-    height: screenHeight / 4.8,
+    width: screenWidth / 1.65,
+    height: screenHeight / 4.75,
     backgroundColor: 'white',
     borderRadius: 5,
     elevation: 12,
+  },
+  stampContainer: {
+    width: screenWidth / 1.65,
+    height: screenHeight / 4.8,
+    // backgroundColor: 'pink',
+    paddingVertical: screenWidth / 15,
+    paddingHorizontal: screenHeight / 15,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    // alignItems: 'center',
   },
 
   // 쿠폰 커스터마이징 요소 들어갈 부분
@@ -443,19 +579,28 @@ const styles = StyleSheet.create({
     // backgroundColor: 'pink',
   },
   purchaseText: {
-    width: screenWidth / 7,
-    // backgroundColor: 'blue',
+    width: screenWidth / 5,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: screenWidth / 17,
+    // backgroundColor: 'green',
+    justifyContent: 'space-around',
   },
   purchaseButton: {
-    marginRight: screenWidth / 15,
+    width: screenWidth,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginHorizontal: screenWidth / 15,
+    // backgroundColor: 'pink',
+  },
+  indicator: {
+    backgroundColor: 'transpaent',
+    paddingHorizontal: '11%',
+    // paddingVertical: 10,
+    borderRadius: 5,
+    // marginTop: '4%',
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
 export default CustomShop;
-
-/**
- *
- */

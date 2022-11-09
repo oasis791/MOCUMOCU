@@ -17,6 +17,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
+import Config from 'react-native-config';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -56,21 +57,23 @@ function FindPassword({navigation}: FindPasswordScreenProps) {
       setLoading(true);
       // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
       const response = await axios.post(
-        'http://54.180.91.167:8080/user/modifyUserAccount',
+        `${Config.API_URL}/customer/find/password`,
         {
-          //
+          email: email,
         },
       ); //비동기 요청이므로 await가 필요
-      console.log(response);
-      console.log('http://54.180.91.167:8080');
+      Alert.alert('알림', `비밀번호는 ${response.data} 입니다.`);
+      setLoading(false);
+      toBack();
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
+      console.log('error', errorResponse);
       if (errorResponse) {
         Alert.alert('알림', errorResponse.data.message);
         setLoading(false);
       }
     }
-  }, [email, loading]); // password는 일방향 암호화(hash화) -> 예측 불가능한 값이 되어버림 but, hash 값이 고정되어있기 때문에 해당 값으로 인증 가능
+  }, [email, loading, toBack]); // password는 일방향 암호화(hash화) -> 예측 불가능한 값이 되어버림 but, hash 값이 고정되어있기 때문에 해당 값으로 인증 가능
   const canGoNext = email;
   return (
     <>
@@ -101,6 +104,7 @@ function FindPassword({navigation}: FindPasswordScreenProps) {
               textContentType="username"
               returnKeyType="send"
               clearButtonMode="while-editing"
+              onSubmitEditing={onSubmit}
               ref={emailRef}
             />
           </View>

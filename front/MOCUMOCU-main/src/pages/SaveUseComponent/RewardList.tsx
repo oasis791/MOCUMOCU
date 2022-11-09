@@ -14,6 +14,7 @@ import {LoggedInUserParamList} from '../../../App';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import {useFocusEffect} from '@react-navigation/native';
+import {Config} from 'react-native-config';
 
 const screenWidth = Dimensions.get('window').width;
 type RewardListScreenProps = NativeStackScreenProps<
@@ -21,8 +22,8 @@ type RewardListScreenProps = NativeStackScreenProps<
   'RewardList'
 >;
 export type Reward = {
-  rewardContent: string;
-  needAmount: number;
+  reward: string;
+  couponRequire: number;
 };
 
 function RewardList({navigation, route}: RewardListScreenProps) {
@@ -34,8 +35,8 @@ function RewardList({navigation, route}: RewardListScreenProps) {
   // const [loading, setLoading] = useState(false);
   const [rewardList, setRewardList] = useState<Reward[]>([
     {
-      rewardContent: '',
-      needAmount: 0,
+      reward: '',
+      couponRequire: 0,
     },
   ]);
   // const rewardListTest = useMemo(() => {
@@ -62,17 +63,12 @@ function RewardList({navigation, route}: RewardListScreenProps) {
       const getRewardList = async () => {
         try {
           const response = await axios.get(
-            'http://54.180.91.167:8080/user/reward-list',
-            {
-              headers: {
-                // authorization: `Bearer ${accessToken}`,
-              },
-              params: {couponId: selectedCouponId},
-            },
+            `${Config.API_URL}/reward/customer/${selectedCouponId}/reward-list`,
           );
           if (isActive) {
             setRewardList(response.data);
           }
+          console.log(response.data);
         } catch (error) {
           const errorResponse = (error as AxiosError<any>).response;
           if (errorResponse) {
@@ -91,7 +87,7 @@ function RewardList({navigation, route}: RewardListScreenProps) {
   const toUseQRTest = (idx: number) => {
     // const couponRequireTest =
     //   rewardListTest[selectedCouponId][idx].couponRequireTest; //Test
-    const couponRequire = rewardList[idx].needAmount;
+    const couponRequire = rewardList[idx].couponRequire;
     console.log(
       `쿠폰 번호: ${selectedCouponId} / 선택한 리워드의 쿠폰 차감 개수: ${couponRequire}`,
     );
@@ -138,8 +134,8 @@ function RewardList({navigation, route}: RewardListScreenProps) {
         key={reward.rewardContent}>
         <Text style={styles.rewardText}>
           {/* {idx} */}
-          {reward.needAmount}개 리워드 - {'\t'}
-          {reward.rewardContent}
+          {reward.couponRequire}개 리워드 - {'\t'}
+          {reward.reward}
         </Text>
         <Image
           style={styles.arrowButton}

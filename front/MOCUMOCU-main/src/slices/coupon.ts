@@ -4,6 +4,8 @@ export interface Coupon {
   couponId: number;
   marketName: string;
   stampAmount: number;
+  boardUrl: string;
+  stampUrl: string;
 }
 
 interface initialState {

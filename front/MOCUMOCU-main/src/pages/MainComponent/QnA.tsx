@@ -1,107 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  Image,
-  StyleSheet,
-  ActivityIndicator,
-  StatusBar,
-  SafeAreaView,
-} from 'react-native';
-import axios from 'axios';
+import React from 'react';
+import {View, Text} from 'react-native';
 
 function QnA() {
-  const [users, setUsers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const getUsers = () => {
-    setIsLoading(true);
-    axios
-      .get(`https://randomuser.me/api/?page=${currentPage}&results=10`)
-      .then(res => {
-        //setUsers(res.data.results);
-        setUsers([...users, ...res.data.results]);
-        setIsLoading(false);
-      });
-  };
-
-  const renderItem = ({item}) => {
-    return (
-      <View style={styles.itemWrapperStyle}>
-        <Image
-          style={styles.itemImageStyle}
-          source={{uri: item.picture.large}}
-        />
-        <View style={styles.contentWrapperStyle}>
-          <Text
-            style={
-              styles.txtNameStyle
-            }>{`${item.name.title} ${item.name.first} ${item.name.last}`}</Text>
-          <Text style={styles.txtEmailStyle}>{item.email}</Text>
-        </View>
-      </View>
-    );
-  };
-
-  const renderLoader = () => {
-    return isLoading ? (
-      <View style={styles.loaderStyle}>
-        <ActivityIndicator size="large" color="black" />
-      </View>
-    ) : null;
-  };
-
-  const loadMoreItem = () => {
-    setCurrentPage(currentPage + 1);
-  };
-
-  useEffect(() => {
-    getUsers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
-
   return (
-    <SafeAreaView>
-      <StatusBar hidden={true} />
-      <FlatList
-        data={users}
-        renderItem={renderItem}
-        keyExtractor={item => item.email}
-        ListFooterComponent={renderLoader}
-        onEndReached={loadMoreItem}
-        onEndReachedThreshold={1}
-      />
-    </SafeAreaView>
+    <View>
+      <Text>Q&A</Text>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  itemWrapperStyle: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderColor: '#ddd',
-  },
-  itemImageStyle: {
-    width: 50,
-    height: 50,
-    marginRight: 16,
-  },
-  contentWrapperStyle: {
-    justifyContent: 'space-around',
-  },
-  txtNameStyle: {
-    fontSize: 16,
-  },
-  txtEmailStyle: {
-    color: '#777',
-  },
-  loaderStyle: {
-    marginVertical: 16,
-    alignItems: 'center',
-  },
-});
 export default QnA;

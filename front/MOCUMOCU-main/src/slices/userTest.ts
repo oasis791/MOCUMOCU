@@ -14,6 +14,7 @@ interface initialStateTest {
   id: number;
   userType: string;
   isLogIn: boolean;
+  point: number;
 }
 
 const initialState: initialStateTest = {
@@ -22,6 +23,7 @@ const initialState: initialStateTest = {
   email: '',
   userType: '',
   isLogIn: false,
+  point: 0,
 };
 
 const userSliceTest = createSlice({
@@ -42,6 +44,9 @@ const userSliceTest = createSlice({
     setLoginType(state, action) {
       state.isLogIn = action.payload.isLogIn;
       state.userType = action.payload.userType;
+    },
+    setUserPoint(state, action) {
+      state.point = action.payload;
     },
   },
   extraReducers: builder => {}, // 비동기 action 만들 때 사용

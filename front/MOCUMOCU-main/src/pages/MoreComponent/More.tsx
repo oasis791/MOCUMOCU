@@ -19,7 +19,6 @@ import Modal from 'react-native-modal';
 import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import {useAppDispatch} from '../../store';
-import userSlice from '../../slices/user';
 import userSliceTest from '../../slices/userTest';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
@@ -39,18 +38,9 @@ function More({navigation}: MoreScreenProps) {
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState('');
   const passwordRef = useRef<TextInput | null>(null);
-
+  const customerId = useSelector((state: RootState) => state.userTest.id);
   const onLogout = useCallback(async () => {
     try {
-      // await axios.post(
-      //   `${Config.API_URL}/logout`,
-      //   {},
-      //   {
-      //     headers: {
-      //       // Authorization: `Bearer ${accessToken}`,
-      //     },
-      //   },
-      // );
       Alert.alert('알림', '로그아웃 되었습니다.');
       dispatch(
         userSliceTest.actions.setUserInfoTest({
@@ -82,8 +72,8 @@ function More({navigation}: MoreScreenProps) {
   const toTermsOfUse = useCallback(() => {
     navigation.navigate('TermsOfUse');
   }, [navigation]);
-  const toDevInfo = useCallback(() => {
-    navigation.navigate('DevInfo');
+  const toHelp = useCallback(() => {
+    navigation.navigate('Help');
   }, [navigation]);
 
   const onChangePassword = useCallback(text => {
@@ -93,37 +83,39 @@ function More({navigation}: MoreScreenProps) {
     // if (loading) {
     //   return;
     // }
-    // if (!password || !password.trim()) {
-    //   return Alert.alert('알림', '비밀번호를 입력해주세요.');
-    // }
-    // if (!/^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@^!%*#?&]).{8,50}$/.test(password)) {
-    //   return Alert.alert(
-    //     '알림',
-    //     '비밀번호는 영문,숫자,특수문자($@^!%*#?&)를 모두 포함하여 8자 이상 입력해야합니다.',
-    //   );
-    // }
-    // try {
-    // setLoading(true);
-    // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
-    // const response = await axios.post(
-    //   'http://54.180.91.167:8080/user/changePassword',
-    //   {
-    //     customerPassword: password,
-    //   },
-    // ); //비동기 요청이므로 await가 필요
-    // console.log(response);
-    console.log('http://54.180.91.167:8080');
-    setModalVisible(!modalVisible);
-    setPassword('');
-    navigation.navigate('ModifyUserAccount');
-    // } catch (error) {
-    //   const errorResponse = (error as AxiosError<any>).response;
-    //   if (errorResponse) {
-    //     Alert.alert('알림', errorResponse.data.message);
-    //     setLoading(false);
-    //   }
-    // }
-  }, [loading, modalVisible, navigation, password]);
+    try {
+      if (!password || !password.trim()) {
+        return Alert.alert('알림', '비밀번호를 입력해주세요.');
+      }
+      if (
+        !/^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@^!%*#?&]).{8,50}$/.test(password)
+      ) {
+        return Alert.alert(
+          '알림',
+          '비밀번호는 영문,숫자,특수문자($@^!%*#?&)를 모두 포함하여 8자 이상 입력해야합니다.',
+        );
+      }
+      setLoading(true);
+      // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
+      const response = await axios.post(`${Config.API_URL}/customer/auth`, {
+        id: customerId,
+        password: password,
+      });
+      // ); //비동기 요청이므로 await가 필요
+      console.log(response);
+      // console.log('http://54.180.91.167:8080');
+      setModalVisible(!modalVisible);
+      setPassword('');
+      setLoading(false);
+      navigation.navigate('ModifyUserAccount');
+    } catch (error) {
+      const errorResponse = (error as AxiosError<any>).response;
+      if (errorResponse) {
+        Alert.alert('알림', errorResponse.data.message);
+        setLoading(false);
+      }
+    }
+  }, [modalVisible, navigation, password]);
   // const requestPassword = () => {
   //   const canGoNext = password;
   //   return (
@@ -188,7 +180,7 @@ function More({navigation}: MoreScreenProps) {
                 source={require('../../assets/icon/arrowNormal.png')}
               />
             </Pressable>
-            <Pressable style={styles.buttonContainer} onPress={toDevInfo}>
+            <Pressable style={styles.buttonContainer} onPress={toHelp}>
               <Text style={styles.buttonText}>도움말</Text>
               <Image
                 style={styles.arrowButton}

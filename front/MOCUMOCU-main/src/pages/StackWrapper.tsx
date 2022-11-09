@@ -8,14 +8,17 @@ import RewardList from './SaveUseComponent/RewardList';
 import UseQR from './SaveUseComponent/UseQR';
 import CouponUsageHistory from './MoreComponent/CouponUsageHistory';
 import TermsOfUse from './MoreComponent/TermsOfUse';
-import DevInfo from './MoreComponent/DevInfo';
+import Help from './MoreComponent/Help';
 import CustomShop from './MoreComponent/CustomShop';
 import CouponDetail from './MainComponent/CouponDetail';
-import PushNotice from './MainComponent/PushNotice';
 import MyPointLog from './MoreComponent/MyPointLog';
 import Notice from './MainComponent/Notice';
 import QnA from './MainComponent/QnA';
 import SelectCustomizing from './MainComponent/SelectCustomizing';
+import ChangePassword from './MoreComponent/ChangePassword';
+import CouponReserveHelp from './MoreComponent/CouponReserveHelp';
+import CouponUsageHelp from './MoreComponent/CouponUsageHelp';
+import CustomizingHelp from './MoreComponent/CustomizingHelp';
 
 const Stack = createNativeStackNavigator();
 function StackWrapper() {
@@ -42,11 +45,6 @@ function StackWrapper() {
       <Stack.Screen
         name="Settings"
         component={Settings}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="PushNotice"
-        component={PushNotice}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -93,8 +91,28 @@ function StackWrapper() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="DevInfo"
-        component={DevInfo}
+        name="Help"
+        component={Help}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CouponReserveHelp"
+        component={CouponReserveHelp}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CouponUsageHelp"
+        component={CouponUsageHelp}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CustomizingHelp"
+        component={CustomizingHelp}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ChangePassword"
+        component={ChangePassword}
         options={{headerShown: false}}
       />
 

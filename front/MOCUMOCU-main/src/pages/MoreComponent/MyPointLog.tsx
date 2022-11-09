@@ -19,21 +19,19 @@ import {useSelector} from 'react-redux';
 import {LoggedInUserParamList} from '../../../App';
 import {RootState} from '../../store/reducer';
 import {userType} from './CouponUsageHistory';
+import {Config} from 'react-native-config';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const today = new Date().toLocaleTimeString();
-
 type Log = {
-  marketName: String;
-  month: Number;
-  date: Number;
-  hour: Number;
-  minute: Number;
-  point: Number;
+  type: string;
+  month: number;
+  date: number;
+  hour: number;
+  minute: number;
+  point: number;
 };
-
 type MyPointScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
   'MyPointLog'
@@ -143,7 +141,7 @@ type MyPointScreenProps = NativeStackScreenProps<
 // ];
 function MyPointLog({navigation}: MyPointScreenProps) {
   const [pointLogList, setPointLogList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const toBack = useCallback(() => {
@@ -160,13 +158,17 @@ function MyPointLog({navigation}: MyPointScreenProps) {
   //   },
   //   {},
   // );
-
+  const logType = {
+    STAMP: '도장 구매',
+    BOARD: '쿠폰 판 구매',
+    ATTENDANCE: '출석체크',
+  };
   const customerPoint = useSelector((state: RootState) => state.userTest.point);
-  async function getData() {
+  async function getPointData() {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        'https://aa2d-2001-2d8-6715-79fb-c946-ae04-da44-c084.jp.ngrok.io/couponlog/customer/scroll/?page=0&size=2&sort=id&customerId=2',
+        `${Config.API_URL}/pointlog/customer/scroll/?page=${currentPage}&size=10&sort=id&customerId=2`,
       );
       console.log('resData: ', response.data);
       const mappingPointDate: userType = response.data.content.reduce(
@@ -182,7 +184,7 @@ function MyPointLog({navigation}: MyPointScreenProps) {
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
-        console.log(errorResponse);
+        console.log('error', errorResponse);
         setIsLoading(false);
       }
     }
@@ -209,19 +211,20 @@ function MyPointLog({navigation}: MyPointScreenProps) {
     isLast ? null : setCurrentPage(currentPage + 1);
   };
   useEffect(() => {
-    isLast === false ? getData() : setIsLoading(false);
-    console.log(currentPage);
+    isLast === false ? getPointData() : setIsLoading(false);
+    console.log('currentPage', currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, isLast]);
   const renderMappingPointLogDateKey = pointLogList.map(poingLog => {
     return Object.keys(poingLog).map(date => {
       return (
         <View style={styles.logContent}>
-          <Text style={{fontWeight: 'bold'}}>{date}</Text>
+          <Text style={{fontWeight: 'bold', color: '#a0a0a0'}}>{date}</Text>
           {poingLog[date].map((log: Log) => (
             // <View style={styles.historyContent}>
             <View style={styles.logText}>
-              <Text style={{fontWeight: 'bold'}}>
-                {log.marketName} {'\n'}
+              <Text style={{fontWeight: 'bold', color: '#a0a0a0'}}>
+                {logType[log.type]} {'\n'}
                 <Text
                   style={{
                     fontFamily: '',
@@ -233,15 +236,17 @@ function MyPointLog({navigation}: MyPointScreenProps) {
               </Text>
               <Text>
                 {log.point <= 0 ? (
-                  <Text
-                    style={{
-                      color: '#363636',
-                      fontFamily: '',
-                      fontWeight: 'bold',
-                      fontSize: 15,
-                    }}>
-                    {log.point}P
-                  </Text>
+                  <>
+                    <Text
+                      style={{
+                        color: '#363636',
+                        fontFamily: '',
+                        fontWeight: 'bold',
+                        fontSize: 15,
+                      }}>
+                      {log.point}P
+                    </Text>
+                  </>
                 ) : (
                   <Text
                     style={{
@@ -417,6 +422,7 @@ const styles = StyleSheet.create({
     // marginHorizontal: screenWidth / 30,
     fontFamily: 'GmarketSansTTF',
     fontSize: 15,
+    color: '#a0a0a0',
   },
   arrowDown: {
     width: screenWidth / 23,

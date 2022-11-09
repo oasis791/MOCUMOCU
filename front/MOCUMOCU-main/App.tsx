@@ -6,6 +6,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {PortalProvider} from '@gorhom/portal';
 import {Coupon} from './src/pages/SaveUseComponent/RewardList';
 import {Select} from './src/pages/SaveUseComponent/UseCoupon';
+import {Customizing} from './src/pages/MainComponent/CouponDetail';
+
 export type LoggedInUserParamList = {
   /** MainComponent Type  */
   Main: undefined;
@@ -22,7 +24,11 @@ export type LoggedInUserParamList = {
   TermsOfUse: undefined;
   CouponUsageHistory: undefined;
   MyPointLog: undefined; // 더보기랑 메인 둘 다 해당
-  DevInfo: undefined;
+  Help: undefined;
+  CouponReserveHelp: undefined;
+  CouponUsageHelp: undefined;
+  CustomizingHelp: undefined;
+  ChangePassword: undefined;
 
   /** SaveUseComponent Type */
   SaveUseCoupon: undefined;

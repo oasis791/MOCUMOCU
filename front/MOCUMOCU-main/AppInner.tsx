@@ -12,10 +12,8 @@ import {useSelector} from 'react-redux';
 import {RootState} from './src/store/reducer';
 import {useAppDispatch} from './src/store';
 import {useEffect} from 'react';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from 'react-native-splash-screen';
 import axios, {AxiosError} from 'axios';
-import userSlice from './src/slices/user';
 import Config from 'react-native-config';
 import FindPassword from './src/pages/FindPassword';
 import FindPasswordOwner from './src/pages/FindPasswordOwner';
@@ -30,12 +28,13 @@ function AppInner() {
   // const isLoggedIn = useSelector(
   //   (state: RootState) => !!state.user.accessToken,
   // );
-  // const isLogIn = useSelector((state: RootState) => state.userTest.isLogIn);
+  const isLogIn = useSelector((state: RootState) => state.userTest.isLogIn);
+  // const isLogIn = true;
   const userType = useSelector((state: RootState) => state.userTest.userType);
   // const userType = 'Owner';
   // const userTypeTest = 'Customer';
   const dispatch = useAppDispatch();
-  const isLogIn = false;
+  // const isLogIn = false;
 
   // 앱 실행 시 토큰 있으면 로그인하는 코드
   useEffect(() => {
@@ -48,7 +47,7 @@ function AppInner() {
           SplashScreen.hide();
           return;
         }
-        const response = await axios.post('http://54.180.91.167:8080/token', {
+        const response = await axios.post(`${Config.APIURL}/token`, {
           isLogIn: isLogIn,
           userType: userType,
         });
@@ -60,15 +59,15 @@ function AppInner() {
         //     accessToken: response.data.data.accessToken,3
         //   }),
         // );
-        // dispatch(
-        //   userSliceTest.actions.setLoginType({
-        //     // name: response.data.data.name,
-        //     // id: response.data.data.id,
-        //     // email: response.data.data.email,
-        //     userType: response.data.userType,
-        //     isLogIn: response.data.logIn,
-        //   }),
-        // );
+        dispatch(
+          userSliceTest.actions.setLoginType({
+            name: response.data.data.name,
+            id: response.data.data.id,
+            email: response.data.data.email,
+            userType: response.data.userType,
+            isLogIn: response.data.logIn,
+          }),
+        );
         console.log('AppInner log(userType)', userType);
         console.log('AppInner log(isLogin)', isLogIn);
       } catch (error) {

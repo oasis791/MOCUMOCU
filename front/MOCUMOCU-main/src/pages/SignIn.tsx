@@ -20,6 +20,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
+import Config from 'react-native-config';
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
 function SignIn({navigation}: SignInScreenProps) {
@@ -43,14 +44,11 @@ function SignIn({navigation}: SignInScreenProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(
-        'http://54.180.91.167:8080/user/login',
-        {
-          customerEmail: email,
-          customerPassword: password,
-        },
-      );
-      console.log('response data: ', response.data.customerEmail);
+      const response = await axios.post(`${Config.API_URL}/customer/login`, {
+        customerEmail: email,
+        customerPassword: password,
+      });
+      console.log('response data: ', response.data);
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
       // dispatch(userSliceTest.actions.setUserInfoTest(response.data.data));
@@ -128,7 +126,6 @@ function SignIn({navigation}: SignInScreenProps) {
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           locations={[0, 1]}
-          // eslint-disable-next-line react-native/no-inline-styles
           style={{
             marginTop: 5,
             marginBottom: 1,

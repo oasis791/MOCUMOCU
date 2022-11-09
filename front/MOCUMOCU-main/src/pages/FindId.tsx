@@ -1,7 +1,6 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -17,58 +16,79 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
-import ModalDropdown from 'react-native-modal-dropdown';
+import {Config} from 'react-native-config';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 type FindIdScreenProps = NativeStackScreenProps<RootStackParamList, 'FindId'>;
 
 function FindId({navigation}: FindIdScreenProps) {
-  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [select, setSelect] = useState(-1);
-  const [question, setQuestion] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
+  const [telephoneNumber, setTelephoneNumber] = useState('');
+  const [name, setName] = useState('');
+  const telephoneNumberRef = useRef<TextInput | null>(null);
   const nameRef = useRef<TextInput | null>(null);
-  const questionRef = useRef<TextInput | null>(null);
-
   const toBack = useCallback(() => {
     navigation.pop(); // 뒤로 가기
   }, [navigation]);
+
   const onChangeName = useCallback(text => {
     setName(text.trim());
   }, []);
-  const onChangeQuestion = useCallback(text => {
-    setQuestion(text.trim());
+  const onChangeTelephoneNumber = useCallback(text => {
+    setTelephoneNumber(text.trim());
   }, []);
 
   const onSubmit = useCallback(async () => {
     // Alert.alert('알림', '회원가입 되었습니다.');
+    if (loading) {
+      return;
+    }
     if (!name || !name.trim()) {
       return Alert.alert('알림', '이름을 입력해주세요.');
     }
-    if (!question || !question.trim()) {
-      return Alert.alert('알림', '본인 확인 질문을 입력해주세요.');
+    if (!telephoneNumber || !telephoneNumber.trim()) {
+      return Alert.alert('알림', '전화번호을 입력해주세요.');
     }
     try {
       setLoading(true);
       // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
-      const response = await axios.post('http://54.180.91.167:8080/user/', {
-        //
-      }); //비동기 요청이므로 await가 필요
+      const response = await axios.post(
+        `${Config.API_URL}/customer/find/email`,
+        {
+          customerName: name,
+          phoneNum: telephoneNumber,
+        },
+      ); //비동기 요청이므로 await가 필요
       console.log(response);
-      console.log('http://54.180.91.167:8080');
       Alert.alert('알림', `아이디는 ${response.data} 입니다.`); // -> 본인 ID를 알려줘야 함
       navigation.navigate('SignIn');
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
+      console.log('error', errorResponse);
       if (errorResponse) {
         Alert.alert('알림', errorResponse.data.message);
         setLoading(false);
       }
     }
-  }, [name, navigation, question]); // password는 일방향 암호화(hash화) -> 예측 불가능한 값이 되어버림 but, hash 값이 고정되어있기 때문에 해당 값으로 인증 가능
-  const canGoNext = name && question;
+  }, [loading, name, navigation, telephoneNumber]); // password는 일방향 암호화(hash화) -> 예측 불가능한 값이 되어버림 but, hash 값이 고정되어있기 때문에 해당 값으로 인증 가능
+  useEffect(() => {
+    setTelephoneNumber(telephoneNumber.trim());
+    // setPhoneNumber(phoneNumber.replace('-', ''));
+    if (telephoneNumber.length === 11) {
+      setTelephoneNumber(
+        telephoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'),
+      );
+    }
+    if (telephoneNumber.length === 11) {
+      setTelephoneNumber(
+        telephoneNumber
+          .replace(/-/g, '')
+          .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
+      );
+    }
+  }, [telephoneNumber]);
+  const canGoNext = telephoneNumber.length < 13 ? '' : telephoneNumber;
   return (
     <>
       <DismissKeyboardView>
@@ -92,67 +112,33 @@ function FindId({navigation}: FindIdScreenProps) {
               placeholderTextColor="#c4c4c4"
               onChangeText={onChangeName}
               value={name}
-              keyboardType={
-                Platform.OS === 'android' ? 'default' : 'ascii-capable'
-              }
-              textContentType="username"
+              keyboardType="default"
+              textContentType="name"
               returnKeyType="next"
               clearButtonMode="while-editing"
               ref={nameRef}
-              onSubmitEditing={() => questionRef.current?.focus()}
+              onSubmitEditing={() => {
+                telephoneNumberRef.current?.focus();
+              }}
+              blurOnSubmit={false}
             />
-            <View
-              style={{
-                flexDirection: 'row',
-                backgroundColor: 'white',
-                borderRadius: 8,
-                borderWidth: 1,
-                borderColor: '#c5c5c5',
-                height: screenHeight / 15,
-                marginTop: screenHeight / 100,
-                alignItems: 'center',
-                justifyContent: 'space-around',
-                width: screenWidth / 1.29,
-              }}>
-              <ModalDropdown
-                options={[
-                  '나의 고향은?',
-                  '나의 출신 초등학교는?',
-                  '김현욱 쥬지 길이는?',
-                ]}
-                defaultValue={'본인 확인 질문'}
-                textStyle={styles.dropDownWrapper}
-                dropdownStyle={styles.listStyle}
-                adjustFrame={() => ({
-                  top: screenHeight / 3.23,
-                  left: screenWidth / 8.4,
-                })}
-                onSelect={idx => {
-                  setSelect(Number(idx));
-                }}
-              />
-              <Image
-                source={require('../assets/icon/arrowDown.png')}
-                style={styles.arrowDown}
-              />
-            </View>
-            {select > 0 ? (
-              <TextInput
-                style={[styles.textInput, {marginTop: screenHeight / 100}]}
-                placeholder="질문에 대한 답변을 입력하세요."
-                placeholderTextColor="#c4c4c4"
-                onChangeText={onChangeQuestion}
-                value={question}
-                keyboardType={
-                  Platform.OS === 'android' ? 'default' : 'ascii-capable'
-                }
-                returnKeyType="send"
-                clearButtonMode="while-editing"
-                ref={questionRef}
-              />
-            ) : (
-              <></>
-            )}
+          </View>
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="전화번호"
+              placeholderTextColor="#c4c4c4"
+              onChangeText={onChangeTelephoneNumber}
+              value={telephoneNumber}
+              keyboardType="number-pad"
+              textContentType="telephoneNumber"
+              returnKeyType="send"
+              clearButtonMode="while-editing"
+              ref={telephoneNumberRef}
+              onSubmitEditing={onSubmit}
+              blurOnSubmit={false}
+              maxLength={13}
+            />
           </View>
           <View style={styles.buttonZone}>
             <TouchableHighlight
@@ -327,7 +313,7 @@ const styles = StyleSheet.create({
     color: '#414FFD',
   },
   buttonZone: {
-    marginTop: screenHeight / 2.3,
+    marginTop: screenHeight / 1.9,
     alignItems: 'center',
     backgroundColor: 'pink',
   },
@@ -492,7 +478,8 @@ const styles = StyleSheet.create({
   },
   // 드랍다운 박스
   dropDownWrapper: {
-    padding: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
     borderColor: '#e5e5e5',
     width: screenWidth / 1.5,
     fontWeight: 'bold',

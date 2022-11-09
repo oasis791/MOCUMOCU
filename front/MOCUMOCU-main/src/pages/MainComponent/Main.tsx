@@ -13,6 +13,7 @@ import {
   StatusBar,
   ImageBackground,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Carousel from 'react-native-snap-carousel';
@@ -23,6 +24,9 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import {useFocusEffect} from '@react-navigation/native';
 import AttendanceModal from '../../components/AttendanceModal';
+import userSlice from '../../slices/user';
+import userSliceTest from '../../slices/userTest';
+import Config from 'react-native-config';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const data = [
@@ -35,24 +39,29 @@ const data = [
     url: 'https://mocumocu-bucket.s3.ap-northeast-2.amazonaws.com/temp/banner2.png',
   },
 ];
-let myPoint = 500;
 
 type MainScreenProps = NativeStackScreenProps<LoggedInUserParamList, 'Main'>;
 function Main({navigation}: MainScreenProps) {
   // const customerId = useSelector((state: RootState) => state.user.id);
   // const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const customerIdTest = useSelector((state: RootState) => state.userTest.id);
+  const customerPoint = useSelector((state: RootState) => state.userTest.point);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [isAttandance, setIsAttandance] = useState(0);
+  const [isAttendance, setIsAttendance] = useState(false);
+  const [point, setPoint] = useState(customerPoint);
+  const [smallBanner, setSmallBanner] = useState([]);
+  const [largeBanner, setLargeBanner] = useState('');
+  const [showLargeBanner, setShowLargeBanner] = useState(false);
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
       const getCouponInfo = async () => {
         try {
           const response = await axios.get<Coupon[]>(
-            `http://54.180.91.167:8080/user/${customerIdTest}/coupon`,
+            `${Config.API_URL}/coupon/${customerIdTest}/coupon`,
             {
               headers: {
                 // authorization: `Bearer ${accessToken}`,
@@ -68,30 +77,73 @@ function Main({navigation}: MainScreenProps) {
           setLoading(false);
           const errorResponse = (error as AxiosError<any>).response;
           if (errorResponse) {
-            Alert.alert('알림', errorResponse.data.message);
+            Alert.alert('알림', 'coupon');
+            console.log(error);
             setLoading(false);
           }
         }
       };
+      const getAttandanceCheck = async () => {
+        try {
+          const response = await axios.get(
+            `${Config.API_URL}/customer/${customerIdTest}/attendance`,
+          );
+          setIsAttendance(response.data);
+          console.log('attendance', response.data);
+        } catch (error) {
+          const errorResponse = (error as AxiosError<any>).response;
+          if (errorResponse) {
+            Alert.alert('알림', 'attendance');
+            setLoading(false);
+          }
+        }
+      };
+      const getPoint = async () => {
+        try {
+          const response = await axios.get(
+            `${Config.API_URL}/customer/${customerIdTest}/point`,
+          );
+          console.log('point', response.data);
+          setPoint(response.data);
+          dispatch(userSliceTest.actions.setUserPoint(response.data));
+        } catch (error) {
+          const errorResponse = (error as AxiosError<any>).response;
+          if (errorResponse) {
+            Alert.alert('알림', 'point');
+
+            setLoading(false);
+          }
+        }
+      };
+      const bannerInfo = async () => {
+        try {
+          const response = await axios.get(
+            `${Config.API_URL}/customer/find/all-event`,
+          );
+          setSmallBanner(response.data);
+          console.log('banner', response.data);
+        } catch (error) {
+          const errorResponse = (error as AxiosError<any>).response;
+          Alert.alert('알림', 'banner');
+          console.log('banner', errorResponse);
+        }
+      };
       getCouponInfo();
+      getAttandanceCheck();
+      getPoint();
+      bannerInfo();
       return () => {
         isActive = false;
       };
-    }, [customerIdTest, dispatch]),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [customerIdTest, dispatch, showModal]),
   );
 
-  const isAlarm = true;
   // const customerName = useSelector((state: RootState) => state.user.name);
   const customerNameTest = useSelector(
     (state: RootState) => state.userTest.name,
   );
   const coupons = useSelector((state: RootState) => state.coupon.coupons);
-  const toSettings = useCallback(() => {
-    navigation.navigate('Settings');
-  }, [navigation]);
-  const toPushNotice = useCallback(() => {
-    navigation.navigate('PushNotice');
-  }, [navigation]);
   const toMyPointLog = useCallback(() => {
     navigation.navigate('MyPointLog');
   }, [navigation]);
@@ -101,52 +153,116 @@ function Main({navigation}: MainScreenProps) {
   const toNotice = useCallback(() => {
     navigation.navigate('Notice');
   }, [navigation]);
-
-  const onSubmitAttendance = () => {
+  async function onSubmitAttendance() {
     // 모달 창으로 출석체크 완료!
+    try {
+      const response = await axios.get(
+        `${Config.API_URL}/customer/${customerIdTest}/attendance-check`,
+      );
+      console.log('check-attendance', response.data);
+    } catch (error) {
+      const errorResponse = (error as AxiosError<any>).response;
+      if (errorResponse) {
+        console.log(errorResponse);
+        console.log('출석체크 오류');
+      }
+    }
     setShowModal(true);
-  };
-  const onSubmitEvent = () => {
-    Alert.alert('알림', '이벤트');
-  };
+  }
+  async function getLargeBanner(marketId: any) {
+    console.log(marketId);
+    try {
+      console.log('marketId', marketId);
+      const response = await axios.get(
+        `${Config.API_URL}/customer/find/big-event/${marketId}`,
+      );
+      console.log('largeBanner', response.data);
+      setLargeBanner(response.data);
+      setShowLargeBanner(true);
+    } catch (error) {
+      const errorResponse = (error as AxiosError<any>).response;
+      if (errorResponse) {
+        console.log(errorResponse);
+        console.log('큰 배너 오류');
+      }
+    }
+  }
   // 쿠폰 등록 관련 로직
   const toCouponDetail = useCallback(() => {
     navigation.navigate('CouponDetail');
   }, [navigation]);
+
+  const renderStamp = useCallback(coupon => {
+    const arr = [];
+    console.log('renderStamp', coupon.stampAmount);
+    if (coupon.stampAmount > 0) {
+      for (let i = 0; i < coupon.stampAmount; i++) {
+        arr.push(
+          <Image
+            source={
+              coupon.stampUrl
+                ? {uri: `${coupon.stampUrl}`}
+                : require('../../assets/blueLogo.png')
+            }
+            resizeMode="center"
+            style={{
+              width: screenHeight / 12,
+              // flex: 1 / 3,
+              // marginHorizontal: 15,
+              height: screenHeight / 13,
+              // marginVertical: 10,
+            }}
+          />,
+        );
+      }
+    } else {
+      arr.push(
+        <View style={styles.scrollStampNone}>
+          <Text style={styles.myStampText}>보유한 도장이 없습니다</Text>
+        </View>,
+      );
+    }
+    return arr;
+  }, []);
   const renderCoupon =
     coupons.length !== 0 ? (
-      coupons.map(coupon => {
-        return (
-          <View style={styles.scrollItem} key={coupon.couponId}>
-            {/* <Text style={styles.scrollItemText}>{coupon.couponId}</Text> */}
-            <Text style={[styles.scrollItemText, {color: '#414FFD'}]}>
-              {coupon.marketName}
-            </Text>
-            <Text style={styles.scrollItemText}>{coupon.stampAmount} 장</Text>
-          </View>
-        );
-      })
+      coupons.map(coupon => (
+        // ImageBackground 넣어야 함(source = coupon.couponImage)
+        <ImageBackground
+          source={
+            coupon.boardUrl
+              ? {uri: `${coupon.boardUrl}`}
+              : require('../../assets/largeBoard.png')
+          }
+          key={coupon.couponId}
+          style={styles.viewCouponImage}>
+          {renderStamp(coupon)}
+        </ImageBackground>
+      ))
     ) : (
       <View style={styles.scrollItemNone}>
         <Text style={styles.myCouponText}>보유한 쿠폰이 없습니다</Text>
       </View>
     );
-
   const renderItem = ({item}: any) => {
     return (
       <TouchableOpacity
-        onPress={onSubmitEvent}
+        onPress={() => {
+          getLargeBanner(item.marketId);
+        }}
         activeOpacity={0.7}
         style={styles.eventImageButton}>
         <ImageBackground
           style={styles.eventImage}
-          source={{uri: item.url}}
+          source={{uri: item.eventSmallUrl}}
           imageStyle={{borderRadius: 20}}
         />
       </TouchableOpacity>
     );
   };
   const isCarousel = useRef(null);
+  // console.log('isAttendance', isAttendance);
+  console.log('slicePoint', customerPoint);
   return (
     <>
       <SafeAreaView style={styles.scrollView}>
@@ -154,8 +270,7 @@ function Main({navigation}: MainScreenProps) {
           isVisible={showModal}
           onBackdropPress={() => {
             setShowModal(false);
-            isAttandance <= 0 ? (myPoint += 10) : myPoint;
-            setIsAttandance(1);
+            // isAttandance === false ? (myPoint += 10) : myPoint;
           }}
           hideModal={() => setShowModal(false)}
           animationIn="fadeIn"
@@ -167,121 +282,138 @@ function Main({navigation}: MainScreenProps) {
             <Text style={[styles.modalText, {color: '#414FFD'}]}>+10P</Text>
           </View>
         </AttendanceModal>
-        <ScrollView fadingEdgeLength={10}>
-          <StatusBar hidden={true} />
-          <View style={[styles.header, {position: 'absolute'}]}>
-            <Image
-              style={styles.headerLogo}
-              source={require('../../assets/blueLogo.png')}
-            />
-            <View style={styles.headerButtonWrapper}>
-              {isAttandance <= 0 ? (
-                <Pressable onPress={onSubmitAttendance}>
-                  <Image
-                    source={require('../../assets/icon/attendanceIcon.png')}
-                    style={styles.headerAttendance}
-                  />
-                </Pressable>
-              ) : (
-                <></>
-              )}
+        {showLargeBanner === false ? (
+          <ScrollView fadingEdgeLength={10}>
+            <StatusBar hidden={true} />
+            <View style={[styles.header, {position: 'absolute'}]}>
+              <Image
+                style={styles.headerLogo}
+                source={require('../../assets/blueLogo.png')}
+              />
+              <View style={styles.headerButtonWrapper}>
+                {isAttendance === false ? (
+                  <Pressable onPress={onSubmitAttendance}>
+                    <Image
+                      source={require('../../assets/icon/attendanceIcon.png')}
+                      style={styles.headerAttendance}
+                    />
+                  </Pressable>
+                ) : (
+                  <></>
+                )}
+              </View>
             </View>
-          </View>
-          <View style={styles.myInfo}>
-            <Text style={styles.myInfoText}>
-              <Text
-                style={[styles.myInfoText, {fontFamily: 'GmarketSansTTFBold'}]}>
-                {customerNameTest}
-              </Text>{' '}
-              님,{'\n'}오늘도 모쿠하세요!
-            </Text>
-            <View style={styles.myInfoPoint}>
-              <Text style={styles.myInfoPointText}>
-                <Pressable
-                  style={styles.toMyPointButton}
-                  onPress={toMyPointLog}>
-                  <Text
-                    style={{
-                      marginRight: 8,
-                      fontFamily: 'GmarketSansTTFBold',
-                      color: '#9b9b9b',
-                      fontSize: 14,
-                    }}>
-                    내 포인트
+            <View style={styles.myInfo}>
+              <Text style={styles.myInfoText}>
+                <Text
+                  style={[
+                    styles.myInfoText,
+                    {fontFamily: 'GmarketSansTTFBold'},
+                  ]}>
+                  {customerNameTest}
+                </Text>{' '}
+                님,{'\n'}오늘도 모쿠하세요!
+              </Text>
+              <View style={styles.myInfoPoint}>
+                <Text style={styles.myInfoPointText}>
+                  <Pressable
+                    style={styles.toMyPointButton}
+                    onPress={toMyPointLog}>
+                    <Text
+                      style={{
+                        marginRight: 8,
+                        fontFamily: 'GmarketSansTTFBold',
+                        color: '#9b9b9b',
+                        fontSize: 14,
+                      }}>
+                      내 포인트
+                    </Text>
+                    <Image
+                      source={require('../../assets/icon/arrowGray.png')}
+                      style={styles.toMyPointImg}
+                    />
+                  </Pressable>
+                  <Text style={{color: '#414FFD', fontSize: 24}}>
+                    {point} P
                   </Text>
-                  <Image
-                    source={require('../../assets/icon/arrowGray.png')}
-                    style={styles.toMyPointImg}
-                  />
-                </Pressable>
-                <Text style={{color: '#414FFD', fontSize: 24}}>
-                  {myPoint} P
                 </Text>
-              </Text>
+              </View>
             </View>
-          </View>
-          <Carousel
-            ref={isCarousel}
-            layout={'default'}
-            data={data}
-            renderItem={renderItem}
-            sliderWidth={screenWidth}
-            itemWidth={screenWidth}
-            autoplay
-            loop
-            autoplayInterval={4000}
-            enableSnap
-            activeAnimationType="decay"
-            inactiveSlideScale={1}
-          />
-          <View style={styles.myCoupon}>
-            <View style={styles.myCouponTextWrapper}>
-              <Text style={styles.myCouponText}>내 쿠폰함</Text>
-              <Pressable
-                style={styles.myCouponboxButton}
-                onPress={toCouponDetail}>
-                <Text style={styles.myCouponboxButtonText}>전체 +</Text>
-              </Pressable>
+            <Carousel
+              ref={isCarousel}
+              layout={'default'}
+              data={smallBanner}
+              renderItem={renderItem}
+              sliderWidth={screenWidth}
+              itemWidth={screenWidth}
+              autoplay
+              loop
+              autoplayInterval={4000}
+              enableSnap
+              activeAnimationType="decay"
+              inactiveSlideScale={1}
+            />
+            <View style={styles.myCoupon}>
+              <View style={styles.myCouponTextWrapper}>
+                <Text style={styles.myCouponText}>내 쿠폰함</Text>
+                <Pressable
+                  style={styles.myCouponboxButton}
+                  onPress={toCouponDetail}
+                  disabled={coupons.length <= 0 ? true : false}>
+                  <Text style={styles.myCouponboxButtonText}>전체 +</Text>
+                </Pressable>
+              </View>
+              <View style={styles.ScrollViewWrapper}>
+                <ScrollView
+                  horizontal={true}
+                  pagingEnabled={true}
+                  showsHorizontalScrollIndicator={true}
+                  contentContainerStyle={styles.scrollViewHorizontal}>
+                  {renderCoupon}
+                </ScrollView>
+              </View>
             </View>
-            <View style={styles.ScrollViewWrapper}>
-              <ScrollView
-                horizontal={true}
-                pagingEnabled={true}
-                showsHorizontalScrollIndicator={true}
-                contentContainerStyle={styles.scrollViewHorizontal}>
-                {renderCoupon}
-              </ScrollView>
+            <View style={styles.footer}>
+              <View style={styles.footerButtonWrapper}>
+                <TouchableOpacity
+                  style={styles.footerButtonLeft}
+                  activeOpacity={0.7}
+                  onPress={toQna}>
+                  <Text style={styles.footerButtonText}>Q&A</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.footerButtonRight}
+                  activeOpacity={0.7}
+                  onPress={toNotice}>
+                  <Text style={styles.footerButtonText}>공지사항</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.footerTextWrapper}>
+                <Text style={styles.footerText}>
+                  멤버십 모쿠모쿠 관련 문의 : 1234 - 5678
+                </Text>
+                <Text style={styles.footerText}>
+                  쿠폰 및 기타 문의 : 8765-4321
+                </Text>
+                <Text style={styles.footerText}>
+                  이용약관 {'\t'}| {'\t'}
+                  개인정보 처리 방침
+                </Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.footer}>
-            <View style={styles.footerButtonWrapper}>
-              <TouchableOpacity
-                style={styles.footerButtonLeft}
-                activeOpacity={0.7}
-                onPress={toQna}>
-                <Text style={styles.footerButtonText}>Q&A</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.footerButtonRight}
-                activeOpacity={0.7}
-                onPress={toNotice}>
-                <Text style={styles.footerButtonText}>공지사항</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.footerTextWrapper}>
-              <Text style={styles.footerText}>
-                멤버십 모쿠모쿠 관련 문의 : 1234 - 5678
-              </Text>
-              <Text style={styles.footerText}>
-                쿠폰 및 기타 문의 : 8765-4321
-              </Text>
-              <Text style={styles.footerText}>
-                이용약관 {'\t'}| {'\t'}
-                개인정보 처리 방침
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        ) : (
+          <Modal style={{flex: 1, backgroundColor: 'gray'}}>
+            <Image source={{uri: largeBanner}} style={styles.largeBanner} />
+            <Pressable
+              onPress={() => {
+                setShowLargeBanner(false);
+              }}
+              style={styles.bannerClose}>
+              <Text style={styles.modalCloseText}>확인</Text>
+            </Pressable>
+          </Modal>
+        )}
       </SafeAreaView>
     </>
   );
@@ -454,20 +586,32 @@ const styles = StyleSheet.create({
     fontSize: 18,
     // backgroundColor: 'pink',
   },
+  myStampText: {
+    // marginBottom: 39,
+    // marginHorizontal: 30,
+    // height: 30,
+    fontFamily: 'GmarketSansTTFBold',
+    color: '#363636',
+    fontSize: 15,
+    // backgroundColor: 'pink',
+  },
   scrollItem: {
     // marginTop: 8,
     flexDirection: 'row',
-    backgroundColor: 'white',
-    marginHorizontal: 9,
+    // backgroundColor: 'white',
+    // marginHorizontal: 9,
     // marginBottom: 20,
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     // alignItems: 'baseline',
-    width: 260,
+    width: screenWidth / 1.25,
     // height: 139,
     height: screenHeight / 4.3,
     borderRadius: 10,
-    elevation: 12,
+    // elevation: 1,
+    flexWrap: 'wrap',
+    // padding: 20,
+    // backgroundColor: 'green',
   },
   scrollItemNone: {
     // backgroundColor: 'pink',
@@ -476,6 +620,35 @@ const styles = StyleSheet.create({
     // height: 139,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  scrollStampNone: {
+    // backgroundColor: 'pink',
+    width: screenWidth / 1.5,
+    height: screenHeight / 6.6,
+    // height: 139,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  viewCouponImage: {
+    width: screenWidth / 1.25,
+    height: screenHeight / 4.75,
+    borderRadius: 5,
+    elevation: 10,
+    padding: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  imageStyle: {
+    // resizeMode: 'contains',s
+    // width: screenWidth,
+    // height: screenHeight,
+    // backgroundColor: 'black',
+    borderRadius: 20,
+    // elevation: 2,
+    borderWidth: 10,
+    borderColor: 'black',
   },
   scrollItemText: {
     fontFamily: 'GmarketSansTTFBold',
@@ -500,6 +673,7 @@ const styles = StyleSheet.create({
     height: '100%',
     // alignItems: 'center',
     // justifyContent: 'center',
+    // elevation: 5,
   },
   ScrollViewWrapper: {
     width: screenWidth,
@@ -515,6 +689,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'green',
     // backgroundColor: 'pink',
     height: 150,
+    width: screenWidth / 1.15,
     // backgroundColor: 'green',
     // backgroundColor: 'pink',
     alignItems: 'center',
@@ -592,6 +767,31 @@ const styles = StyleSheet.create({
     color: '#aeaeae',
     marginHorizontal: 30,
     fontSize: 18,
+  },
+  largeBanner: {
+    marginTop: screenHeight / 55,
+    marginLeft: screenWidth / 11,
+    width: screenWidth / 1.2,
+    height: screenHeight / 1.2,
+    resizeMode: 'stretch',
+    borderRadius: 5,
+  },
+  bannerClose: {
+    position: 'absolute',
+    backgroundColor: '#414FFD',
+    width: screenWidth / 1.2,
+    bottom: 0,
+    marginLeft: screenWidth / 12,
+    marginBottom: screenWidth / 20,
+    height: screenHeight / 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  modalCloseText: {
+    color: 'white',
+    fontSize: 14,
+    fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
 });
 export default Main;

@@ -14,6 +14,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {LoggedInUserParamList} from '../../../App';
+import {Config} from 'react-native-config';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/reducer';
 export type History = {
   marketName: String;
   month: Number;
@@ -28,67 +31,67 @@ export interface userType {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const couponHistoryTestList = [
-  {
-    '5.14': [
-      {
-        date: 14,
-        hour: 16,
-        marketName: '카페현욱',
-        minute: 32,
-        month: 5,
-        stamp: -5,
-      },
-    ],
-    '5.15': [
-      {
-        date: 15,
-        hour: 16,
-        marketName: '카페현욱',
-        minute: 32,
-        month: 5,
-        stamp: 5,
-      },
-    ],
-    '5.16': [
-      {
-        date: 16,
-        hour: 16,
-        marketName: '카페현욱',
-        minute: 32,
-        month: 5,
-        stamp: -5,
-      },
-    ],
-  },
-];
+// const couponHistoryTestList = [
+//   {
+//     '5.14': [
+//       {
+//         date: 14,
+//         hour: 16,
+//         marketName: '카페현욱',
+//         minute: 32,
+//         month: 5,
+//         stamp: -5,
+//       },
+//     ],
+//     '5.15': [
+//       {
+//         date: 15,
+//         hour: 16,
+//         marketName: '카페현욱',
+//         minute: 32,
+//         month: 5,
+//         stamp: 5,
+//       },
+//     ],
+//     '5.16': [
+//       {
+//         date: 16,
+//         hour: 16,
+//         marketName: '카페현욱',
+//         minute: 32,
+//         month: 5,
+//         stamp: -5,
+//       },
+//     ],
+//   },
+// ];
 
-const responseData = [
-  {
-    day: 27,
-    hour: 13,
-    marketName: '민수네 가게',
-    minute: 4,
-    month: 10,
-    stamp: 231,
-  },
-  {
-    day: 27,
-    hour: 13,
-    marketName: '민수네 가게',
-    minute: 4,
-    month: 10,
-    stamp: 231,
-  },
-  {
-    day: 27,
-    hour: 13,
-    marketName: '민수네 가게',
-    minute: 4,
-    month: 10,
-    stamp: 231,
-  },
-];
+// const responseData = [
+//   {
+//     day: 27,
+//     hour: 13,
+//     marketName: '민수네 가게',
+//     minute: 4,
+//     month: 10,
+//     stamp: 231,
+//   },
+//   {
+//     day: 27,
+//     hour: 13,
+//     marketName: '민수네 가게',
+//     minute: 4,
+//     month: 10,
+//     stamp: 231,
+//   },
+//   {
+//     day: 27,
+//     hour: 13,
+//     marketName: '민수네 가게',
+//     minute: 4,
+//     month: 10,
+//     stamp: 231,
+//   },
+// ];
 
 type couponUsageHistoryScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
@@ -102,10 +105,7 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
   const toBack = useCallback(() => {
     navigation.popToTop(); // 뒤로 가기
   }, [navigation]);
-  const toSettings = useCallback(() => {
-    navigation.navigate('Settings');
-  }, [navigation]);
-
+  const customerId = useSelector((state: RootState) => state.userTest.id);
   // const mappingCouponDate: userType = useCallback(() => {
   //   console.log('mapping', couponHistory);
   //   couponHistory.reduce((acc: userType, cur) => {
@@ -122,11 +122,11 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
    *    "5.16": [{"date": 16, "hour": 16, "marketName": "카페현욱", "minute": 32, "month": 5, "stamp": -5}]
    *  }
    */
-  async function getData() {
+  async function getCouponUsageData() {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        `https://3b5d-165-229-90-40.jp.ngrok.io/couponlog/customer/scroll/?page=${currentPage}&size=2&sort=id&customerId=2`,
+        `${Config.API_URL}/couponlog/customer/scroll/?page=${currentPage}&size=10&sort=id&customerId=${customerId}`,
       );
       console.log('resData: ', response.data);
       const mappingCouponDate: userType = response.data.content.reduce(
@@ -171,8 +171,8 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
     isLast ? null : setCurrentPage(currentPage + 1);
   };
   useEffect(() => {
-    isLast === false ? getData() : setIsLoading(false);
-    console.log(currentPage);
+    isLast === false ? getCouponUsageData() : setIsLoading(false);
+    console.log('currentPage', currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, isLast]);
   // const mappingCouponDate: userType = couponHistoryList.reduce(

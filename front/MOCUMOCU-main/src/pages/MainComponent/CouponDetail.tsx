@@ -32,8 +32,8 @@ const screenHeight = Dimensions.get('window').height;
 function CouponDetail({navigation}: CouponDetailScreenProps) {
   const coupons = useSelector((state: RootState) => state.coupon.coupons); // 사용자 쿠폰 리스트 가져오기
 
-  // const customerId = useSelector((state: RootState) => state.userTest.id);
-  const customerIdTest = 1;
+  const customerId = useSelector((state: RootState) => state.userTest.id);
+
   const couponList = useMemo(() => {
     return [
       {couponId: 0, marketName: 'market 1'},
@@ -104,14 +104,14 @@ function CouponDetail({navigation}: CouponDetailScreenProps) {
   //   return () => {};
   // }, [customerId, dispatch]);
 
-  const renderMarket = couponList.map(coupon => {
+  const renderMarket = coupons.map(coupon => {
     return (
       <View style={styles.continer}>
         <Pressable
           key={coupon.couponId}
           style={styles.marketContainer}
           onPress={() => {
-            toSelectCustomizing(coupon.couponId, customerIdTest);
+            toSelectCustomizing(coupon.couponId, customerId);
           }}>
           <Text style={styles.marketText}>{coupon.marketName}</Text>
           <Image

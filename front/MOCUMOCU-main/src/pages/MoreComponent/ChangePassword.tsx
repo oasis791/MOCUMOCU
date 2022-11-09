@@ -14,11 +14,15 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
+import Config from 'react-native-config';
+import {useSelector} from 'react-redux';
 import {LoggedInUserParamList} from '../../../App';
 import DismissKeyboardView from '../../components/DismissKeyboardView';
+import {RootState} from '../../store/reducer';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+
 type ChangePasswordScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
   'ChangePassword'
@@ -28,6 +32,7 @@ function ChangePassword({navigation}: ChangePasswordScreenProps) {
   const [password, setPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const customerId = useSelector((state: RootState) => state.userTest.id);
 
   const passwordRef = useRef<TextInput | null>(null);
   const checkPasswordRef = useRef<TextInput | null>(null);
@@ -61,29 +66,28 @@ function ChangePassword({navigation}: ChangePasswordScreenProps) {
       return Alert.alert('알림', '비밀번호와 확인 값이 다릅니다.');
     }
     console.log(password, checkPassword);
-    Alert.alert('알림', '비밀번호가 변경되었습니다.');
     try {
       setLoading(true);
       // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
-      const response = await axios.post(
-        'http://54.180.91.167:8080/user/changePassword',
+      const response = await axios.put(
+        `${Config.API_URL}/customer/update/password`,
         {
-          customerPassword: password,
-          customerCheckPassword: checkPassword,
+          id: customerId,
+          password: password,
         },
       ); //비동기 요청이므로 await가 필요
       console.log(response);
-      console.log('http://54.180.91.167:8080');
       Alert.alert('알림', '수정 완료');
       navigation.navigate('ModifyUserAccount');
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
         Alert.alert('알림', errorResponse.data.message);
+        console.log(errorResponse);
         setLoading(false);
       }
     }
-  }, [checkPassword, loading, navigation, password]);
+  }, [checkPassword, customerId, loading, navigation, password]);
   const canGoNext = password && checkPassword;
   return (
     <DismissKeyboardView>
