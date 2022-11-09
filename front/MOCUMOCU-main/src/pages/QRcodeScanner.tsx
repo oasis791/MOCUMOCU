@@ -79,7 +79,7 @@ function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
           } catch (error) {
             const errorResponse = (error as AxiosError).response;
             if (errorResponse) {
-              Alert.alert('알림', '사용 처리에 실패했습니다.');
+              Alert.alert('알림', '유효하지 않은 QR코드 입니다.');
             }
           }
           break;
