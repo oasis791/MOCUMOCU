@@ -106,6 +106,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
           }}
           value={phoneNumber}
           placeholder="전화번호를 입력해주세요"
+          placeholderTextColor={'#c4c4c4'}
           maxLength={13}
           keyboardType="decimal-pad"
           returnKeyType="next"
