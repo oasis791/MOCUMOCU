@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
   privacyAgreeText: {
     marginHorizontal: 40,
     marginBottom: 100,
+    color: 'black',
   },
   scrollView: {
     width: '100%',

@@ -76,6 +76,7 @@ function ModifyOwnerAccount({navigation}: ModifyOwnerPasswordScreenProps) {
           password: password,
         },
       );
+      Alert.alert('알림', '비밀번호가 변경되었습니다.');
       navigation.navigate('MoreOwner');
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
@@ -211,6 +212,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: screenWidth / 1.29,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   textDisableInput: {

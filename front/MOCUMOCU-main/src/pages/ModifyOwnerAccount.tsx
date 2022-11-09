@@ -260,6 +260,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: screenWidth / 1.29,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   textDisableInput: {
@@ -274,6 +275,7 @@ const styles = StyleSheet.create({
     height: screenHeight / 14,
     textAlignVertical: 'center',
     backgroundColor: '#E6E6E6',
+    color: '#a0a0a0',
   },
   emailWrapper: {
     borderStyle: 'solid',

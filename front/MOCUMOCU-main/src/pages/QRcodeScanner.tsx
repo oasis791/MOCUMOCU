@@ -68,7 +68,6 @@ function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
           navigation.navigate('StampAmount', { marketId: marketId, customerId: qrValue.customerId });
           break;
         case 'use': // 사용
-
           try {
             const response = await axios.patch(`${Config.API_URL}/coupon/stamp`, {
               couponId: qrValue.couponId,

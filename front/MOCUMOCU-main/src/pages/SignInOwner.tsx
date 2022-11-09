@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     width: 270,
+    color: 'black',
   },
   inputWrapper: {padding: 20, alignItems: 'center'},
   inputBoxWrapper: {padding: 5, alignItems: 'center'},

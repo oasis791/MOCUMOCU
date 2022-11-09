@@ -412,6 +412,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: 280,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   inputWrapper: {
@@ -488,6 +489,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 40,
     marginBottom: 120,
     lineHeight: 20,
+    color: '#c4c4c4',
   },
   welcomeText: {
     fontSize: 24,

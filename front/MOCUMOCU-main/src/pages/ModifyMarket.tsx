@@ -219,10 +219,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderWidth: 1.5,
     borderColor: '#c1c1c1',
+    color: 'black',
   },
   infoText: {
     fontSize: 16,
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
+    color: '#a0a0a0',
   },
   textInput: {
     height: screenHeight * 0.07,

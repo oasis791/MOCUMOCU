@@ -419,6 +419,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: screenWidth / 1.29,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
 });

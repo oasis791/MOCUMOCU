@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
   marketTabNameText: {
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
     fontSize: 15,
+    color: '#a0a0a0',
   },
 
   marketTabArrow: {

@@ -190,6 +190,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e5e5e5',
     paddingHorizontal: 15,
+    color: 'black',
   },
 
   okButtonWrapper: {
