@@ -126,7 +126,9 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
 
         {markets.length === 0 ? (
           <View style={[styles.noneMarketWrapper, {height: 60}]}>
-            <Text style={{top: 5}}>등록된 매장이 없습니다.</Text>
+            <Text style={{color: '#a8a8a8', top: 5}}>
+              등록된 매장이 없습니다.
+            </Text>
           </View>
         ) : (
           <ScrollView
@@ -206,7 +208,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
 
         {markets.length === 0 ? (
           <View style={[styles.noneMarketWrapper, {height: 200}]}>
-            <Text>등록된 매장이 없습니다.</Text>
+            <Text style={{color: '#a8a8a8'}}>등록된 매장이 없습니다.</Text>
           </View>
         ) : (
           <ScrollView
@@ -218,7 +220,6 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
                 <TouchableOpacity
                   style={styles.analysisCard}
                   onPress={() => {
-                    Alert.alert('알림', `${market.name} 매장 분석으로 이동`);
                     toMarektAnalysis(i);
                   }}
                   key={i}>
