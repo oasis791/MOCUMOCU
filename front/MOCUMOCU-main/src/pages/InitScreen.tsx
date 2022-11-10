@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // backgroundColor: 'white',
     width: screenWidth * 0.8,
-    height: screenHeight * 0.08,
+    height: screenHeight * 0.06,
     borderRadius: 8,
     elevation: 5,
     opacity: 0.9,
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     height: '100%',
     textAlignVertical: 'center',
-    marginBottom: 5,
+    marginBottom: 4,
   },
 });
 export default InitScreen;

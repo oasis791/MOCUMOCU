@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import TabOwnerWrapper from './TabOwnerWrapper';
-import SettingsOwner from './SettingsOwner';
+
 import AddMarket from './AddMarket';
 import MarketInfo from './MarketInfo';
 import MarketReward from './MarketReward';
@@ -39,11 +39,6 @@ function StackOwnerWrapper() {
         options={{headerShown: false}}
       />
       {/* mainOwner */}
-      <Stack.Screen
-        name="SettingsOwner"
-        component={SettingsOwner}
-        options={{headerShown: false}}
-      />
 
       <Stack.Screen
         name="AddMarket"

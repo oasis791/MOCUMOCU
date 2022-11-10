@@ -20,6 +20,8 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import userSliceTest from '../slices/userTest';
 import Config from 'react-native-config';
+import {RootState} from '../store/reducer';
+import {useSelector} from 'react-redux';
 type SignInOwnerScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SignInOwner'
@@ -33,6 +35,8 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
   // const canGoNext = email && password;
   const emailRef = useRef<TextInput | null>(null); //< > => generic
   const passwordRef = useRef<TextInput | null>(null);
+
+  const userType = useSelector((state: RootState) => state.userTest.userType);
   const onSubmit = useCallback(async () => {
     if (loading) {
       return;
@@ -53,6 +57,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
       console.log(response.data);
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
+      console.log('userType dispatch 이전', userType);
       dispatch(
         userSliceTest.actions.setUserInfoTest({
           // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
@@ -68,6 +73,7 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
       //   response.data.data.refreshToken,
       // );
       // console.log(EncryptedStorage.getItem('refreshToken'));
+      console.log('userType', userType);
     } catch (error) {
       setLoading(false);
       const errorResponse = (error as AxiosError).response;

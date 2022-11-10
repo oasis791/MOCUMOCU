@@ -23,11 +23,7 @@ export type Select = {
   selectMarket: string;
 };
 
-<<<<<<< HEAD:front/MOCUMOCU-main/src/pages/SaveUseComponent/UseCoupon.tsx
 const screenWidth = Dimensions.get('window').width;
-=======
-const screenWidth = Dimensions.get('screen').width;
->>>>>>> 583f05bbfaa40f1f6743d98bce87c9657114aaab:front/MOCUMOCU-main/src/pages/UseCoupon.tsx
 const screenHeight = Dimensions.get('window').height;
 function UseCoupon({navigation}: UseCouponScreenProps) {
   const coupons = useSelector((state: RootState) => state.coupon.coupons); // 사용자 쿠폰 리스트 가져오기

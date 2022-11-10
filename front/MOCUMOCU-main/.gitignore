@@ -60,9 +60,6 @@ buck-out/
 /vendor/bundle/
 .DS_Store
 
-<<<<<<< HEAD
 .eslintrc.js
-=======
 #env
 .env
->>>>>>> 583f05bbfaa40f1f6743d98bce87c9657114aaab

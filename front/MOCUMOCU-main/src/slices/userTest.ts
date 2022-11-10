@@ -21,7 +21,7 @@ const initialState: initialStateTest = {
   name: '김준서',
   id: 0,
   email: 'jykim9868@gmail.com',
-  userType: '',
+  userType: 'Customer',
   isLogIn: false,
   point: 0,
 };
