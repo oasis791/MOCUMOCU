@@ -28,66 +28,76 @@ type ModifyMarketScreenProps = NativeStackScreenProps<
 
 function ModifyMarket({navigation, route}: ModifyMarketScreenProps) {
   const marketIndex = route.params.marketIndex;
+  const marketId = useSelector(
+    (state: RootState) => state.marketOwner.markets[marketIndex].id,
+  );
   const marketName = useSelector(
     (state: RootState) => state.marketOwner.markets[marketIndex].name,
   );
   const ownerName = useSelector((state: RootState) => state.userTest.name);
-  const [marketPhoneNum, setMarketPhoneNum] = useState('000-0000-0000');
 
-  const [newMarketPhoneNum, setNewOwnerPhoneNum] = useState('');
+  const [telephoneNumber, setTelephoneNumber] = useState('');
 
   const toBack = useCallback(() => {
     navigation.pop(); // 뒤로 가기
   }, [navigation]);
-  const onChangeTelephoneNumber = useCallback(text => {
-    setNewOwnerPhoneNum(text);
-  }, []);
+
   const telephoneNumberRef = useRef<TextInput | null>(null);
 
   const [buttonActive, setButtonActive] = useState(false);
 
-  const getMarketPhoneNum = useCallback(async () => {
-    try {
-      // const response = await axios.get(`${Config.API_URL}/`);
-      // setMarketPhoneNum(response.data);
-    } catch (error) {
-      const errorResponse = (error as AxiosError).response;
-      if (errorResponse) {
-        Alert.alert('알림', '매장 전화번호를 불러오는데 실패하였습니다.');
-      }
-    }
-  }, []);
+  // const getMarketPhoneNum = useCallback(async () => {
+  //   try {
+  //     // const response = await axios.get(`${Config.API_URL}/`);
+  //     // setMarketPhoneNum(response.data);
+  //   } catch (error) {
+  //     const errorResponse = (error as AxiosError).response;
+  //     if (errorResponse) {
+  //       Alert.alert('알림', '매장 전화번호를 불러오는데 실패하였습니다.');
+  //     }
+  //   }
+  // }, []);
 
   const onSubmit = useCallback(async () => {
     // Alert.alert('미구현', '매장정보 수정 api 송신');
+    console.log('log', marketId, telephoneNumber);
     try {
-      await axios.put(`${Config.API_URL}/market/update/market-num`);
+      await axios.put(`${Config.API_URL}/market/update/market-num`, {
+        id: marketId,
+        marketNum: telephoneNumber,
+      });
+
+      Alert.alert('알림', '매장 전화번호를 변경하였습니다.');
     } catch (error) {
       const errorResponse = (error as AxiosError).response;
       if (errorResponse) {
-        // Alert.alert('알림', errorResponse.data.message);
-        Alert.alert('알림', '매장 전화번호를 변경하였습니다.');
+        Alert.alert('알림', '매장 전화번호를 변경에 실패했습니다.');
+        console.log(errorResponse);
       }
     }
+  }, [marketId, telephoneNumber]);
+
+  const onChangeTelephoneNumber = useCallback(text => {
+    setTelephoneNumber(text.trim());
   }, []);
-
   useEffect(() => {
-    setButtonActive(newMarketPhoneNum.length > 11);
+    setTelephoneNumber(telephoneNumber.trim());
+    // setPhoneNumber(phoneNumber.replace('-', ''));
 
-    if (newMarketPhoneNum.length === 11) {
-      setNewOwnerPhoneNum(
-        newMarketPhoneNum
+    if (telephoneNumber.length === 11) {
+      setTelephoneNumber(
+        telephoneNumber
           .replace(/-/g, '')
           .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
       );
+      setButtonActive(true);
     }
-  }, [newMarketPhoneNum]);
-
+  }, [telephoneNumber]);
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    getMarketPhoneNum();
-  }, [isFocused]);
+  // useEffect(() => {
+  //   getMarketPhoneNum();
+  // }, [isFocused]);
 
   return (
     <DismissKeyboardView>
@@ -121,19 +131,15 @@ function ModifyMarket({navigation, route}: ModifyMarketScreenProps) {
           </View>
           <TextInput
             style={styles.inputBox}
-            placeholder={marketPhoneNum}
-            placeholderTextColor="#c4c4c4"
             onChangeText={onChangeTelephoneNumber}
-            keyboardType="decimal-pad"
-            value={newMarketPhoneNum}
-            textContentType="telephoneNumber"
-            returnKeyType="next"
-            clearButtonMode="while-editing"
-            ref={telephoneNumberRef}
-            // onSubmitEditing={onSubmit}
-            blurOnSubmit={false}
+            value={telephoneNumber}
+            placeholder="전화번호를 입력해주세요"
+            placeholderTextColor={'#c4c4c4'}
             maxLength={13}
-            caretHidden={true}
+            keyboardType="decimal-pad"
+            returnKeyType="next"
+            onSubmitEditing={onSubmit}
+            importantForAutofill="yes"
           />
           <TouchableOpacity
             style={

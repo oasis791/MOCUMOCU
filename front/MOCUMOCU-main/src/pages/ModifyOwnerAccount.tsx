@@ -116,6 +116,7 @@ function ModifyOwnerAccount({navigation}: ModifyOwnerAccountScreenProps) {
   // const canGoNext = password && checkPassword && telephoneNumber;
 
   const onSubmit = useCallback(async () => {
+    console.log(ownerId, telephoneNumber);
     try {
       await axios.put(`${Config.API_URL}/owner/update/phoneNum`, {
         id: ownerId,

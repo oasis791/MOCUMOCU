@@ -78,6 +78,7 @@ function MoreOwner({navigation, route}: MoreOwnerScreenProps) {
       });
       setModalVisible(!modalVisible);
       setPassword('');
+      setLoading(false);
       toModifyOwnerAccount();
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
