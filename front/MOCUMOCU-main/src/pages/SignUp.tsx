@@ -88,11 +88,6 @@ function SignUp({navigation}: SignUpScreenProps) {
 
     if (telephoneNumber.length === 11) {
       setTelephoneNumber(
-        telephoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'),
-      );
-    }
-    if (telephoneNumber.length === 11) {
-      setTelephoneNumber(
         telephoneNumber
           .replace(/-/g, '')
           .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
@@ -182,6 +177,7 @@ function SignUp({navigation}: SignUpScreenProps) {
     try {
       setLoading(true);
       // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
+<<<<<<< HEAD
       const response = await axios.post(`${Config.API_URL}/customer/signup`, {
         customerName: name,
         customerPhoneNum: telephoneNumber,
@@ -193,6 +189,22 @@ function SignUp({navigation}: SignUpScreenProps) {
       }); //비동기 요청이므로 await가 필요
       console.log(response);
       console.log(`${Config.API_URL}/user/signup`);
+=======
+      const response = await axios.post(
+        'http://15.164.100.68:8080/user/signup',
+        {
+          customerName: name,
+          customerPhoneNum: telephoneNumber,
+          customerEmail: email,
+          customerPassword: password,
+          customerCheckPassword: checkPassword,
+          customerBirth: sendDate,
+          customerGender: checkGender,
+        },
+      ); //비동기 요청이므로 await가 필요
+      console.log(response);
+      console.log('http://15.164.100.68:8080');
+>>>>>>> 583f05bbfaa40f1f6743d98bce87c9657114aaab
       Alert.alert('알림', '회원가입 되었습니다.');
       navigation.navigate('SignIn');
     } catch (error) {

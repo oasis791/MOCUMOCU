@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 import {
+  Dimensions,
   Image,
   ImageBackground,
   Pressable,
@@ -67,6 +68,9 @@ function InitScreen({navigation}: InitScreenProps) {
   );
 }
 
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
   background: {resizeMode: 'stretch', width: '100%', height: '100%'},
   initText: {
@@ -105,8 +109,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: 'white',
-    width: '77%',
-    height: '22%',
+    width: screenWidth * 0.8,
+    height: screenHeight * 0.08,
     borderRadius: 8,
     elevation: 5,
     opacity: 0.9,

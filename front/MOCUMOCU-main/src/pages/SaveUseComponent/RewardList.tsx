@@ -14,7 +14,11 @@ import {LoggedInUserParamList} from '../../../App';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import {useFocusEffect} from '@react-navigation/native';
+<<<<<<< HEAD:front/MOCUMOCU-main/src/pages/SaveUseComponent/RewardList.tsx
 import {Config} from 'react-native-config';
+=======
+import Config from 'react-native-config';
+>>>>>>> 583f05bbfaa40f1f6743d98bce87c9657114aaab:front/MOCUMOCU-main/src/pages/RewardList.tsx
 
 const screenWidth = Dimensions.get('window').width;
 type RewardListScreenProps = NativeStackScreenProps<
@@ -63,7 +67,17 @@ function RewardList({navigation, route}: RewardListScreenProps) {
       const getRewardList = async () => {
         try {
           const response = await axios.get(
+<<<<<<< HEAD:front/MOCUMOCU-main/src/pages/SaveUseComponent/RewardList.tsx
             `${Config.API_URL}/reward/customer/${selectedCouponId}/reward-list`,
+=======
+            `${Config.API_URL}/user/reward-list`,
+            {
+              headers: {
+                // authorization: `Bearer ${accessToken}`,
+              },
+              params: {couponId: selectedCouponId},
+            },
+>>>>>>> 583f05bbfaa40f1f6743d98bce87c9657114aaab:front/MOCUMOCU-main/src/pages/RewardList.tsx
           );
           if (isActive) {
             setRewardList(response.data);
@@ -105,7 +119,7 @@ function RewardList({navigation, route}: RewardListScreenProps) {
   //     }
   //     setLoading(true);
   //     const response = await axios.post(
-  //       'http://54.180.91.167:8080/customer/reward-list',
+  //       'http://15.164.100.68:8080/customer/reward-list',
   //       {
   //         userCouponId: couponId,
   //       },

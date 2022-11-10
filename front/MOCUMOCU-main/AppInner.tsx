@@ -21,7 +21,11 @@ import FindIdOwner from './src/pages/FindIdOwner';
 import FindId from './src/pages/FindId';
 import OwnerWrapper from './src/pages/OwnerWrapper';
 import userSliceTest from './src/slices/userTest';
+<<<<<<< HEAD
 import StackWrapper from './src/pages/StackWrapper';
+=======
+import StackOwnerWrapper from './src/pages/StackOwnerWrapper';
+>>>>>>> 583f05bbfaa40f1f6743d98bce87c9657114aaab
 
 const Stack = createNativeStackNavigator();
 function AppInner() {
@@ -43,11 +47,14 @@ function AppInner() {
       try {
         const token = isLogIn;
         if (!token) {
-          console.log('!token');
           SplashScreen.hide();
           return;
         }
+<<<<<<< HEAD
         const response = await axios.post(`${Config.APIURL}/token`, {
+=======
+        const response = await axios.post('http://15.164.100.68:8080/token', {
+>>>>>>> 583f05bbfaa40f1f6743d98bce87c9657114aaab
           isLogIn: isLogIn,
           userType: userType,
         });
@@ -85,7 +92,8 @@ function AppInner() {
 
   return isLogIn ? (
     userType === 'Owner' ? (
-      <OwnerWrapper />
+      // <OwnerWrapper />
+      <StackOwnerWrapper />
     ) : (
       <StackWrapper />
     )

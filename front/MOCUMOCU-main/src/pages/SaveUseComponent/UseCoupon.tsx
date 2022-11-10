@@ -23,7 +23,11 @@ export type Select = {
   selectMarket: string;
 };
 
+<<<<<<< HEAD:front/MOCUMOCU-main/src/pages/SaveUseComponent/UseCoupon.tsx
 const screenWidth = Dimensions.get('window').width;
+=======
+const screenWidth = Dimensions.get('screen').width;
+>>>>>>> 583f05bbfaa40f1f6743d98bce87c9657114aaab:front/MOCUMOCU-main/src/pages/UseCoupon.tsx
 const screenHeight = Dimensions.get('window').height;
 function UseCoupon({navigation}: UseCouponScreenProps) {
   const coupons = useSelector((state: RootState) => state.coupon.coupons); // 사용자 쿠폰 리스트 가져오기
@@ -69,7 +73,7 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
   //     }
   //     setLoading(true);
   //     const response = await axios.post(
-  //       'http://54.180.91.167:8080/user/use-coupon',
+  //       'http://15.164.100.68:8080/user/use-coupon',
   //       {
   //         userCouponId: couponId,
   //       },
@@ -93,7 +97,7 @@ function UseCoupon({navigation}: UseCouponScreenProps) {
   // useEffect(() => {
   //   async function getCoupon() {
   //     const response = await axios.post(
-  //       'http://54.180.91.167:8080/customer/main',
+  //       'http://15.164.100.68:8080/customer/main',
   //       {
   //         couponId: coupons.couponId,
   //       },

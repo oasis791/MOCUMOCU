@@ -44,11 +44,22 @@ function SignIn({navigation}: SignInScreenProps) {
     }
     try {
       setLoading(true);
+<<<<<<< HEAD
       const response = await axios.post(`${Config.API_URL}/customer/login`, {
         customerEmail: email,
         customerPassword: password,
       });
       console.log('response data: ', response.data);
+=======
+      const response = await axios.post(
+        'http://15.164.100.68:8080/user/login',
+        {
+          customerEmail: email,
+          customerPassword: password,
+        },
+      );
+      console.log('response data: ', response.data.customerEmail);
+>>>>>>> 583f05bbfaa40f1f6743d98bce87c9657114aaab
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
       // dispatch(userSliceTest.actions.setUserInfoTest(response.data.data));
