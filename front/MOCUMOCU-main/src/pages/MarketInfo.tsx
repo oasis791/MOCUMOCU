@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-around',
   },
   headerSetting: {
+    // marginTop: screenHeight / 25,
     resizeMode: 'contain',
     width: 20,
     height: 20,
