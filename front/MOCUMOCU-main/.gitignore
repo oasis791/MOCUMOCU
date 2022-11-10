@@ -60,3 +60,6 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 .DS_Store
+
+#env
+.env
