@@ -321,7 +321,7 @@ function Main({navigation}: MainScreenProps) {
                     onPress={toMyPointLog}>
                     <Text
                       style={{
-                        marginRight: 8,
+                        marginRight: screenWidth / 100,
                         fontFamily: 'GmarketSansTTFBold',
                         color: '#9b9b9b',
                         fontSize: 14,
@@ -333,8 +333,14 @@ function Main({navigation}: MainScreenProps) {
                       style={styles.toMyPointImg}
                     />
                   </Pressable>
-                  <Text style={{color: '#414FFD', fontSize: 24}}>
-                    {point} P
+                  {'\n'}
+                  <Text
+                    style={{
+                      color: '#414FFD',
+                      fontSize: 24,
+                      // backgroundColor: 'blue',
+                    }}>
+                    {100} P
                   </Text>
                 </Text>
               </View>
@@ -484,14 +490,15 @@ const styles = StyleSheet.create({
   },
   myInfoPoint: {
     // flexDirection: 'row',
-    // backgroundColor: 'white',
+    // backgroundColor: 'pink',
     // justifyContent: 'space-between',
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 50,
-    marginRight: 30,
+    // marginLeft: 50,
+    marginLeft: screenWidth / 7,
     // alignItems: 'baseline',
     width: screenWidth / 4,
+    height: screenHeight / 9,
     // width: 87,
     // height: 40,
     // borderRadius: 10,
@@ -502,8 +509,9 @@ const styles = StyleSheet.create({
     fontFamily: 'GmarketSansTTFBold',
     color: '#9b9b9b',
     height: screenHeight / 10,
+    width: screenWidth / 4.5,
     lineHeight: 25,
-    // backgroundColor: 'black',
+    // backgroundColor: 'orange',
   },
   eventBanner: {
     // height: 210,
@@ -523,8 +531,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 12,
+    // fontSize: 12,
     // marginBottom: 10,
+    // backgroundColor: 'green',
   },
   toMyPointImg: {
     resizeMode: 'contain',
@@ -597,19 +606,20 @@ const styles = StyleSheet.create({
   },
   scrollItem: {
     // marginTop: 8,
-    flexDirection: 'row',
+    // flexDirection: 'row',
     // backgroundColor: 'white',
     // marginHorizontal: 9,
     // marginBottom: 20,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    // justifyContent: 'flex-start',
+    // alignItems: 'center',
     // alignItems: 'baseline',
-    width: screenWidth / 1.25,
+    // width: screenWidth / 1.25,
     // height: 139,
+    width: '100%',
     height: screenHeight / 4.3,
     borderRadius: 10,
     // elevation: 1,
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
     // padding: 20,
     // backgroundColor: 'green',
   },
@@ -637,8 +647,9 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    // justifyContent: 'flex-start',
+    // alignItems: 'flex-start',
+    marginHorizontal: screenWidth / 10,
   },
   imageStyle: {
     // resizeMode: 'contains',s
@@ -677,6 +688,7 @@ const styles = StyleSheet.create({
   },
   ScrollViewWrapper: {
     width: screenWidth,
+    // flex: 1,
     height: screenHeight / 3.5,
     justifyContent: 'center',
     alignItems: 'center',
@@ -685,11 +697,13 @@ const styles = StyleSheet.create({
   scrollViewHorizontal: {
     // top: -10,
     // // backgroundColor: 'black',
-    // width: screenWidth - 100,
+    flex: 1,
+    width: screenWidth / 1.2,
     // backgroundColor: 'green',
     // backgroundColor: 'pink',
     height: 150,
-    width: screenWidth / 1.15,
+    // marginHorizontal: 10,
+    // width: screenWidth / 1.15,
     // backgroundColor: 'green',
     // backgroundColor: 'pink',
     alignItems: 'center',

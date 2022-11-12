@@ -28,8 +28,8 @@ function AppInner() {
   // const isLoggedIn = useSelector(
   //   (state: RootState) => !!state.user.accessToken,
   // );
-  const isLogIn = useSelector((state: RootState) => state.userTest.isLogIn);
-  // const isLogIn = true;
+  // const isLogIn = useSelector((state: RootState) => state.userTest.isLogIn);
+  const isLogIn = true;
   const userType = useSelector((state: RootState) => state.userTest.userType);
   // const userType = 'Owner';
   // const userTypeTest = 'Customer';
