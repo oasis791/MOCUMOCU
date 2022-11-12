@@ -387,14 +387,14 @@ function Main({navigation}: MainScreenProps) {
                   style={styles.myCouponboxButton}
                   onPress={toCouponDetail}
                   // disabled={coupons.length <= 0 ? true : false}
-                  disabled={couponsTest.length <= 0 ? true : false}>
+                  disabled={coupons.length <= 0 ? true : false}>
                   <Text style={styles.myCouponboxButtonText}>전체 +</Text>
                 </Pressable>
               </View>
               <View style={styles.ScrollViewWrapper}>
                 <FlatList
                   // data={coupons}
-                  data={couponsTest}
+                  data={coupons}
                   renderItem={renderCoupon}
                   onEndReachedThreshold={0.1}
                   horizontal
