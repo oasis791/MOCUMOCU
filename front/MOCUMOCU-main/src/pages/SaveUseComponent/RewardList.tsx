@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     width: screenWidth,
     justifyContent: 'space-between',
     // height: 77,
-    height: screenHeight / 8,
+    height: screenHeight / 9,
     top: 120,
     borderRadius: 20,
     marginBottom: 7,
