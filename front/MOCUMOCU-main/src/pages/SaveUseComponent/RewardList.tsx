@@ -17,6 +17,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {Config} from 'react-native-config';
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 type RewardListScreenProps = NativeStackScreenProps<
   LoggedInUserParamList,
   'RewardList'
@@ -39,6 +40,9 @@ function RewardList({navigation, route}: RewardListScreenProps) {
       couponRequire: 0,
     },
   ]);
+  const toBack = useCallback(() => {
+    navigation.popToTop(); // 뒤로 가기
+  }, [navigation]);
   // const rewardListTest = useMemo(() => {
   //   return [
   //     [
@@ -147,6 +151,14 @@ function RewardList({navigation, route}: RewardListScreenProps) {
 
   return (
     <View>
+      <View style={[styles.header]}>
+        <Pressable style={styles.headerButton} onPress={toBack}>
+          <Image
+            source={require('../../assets/icon/arrowBack.png')}
+            style={styles.headerSetting}
+          />
+        </Pressable>
+      </View>
       <View style={styles.titleContiner}>
         <Text style={styles.titleText}>{selectedMarket}</Text>
       </View>
@@ -156,8 +168,30 @@ function RewardList({navigation, route}: RewardListScreenProps) {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    height: screenHeight / 12,
+    // backgroundColor: 'orange',
+    width: screenWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    // marginHorizontal: 10,
+  },
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
+  },
+  headerSetting: {
+    // flex: 1,
+    width: 18,
+    resizeMode: 'contain',
+    // marginTop: screenHeight / 25,
+    // flex: 1 / 3,
+    // marginHorizontal: 15,
+    height: 18,
+  },
   titleContiner: {alignItems: 'center'},
   titleText: {
+    color: 'black',
     top: 78,
     fontSize: 20,
     fontFamily: 'GmarketSansTTFMedium',
@@ -170,7 +204,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: screenWidth,
     justifyContent: 'space-between',
-    height: 77,
+    // height: 77,
+    height: screenHeight / 8,
     top: 120,
     borderRadius: 20,
     marginBottom: 7,
@@ -181,7 +216,9 @@ const styles = StyleSheet.create({
     color: '#363636',
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
     fontSize: 14,
-
+    // backgroundColor: 'pink',
+    width: screenWidth / 2,
+    height: screenHeight / 8,
     paddingVertical: 10,
   },
   arrowButton: {

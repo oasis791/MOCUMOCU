@@ -277,9 +277,10 @@ const styles = StyleSheet.create({
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
     borderWidth: 1,
     borderColor: '#e5e5e5',
+    color: 'black',
   },
   inputWrapper: {padding: 20, alignItems: 'center'},
-  inputBoxWrapper: {padding: 3, alignItems: 'center'},
+  inputBoxWrapper: {padding: 3, alignItems: 'center', color: 'black'},
   label: {
     fontWeight: 'bold',
     fontSize: 16,

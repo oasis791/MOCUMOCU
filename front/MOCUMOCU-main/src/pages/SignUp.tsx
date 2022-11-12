@@ -599,6 +599,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: 280,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   emailWrapper: {
@@ -617,6 +618,7 @@ const styles = StyleSheet.create({
   textInputEmail: {
     fontWeight: 'bold',
     height: 40,
+    color: 'black',
   },
   certificationButton: {
     // backgroundColor: 'black',

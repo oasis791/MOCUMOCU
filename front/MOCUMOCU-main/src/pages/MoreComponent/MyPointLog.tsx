@@ -223,7 +223,7 @@ function MyPointLog({navigation}: MyPointScreenProps) {
           {poingLog[date].map((log: Log) => (
             // <View style={styles.historyContent}>
             <View style={styles.logText}>
-              <Text style={{fontWeight: 'bold', color: '#a0a0a0'}}>
+              <Text style={{fontWeight: 'bold', color: 'black'}}>
                 {logType[log.type]} {'\n'}
                 <Text
                   style={{
@@ -282,7 +282,7 @@ function MyPointLog({navigation}: MyPointScreenProps) {
           </View>
           <View style={styles.topContent}>
             <Text style={styles.topText}>
-              <Text>내 포인트{'\n'}</Text>
+              <Text style={{color: 'black'}}>내 포인트{'\n'}</Text>
               <Text
                 style={{
                   color: '#414FFD',

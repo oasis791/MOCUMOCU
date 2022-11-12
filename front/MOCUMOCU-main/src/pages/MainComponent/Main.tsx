@@ -14,6 +14,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Modal,
+  FlatList,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Carousel from 'react-native-snap-carousel';
@@ -77,8 +78,8 @@ function Main({navigation}: MainScreenProps) {
           setLoading(false);
           const errorResponse = (error as AxiosError<any>).response;
           if (errorResponse) {
-            Alert.alert('알림', 'coupon');
-            console.log(error);
+            // Alert.alert('알림', 'coupon');
+            // console.log(error);
             setLoading(false);
           }
         }
@@ -124,8 +125,8 @@ function Main({navigation}: MainScreenProps) {
           console.log('banner', response.data);
         } catch (error) {
           const errorResponse = (error as AxiosError<any>).response;
-          Alert.alert('알림', 'banner');
-          console.log('banner', errorResponse);
+          // Alert.alert('알림', 'banner');
+          // console.log('banner', errorResponse);
         }
       };
       getCouponInfo();
@@ -202,14 +203,15 @@ function Main({navigation}: MainScreenProps) {
             source={
               coupon.stampUrl
                 ? {uri: `${coupon.stampUrl}`}
-                : require('../../assets/blueLogo.png')
+                : require('../../assets/icon/basicStamp.png')
             }
             resizeMode="center"
             style={{
-              width: screenHeight / 12,
+              width: screenHeight / 25,
               // flex: 1 / 3,
-              // marginHorizontal: 15,
-              height: screenHeight / 13,
+              marginVertical: 10,
+              marginLeft: 20,
+              height: screenHeight / 23,
               // marginVertical: 10,
             }}
           />,
@@ -224,26 +226,51 @@ function Main({navigation}: MainScreenProps) {
     }
     return arr;
   }, []);
-  const renderCoupon =
-    coupons.length !== 0 ? (
-      coupons.map(coupon => (
-        // ImageBackground 넣어야 함(source = coupon.couponImage)
-        <ImageBackground
-          source={
-            coupon.boardUrl
-              ? {uri: `${coupon.boardUrl}`}
-              : require('../../assets/largeBoard.png')
-          }
-          key={coupon.couponId}
-          style={styles.viewCouponImage}>
-          {renderStamp(coupon)}
-        </ImageBackground>
-      ))
+  const couponsTest = [
+    {
+      couponId: 1,
+      boardUrl:
+        'https://cdn.pixabay.com/photo/2014/04/02/10/23/ticket-303706_1280.png',
+    },
+    {
+      couponId: 2,
+      boardUrl:
+        'https://cdn.pixabay.com/photo/2015/08/11/08/21/coupon-883643_1280.jpg',
+    },
+  ];
+  const renderCoupon = ({item}) => {
+    return item.length !== 0 ? (
+      // item.map(coupon => (
+      // ImageBackground 넣어야 함(source = coupon.couponImage)
+      // <ImageBackground
+      //   source={
+      //     coupon.boardUrl
+      //       ? {uri: `${coupon.boardUrl}`}
+      //       : require('../../assets/largeBoard.png')
+      //   }
+      //   key={coupon.couponId}
+      //   style={styles.viewCouponImage}
+      //   resizeMode="stretch">
+      //   {renderStamp(coupon)}
+      // </ImageBackground>
+      <ImageBackground
+        source={
+          item.boardUrl
+            ? {uri: `${item.boardUrl}`}
+            : require('../../assets/largeBoard.png')
+        }
+        key={item.couponId}
+        style={styles.viewCouponImage}
+        resizeMode="stretch">
+        {renderStamp(item)}
+      </ImageBackground>
     ) : (
+      // ))
       <View style={styles.scrollItemNone}>
         <Text style={styles.myCouponText}>보유한 쿠폰이 없습니다</Text>
       </View>
     );
+  };
   const renderItem = ({item}: any) => {
     return (
       <TouchableOpacity
@@ -359,18 +386,20 @@ function Main({navigation}: MainScreenProps) {
                 <Pressable
                   style={styles.myCouponboxButton}
                   onPress={toCouponDetail}
+                  // disabled={coupons.length <= 0 ? true : false}
                   disabled={coupons.length <= 0 ? true : false}>
                   <Text style={styles.myCouponboxButtonText}>전체 +</Text>
                 </Pressable>
               </View>
               <View style={styles.ScrollViewWrapper}>
-                <ScrollView
-                  horizontal={true}
-                  pagingEnabled={true}
-                  showsHorizontalScrollIndicator={true}
-                  contentContainerStyle={styles.scrollViewHorizontal}>
-                  {renderCoupon}
-                </ScrollView>
+                <FlatList
+                  // data={coupons}
+                  data={coupons}
+                  renderItem={renderCoupon}
+                  onEndReachedThreshold={0.1}
+                  horizontal
+                  contentContainerStyle={{flexGrow: 1}}
+                />
               </View>
             </View>
             <View style={styles.footer}>
@@ -484,14 +513,15 @@ const styles = StyleSheet.create({
   },
   myInfoPoint: {
     // flexDirection: 'row',
-    // backgroundColor: 'white',
+    // backgroundColor: 'pink',
     // justifyContent: 'space-between',
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 50,
-    marginRight: 30,
+    // marginLeft: 50,
+    marginLeft: screenWidth / 7,
     // alignItems: 'baseline',
     width: screenWidth / 4,
+    height: screenHeight / 9,
     // width: 87,
     // height: 40,
     // borderRadius: 10,
@@ -597,19 +627,20 @@ const styles = StyleSheet.create({
   },
   scrollItem: {
     // marginTop: 8,
-    flexDirection: 'row',
+    // flexDirection: 'row',
     // backgroundColor: 'white',
     // marginHorizontal: 9,
     // marginBottom: 20,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    // justifyContent: 'flex-start',
+    // alignItems: 'center',
     // alignItems: 'baseline',
-    width: screenWidth / 1.25,
+    // width: screenWidth / 1.25,
     // height: 139,
+    width: '100%',
     height: screenHeight / 4.3,
     borderRadius: 10,
     // elevation: 1,
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
     // padding: 20,
     // backgroundColor: 'green',
   },
@@ -637,8 +668,9 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    // justifyContent: 'flex-start',
+    // alignItems: 'flex-start',
+    marginHorizontal: screenWidth / 10,
   },
   imageStyle: {
     // resizeMode: 'contains',s
@@ -677,6 +709,7 @@ const styles = StyleSheet.create({
   },
   ScrollViewWrapper: {
     width: screenWidth,
+    // flex: 1,
     height: screenHeight / 3.5,
     justifyContent: 'center',
     alignItems: 'center',
@@ -685,11 +718,13 @@ const styles = StyleSheet.create({
   scrollViewHorizontal: {
     // top: -10,
     // // backgroundColor: 'black',
-    // width: screenWidth - 100,
+    flex: 1,
+    width: screenWidth / 1.2,
     // backgroundColor: 'green',
     // backgroundColor: 'pink',
     height: 150,
-    width: screenWidth / 1.15,
+    // marginHorizontal: 10,
+    // width: screenWidth / 1.15,
     // backgroundColor: 'green',
     // backgroundColor: 'pink',
     alignItems: 'center',
