@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 20,
     fontFamily: 'GmarketSansTTFMedium',
+    color: 'black',
   },
   continer: {
     justifyContent: 'center',

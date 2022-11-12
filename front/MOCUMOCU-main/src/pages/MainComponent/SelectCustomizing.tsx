@@ -113,7 +113,7 @@ const defaultBoardImage = {
 };
 const defaultStampImage = {
   id: -1,
-  smallImageUrl: require('../../assets/smallBoard.png'),
+  smallImageUrl: null,
   point: 0,
 };
 
@@ -258,7 +258,7 @@ function SelectCustomizing({navigation, route}: SelectCustomizingScreenProps) {
               source={{
                 uri: `${boardImage[clickBoardElement].bigImageUrl}`,
               }}
-              resizeMode="contain"
+              resizeMode="stretch"
               resizeMethod="auto"
               style={styles.viewCouponImage}
             />
@@ -267,16 +267,20 @@ function SelectCustomizing({navigation, route}: SelectCustomizingScreenProps) {
               source={{
                 uri: `${boardImage[clickBoardElement].bigImageUrl}`,
               }}
-              resizeMode="contain"
+              resizeMode="stretch"
               resizeMethod="auto"
               style={styles.viewCouponImage}>
               <View style={styles.stampContainer}>
                 {stampImage.map(stamp => {
                   return (
                     <Image
-                      source={{
-                        uri: `${stampImage[clickStampElement].smallImageUrl}`,
-                      }}
+                      source={
+                        stampImage[clickStampElement].smallImageUrl
+                          ? {
+                              uri: `${stampImage[clickStampElement].smallImageUrl}`,
+                            }
+                          : require('../../assets/icon/basicStamp.png')
+                      }
                       style={{
                         width: screenHeight / 25,
                         // flex: 1 / 3,
@@ -285,7 +289,7 @@ function SelectCustomizing({navigation, route}: SelectCustomizingScreenProps) {
                         margin: 5,
                       }}
                       resizeMethod="auto"
-                      resizeMode="cover"
+                      resizeMode="contain"
                     />
                   );
                 })}
@@ -355,9 +359,12 @@ function SelectCustomizing({navigation, route}: SelectCustomizingScreenProps) {
                     }
                   }}>
                   <ImageBackground
-                    source={{uri: `${stamp.smallImageUrl}`}}
-                    // resizeMode="contain"
-                  >
+                    source={
+                      stamp.smallImageUrl
+                        ? {uri: `${stamp.smallImageUrl}`}
+                        : require('../../assets/icon/basicStamp.png')
+                    }
+                    resizeMode="contain">
                     <Text
                       style={{
                         width: screenWidth / 7.3,
@@ -392,7 +399,7 @@ function SelectCustomizing({navigation, route}: SelectCustomizingScreenProps) {
                   }}>
                   <ImageBackground
                     source={{uri: `${board.smallImageUrl}`}}
-                    resizeMode="center">
+                    resizeMode="stretch">
                     <Text
                       style={{
                         width: screenWidth / 7.3,
@@ -478,7 +485,7 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   stampContainer: {
-    width: screenWidth / 1.65,
+    width: screenWidth / 1.4,
     height: screenHeight / 4.8,
     // backgroundColor: 'pink',
     paddingVertical: screenWidth / 15,

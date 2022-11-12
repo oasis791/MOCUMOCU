@@ -144,12 +144,12 @@ function More({navigation}: MoreScreenProps) {
                 <Pressable
                   style={styles.pointUseInfoButton}
                   onPress={toMyPointLog}>
-                  <Text>포인트 사용 내역</Text>
+                  <Text style={{color: 'black'}}>포인트 사용 내역</Text>
                 </Pressable>
                 <Pressable
                   style={styles.pointShopButton}
                   onPress={toCustomShop}>
-                  <Text>포인트 상점</Text>
+                  <Text style={{color: 'black'}}>포인트 상점</Text>
                 </Pressable>
               </View>
             </View>
@@ -376,6 +376,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: screenWidth / 1.29,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   inputWrapper: {
