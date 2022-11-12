@@ -94,7 +94,7 @@ function Main({navigation}: MainScreenProps) {
         } catch (error) {
           const errorResponse = (error as AxiosError<any>).response;
           if (errorResponse) {
-            Alert.alert('알림', 'attendance');
+            // Alert.alert('알림', 'attendance');
             setLoading(false);
           }
         }
@@ -110,8 +110,7 @@ function Main({navigation}: MainScreenProps) {
         } catch (error) {
           const errorResponse = (error as AxiosError<any>).response;
           if (errorResponse) {
-            Alert.alert('알림', 'point');
-
+            // Alert.alert('알림', 'point');
             setLoading(false);
           }
         }
@@ -239,20 +238,7 @@ function Main({navigation}: MainScreenProps) {
     },
   ];
   const renderCoupon = ({item}) => {
-    return item.length !== 0 ? (
-      // item.map(coupon => (
-      // ImageBackground 넣어야 함(source = coupon.couponImage)
-      // <ImageBackground
-      //   source={
-      //     coupon.boardUrl
-      //       ? {uri: `${coupon.boardUrl}`}
-      //       : require('../../assets/largeBoard.png')
-      //   }
-      //   key={coupon.couponId}
-      //   style={styles.viewCouponImage}
-      //   resizeMode="stretch">
-      //   {renderStamp(coupon)}
-      // </ImageBackground>
+    return (
       <ImageBackground
         source={
           item.boardUrl
@@ -264,8 +250,10 @@ function Main({navigation}: MainScreenProps) {
         resizeMode="stretch">
         {renderStamp(item)}
       </ImageBackground>
-    ) : (
-      // ))
+    );
+  };
+  const renderEmpty = () => {
+    return (
       <View style={styles.scrollItemNone}>
         <Text style={styles.myCouponText}>보유한 쿠폰이 없습니다</Text>
       </View>
@@ -353,13 +341,14 @@ function Main({navigation}: MainScreenProps) {
                         color: '#9b9b9b',
                         fontSize: 14,
                       }}>
-                      내 포인트{'\n'}
+                      내 포인트
                     </Text>
                     <Image
                       source={require('../../assets/icon/arrowGray.png')}
                       style={styles.toMyPointImg}
                     />
                   </Pressable>
+                  {'\n'}
                   <Text style={{color: '#414FFD', fontSize: 24}}>
                     {point} P
                   </Text>
@@ -386,7 +375,6 @@ function Main({navigation}: MainScreenProps) {
                 <Pressable
                   style={styles.myCouponboxButton}
                   onPress={toCouponDetail}
-                  // disabled={coupons.length <= 0 ? true : false}
                   disabled={coupons.length <= 0 ? true : false}>
                   <Text style={styles.myCouponboxButtonText}>전체 +</Text>
                 </Pressable>
@@ -399,6 +387,7 @@ function Main({navigation}: MainScreenProps) {
                   onEndReachedThreshold={0.1}
                   horizontal
                   contentContainerStyle={{flexGrow: 1}}
+                  ListEmptyComponent={renderEmpty}
                 />
               </View>
             </View>

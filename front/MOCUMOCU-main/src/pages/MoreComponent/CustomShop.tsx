@@ -262,7 +262,7 @@ function CustomShop({navigation}: CustomShopScreenProps) {
             source={{
               uri: `${boardImage[clickBoardElement].bigImageUrl}`,
             }}
-            resizeMode="contain"
+            resizeMode="stretch"
             resizeMethod="auto"
             style={styles.viewCouponImage}
           />
@@ -271,7 +271,7 @@ function CustomShop({navigation}: CustomShopScreenProps) {
             source={{
               uri: `${boardImage[clickBoardElement].bigImageUrl}`,
             }}
-            resizeMode="contain"
+            resizeMode="stretch"
             resizeMethod="auto"
             style={styles.viewCouponImage}>
             <View style={styles.stampContainer}>
