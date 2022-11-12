@@ -202,11 +202,11 @@ function SignIn({navigation}: SignInScreenProps) {
             <Pressable onPress={toFindId}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
-            <Text style={{marginLeft: 5}}>ㅣ</Text>
+            <Text style={{marginLeft: 5, color: 'gray'}}>ㅣ</Text>
             <Pressable onPress={toFindPassword}>
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
             </Pressable>
-            <Text style={{marginLeft: 5}}>ㅣ</Text>
+            <Text style={{marginLeft: 5, color: 'gray'}}>ㅣ</Text>
             <Pressable onPress={toSignUp}>
               <Text style={styles.zZoneText}>회원가입</Text>
             </Pressable>
@@ -343,6 +343,7 @@ const styles = StyleSheet.create({
   zZoneText: {
     marginLeft: 5,
     fontSize: 12,
+    color: 'gray',
   },
   indicator: {
     // backgroundColor: 'gray',

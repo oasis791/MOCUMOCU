@@ -353,7 +353,7 @@ function Main({navigation}: MainScreenProps) {
                         color: '#9b9b9b',
                         fontSize: 14,
                       }}>
-                      내 포인트
+                      내 포인트{'\n'}
                     </Text>
                     <Image
                       source={require('../../assets/icon/arrowGray.png')}
