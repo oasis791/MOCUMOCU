@@ -113,7 +113,7 @@ function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
       <View style={styles.scanAreaBackground}>
         <Text style={styles.scanAreaText}>손님이 제시한</Text>
         <Text style={styles.scanAreaText}>QR코드를 스캔하세요</Text>
-        <Text style={styles.scanAreaText}>{route.params.type}</Text>
+        {/* <Text style={styles.scanAreaText}>{route.params.type}</Text> */}
       </View>
     </View>
   );

@@ -201,8 +201,8 @@ function MarketReward({ navigation, route }: MarketRewardScreenProps) {
 
                     <TouchableOpacity onPress={() => { setDeleteButtonActive(!deleteButtonActive); }}>
                         { !deleteButtonActive
-                        ? <Text>삭제하기</Text>
-                        : <Text>취소</Text>
+                        ? <Text style={{color: '#c4c4c4'}}>삭제하기</Text>
+                        : <Text  style={{color: '#c4c4c4'}}>취소</Text>
                         }
                     </TouchableOpacity>
                     {/*

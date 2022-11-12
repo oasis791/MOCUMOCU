@@ -188,6 +188,3 @@ const styles = StyleSheet.create({
 });
 
 export default AddMarket;
-function dispatch(arg0: any) {
-  throw new Error('Function not implemented.');
-}
