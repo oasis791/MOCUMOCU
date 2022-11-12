@@ -349,7 +349,12 @@ function Main({navigation}: MainScreenProps) {
                     />
                   </Pressable>
                   {'\n'}
-                  <Text style={{color: '#414FFD', fontSize: 24}}>
+                  <Text
+                    style={{
+                      color: '#414FFD',
+                      fontSize: 24,
+                    }}>
+                    {'      '}
                     {point} P
                   </Text>
                 </Text>
@@ -381,7 +386,6 @@ function Main({navigation}: MainScreenProps) {
               </View>
               <View style={styles.ScrollViewWrapper}>
                 <FlatList
-                  // data={coupons}
                   data={coupons}
                   renderItem={renderCoupon}
                   onEndReachedThreshold={0.1}
@@ -507,7 +511,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     // marginLeft: 50,
-    marginLeft: screenWidth / 7,
+    marginLeft: screenWidth / 5,
     // alignItems: 'baseline',
     width: screenWidth / 4,
     height: screenHeight / 9,
@@ -515,15 +519,16 @@ const styles = StyleSheet.create({
     // height: 40,
     // borderRadius: 10,
   },
-  myInfoPointText: {
-    fontSize: 15,
-    // paddingVertical: 5,
-    fontFamily: 'GmarketSansTTFBold',
-    color: '#9b9b9b',
-    height: screenHeight / 10,
-    lineHeight: 25,
-    // backgroundColor: 'black',
-  },
+  // myInfoPointText: {
+  //   fontSize: 15,
+  //   // paddingVertical: 5,
+  //   fontFamily: 'GmarketSansTTFBold',
+  //   color: '#9b9b9b',
+  //   height: screenHeight / 8,
+  //   width: screenWidth / 4.5,
+  //   lineHeight: 25,
+  //   backgroundColor: 'orange',
+  // },
   eventBanner: {
     // height: 210,
     // height: screenHeight / 10,
@@ -543,6 +548,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 12,
+    // backgroundColor: 'green',
+    width: screenWidth / 4,
+    // height: screenHeight / 8,
     // marginBottom: 10,
   },
   toMyPointImg: {
