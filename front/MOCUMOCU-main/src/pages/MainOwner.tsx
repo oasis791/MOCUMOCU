@@ -17,13 +17,13 @@ import {useSelector} from 'react-redux';
 import ActivityRings from 'react-native-activity-rings';
 import {LoggedInOwnerParamList} from '../../App';
 import {RootState} from '../store/reducer';
-// import Config from 'react-native-config';
 import axios, {AxiosError} from 'axios';
 import {useAppDispatch} from '../store';
 import marketOwnerSlice from '../slices/marketOwner';
 import {useIsFocused} from '@react-navigation/native';
+import Config from 'react-native-config';
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('window').height;
 
 type MainOwnerScreenProps = NativeStackScreenProps<
@@ -32,7 +32,6 @@ type MainOwnerScreenProps = NativeStackScreenProps<
 >;
 
 function MainOwner({navigation}: MainOwnerScreenProps) {
-  const isAlarm = false;
   const ownerName = useSelector((state: RootState) => state.userTest.name);
   const ownerId = useSelector((state: RootState) => state.userTest.id);
   const [deleteButtonAcitive, setDeleteButtonActive] = useState(false);
@@ -47,13 +46,6 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
     ringSize: 14,
   };
 
-  const onSubmitSetting = () => {
-    navigation.navigate('SettingsOwner');
-  };
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
-  };
-
   const toAddMarket = () => {
     navigation.navigate('AddMarket');
   };
@@ -65,14 +57,17 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
     setDeleteButtonActive(!deleteButtonAcitive);
   };
 
+  const toMarektAnalysis = (index: number) => {
+    // Alert.alert('알림', '매장 분석으로 이동');
+    navigation.navigate('MarketAnalysis', {marketIndex: index});
+  };
+
   const onGetMarkets = useCallback(async () => {
     try {
-      console.log('ownerId', ownerId);
-
       const response = await axios.get(
-        `http://54.180.91.167:8080/owner/${ownerId}/market-list`,
+        `${Config.API_URL}/market/${ownerId}/market-list/?day=0`,
       );
-      console.log('market', response.data);
+      // console.log('market', response.data[0]);
       dispatch(
         marketOwnerSlice.actions.setMarket({
           markets: response.data,
@@ -89,9 +84,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
   const onDeleteSubmit = useCallback(
     async storeId => {
       try {
-        const response = await axios.delete(
-          `http://54.180.91.167:8080/owner/store/${storeId}`,
-        );
+        await axios.delete(`${Config.API_URL}/owner/store/${storeId}`);
         onGetMarkets();
         Alert.alert('알림', '매장이 삭제되었습니다.');
       } catch (error) {
@@ -109,7 +102,7 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
 
   useEffect(() => {
     onGetMarkets();
-  }, [isFocused, onGetMarkets]);
+  }, [isFocused]);
 
   return (
     <ScrollView style={styles.mainBackground}>
@@ -119,26 +112,6 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
           source={require('../assets/mainLogoOwner.png')}
           style={styles.headerLogo}
         />
-
-        <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitAlarm}>
-            <Image
-              source={
-                isAlarm
-                  ? require('../assets/icon/mainAlarmActive.png')
-                  : require('../assets/icon/mainAlarm.png')
-              }
-              style={styles.headerAlarm}
-            />
-          </Pressable>
-
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
-              style={styles.headerSetting}
-            />
-          </Pressable>
-        </View>
       </View>
 
       <View style={styles.ownerInfoWrapper}>
@@ -153,7 +126,9 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
 
         {markets.length === 0 ? (
           <View style={[styles.noneMarketWrapper, {height: 60}]}>
-            <Text style={{top: 5}}>등록된 매장이 없습니다.</Text>
+            <Text style={{color: '#a8a8a8', top: 5}}>
+              등록된 매장이 없습니다.
+            </Text>
           </View>
         ) : (
           <ScrollView
@@ -233,30 +208,19 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
 
         {markets.length === 0 ? (
           <View style={[styles.noneMarketWrapper, {height: 200}]}>
-            <Text>등록된 매장이 없습니다.</Text>
+            <Text style={{color: '#a8a8a8'}}>등록된 매장이 없습니다.</Text>
           </View>
         ) : (
           <ScrollView
             horizontal={true}
             pagingEnabled={true}
-            showsHorizontalScrollIndicator={true}
-            style={styles.storeAnalysisScrollView}>
+            showsHorizontalScrollIndicator={true}>
             {markets.map((market, i) => {
-              market.male === market.female
-                ? ((market.activityData[0].value = 0.5),
-                  (market.activityData[0].color = '#363636'))
-                : market.male > market.female
-                ? ((market.activityData[0].value =
-                    market.male / (market.male + market.female)),
-                  (market.activityData[0].color = '#3F83D3'))
-                : ((market.activityData[0].value =
-                    market.female / (market.male + market.female)),
-                  (market.activityData[0].color = '#DD4435'));
               return (
                 <TouchableOpacity
                   style={styles.analysisCard}
                   onPress={() => {
-                    Alert.alert('알림', `${market.name} 매장 분석으로 이동`);
+                    toMarektAnalysis(i);
                   }}
                   key={i}>
                   <Text style={styles.analysisStoreNameText}>
@@ -269,47 +233,72 @@ function MainOwner({navigation}: MainOwnerScreenProps) {
                           오늘 방문자 수
                         </Text>
                         <Text style={[styles.todaysText, {bottom: 10}]}>
-                          {market.today}명
+                          {market.genderDTO.female + market.genderDTO.male}명
                         </Text>
                       </View>
 
                       <View>
                         <ActivityRings
-                          data={market.activityData}
+                          data={[
+                            {
+                              label: 'ACTIVITY',
+                              value:
+                                market.genderDTO.female ===
+                                market.genderDTO.male
+                                  ? 1
+                                  : market.genderDTO.female >
+                                    market.genderDTO.male
+                                  ? market.genderDTO.female /
+                                    (market.genderDTO.female +
+                                      market.genderDTO.male)
+                                  : market.genderDTO.male /
+                                    (market.genderDTO.female +
+                                      market.genderDTO.male),
+                              color:
+                                market.genderDTO.female ===
+                                market.genderDTO.male
+                                  ? '#c6c6c6'
+                                  : market.genderDTO.male >
+                                    market.genderDTO.female
+                                  ? '#3F83D3'
+                                  : '#DD4435',
+                            },
+                          ]}
                           config={activityConfig}
                         />
                       </View>
 
                       <View style={{right: 15}}>
-                        {market.male > market.female ? (
+                        {market.genderDTO.male > market.genderDTO.female ? (
                           <>
                             <Text style={[styles.todaysText, {top: 10}]}>
                               <Text style={{fontSize: 10}}>🔵 </Text>
-                              남자 {market.male}
+                              남자 {market.genderDTO.male}
                             </Text>
                             <Text style={[styles.todaysText, {bottom: 10}]}>
-                              &nbsp; &nbsp; &nbsp;여자 {market.female}
+                              &nbsp; &nbsp; &nbsp;여자 {market.genderDTO.female}
                             </Text>
                           </>
-                        ) : market.male === market.female ? (
+                        ) : market.genderDTO.male ===
+                          market.genderDTO.female ? (
                           <>
                             <Text style={[styles.todaysText, {top: 10}]}>
                               <Text style={{fontSize: 10}}>🔵 </Text>
-                              남자 {market.male}
+                              남자 {market.genderDTO.male}
                             </Text>
                             <Text style={[styles.todaysText, {bottom: 10}]}>
                               <Text style={{fontSize: 10}}>🔴 </Text>
-                              여자 {market.female}
+                              여자 {market.genderDTO.female}
                             </Text>
                           </>
                         ) : (
                           <>
                             <Text style={[styles.todaysText, {top: 10}]}>
                               <Text style={{fontSize: 10}}>🔴 </Text>
-                              여자 {market.female}
+                              여자 {market.genderDTO.female}
                             </Text>
                             <Text style={[styles.todaysText, {bottom: 10}]}>
-                              &nbsp; &nbsp; &nbsp;남자 {market.male}
+                              &nbsp; &nbsp; &nbsp;남자 {market.genderDTO.male}
                             </Text>
                           </>
                         )}
@@ -353,14 +342,12 @@ const styles = StyleSheet.create({
     height: 25,
     marginLeft: 27,
     marginTop: 5,
-    // justifyContent: 'flex-start',
   },
   headerButtonWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 19,
     marginTop: 5,
-    // justifyContent: 'space-around',
   },
   headerSetting: {
     resizeMode: 'contain',
@@ -426,7 +413,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomColor: '#D8D8D8',
     borderBottomWidth: 1,
-    // backgroundColor: 'pink',
   },
 
   marketTabText: {
@@ -475,28 +461,6 @@ const styles = StyleSheet.create({
   pointButtonBar: {
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: '#727272',
-    // marginLeft: 0,
-    // paddingLeft: 1,
-  },
-  myCoupon: {
-    // flex: 1,
-    backgroundColor: 'white',
-    height: 135,
-    // elevation: 30,
-  },
-  myCouponboxButton: {
-    justifyContent: 'center',
-    // alignItems: 'center',
-  },
-  myCouponboxButtonText: {
-    fontFamily: 'NotoSansCJKkr-Black (TTF)',
-    color: 'gray',
-    fontSize: 12,
-    marginRight: 20,
-  },
-  myCouponTextWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
 
   marketAnalysisWrapper: {
@@ -509,13 +473,10 @@ const styles = StyleSheet.create({
 
   marketAnalysisTitle: {
     marginTop: -10,
-    // marginLeft: 30,
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     color: 'black',
     fontSize: 18,
   },
-
-  storeAnalysisScrollView: {},
 
   analysisCard: {
     marginTop: 5,
@@ -541,7 +502,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'white',
     marginBottom: 9,
-    // paddingVertical: 10,
   },
 
   bottomButton: {

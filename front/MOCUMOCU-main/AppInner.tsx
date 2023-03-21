@@ -19,9 +19,8 @@ import FindPassword from './src/pages/FindPassword';
 import FindPasswordOwner from './src/pages/FindPasswordOwner';
 import FindIdOwner from './src/pages/FindIdOwner';
 import FindId from './src/pages/FindId';
-import OwnerWrapper from './src/pages/OwnerWrapper';
-import userSliceTest from './src/slices/userTest';
 import StackWrapper from './src/pages/StackWrapper';
+import StackOwnerWrapper from './src/pages/StackOwnerWrapper';
 
 const Stack = createNativeStackNavigator();
 function AppInner() {
@@ -43,14 +42,13 @@ function AppInner() {
       try {
         const token = isLogIn;
         if (!token) {
-          console.log('!token');
           SplashScreen.hide();
           return;
         }
-        const response = await axios.post(`${Config.APIURL}/token`, {
-          isLogIn: isLogIn,
-          userType: userType,
-        });
+        // const response = await axios.post(`${Config.APIURL}/token`, {
+        //   isLogIn: isLogIn,
+        //   userType: userType,
+        // });
         // dispatch(
         //   userSlice.actions.setUserInfo({
         //     name: response.data.data.name,
@@ -59,22 +57,23 @@ function AppInner() {
         //     accessToken: response.data.data.accessToken,3
         //   }),
         // );
-        dispatch(
-          userSliceTest.actions.setLoginType({
-            name: response.data.data.name,
-            id: response.data.data.id,
-            email: response.data.data.email,
-            userType: response.data.userType,
-            isLogIn: response.data.logIn,
-          }),
-        );
-        console.log('AppInner log(userType)', userType);
-        console.log('AppInner log(isLogin)', isLogIn);
+        // console.log('type', userType);
+        // dispatch(
+        //   userSliceTest.actions.setLoginType({
+        //     name: response.data.data.name,
+        //     id: response.data.data.id,
+        //     email: response.data.data.email,
+        //     userType: response.data.userType,
+        //     isLogIn: response.data.logIn,
+        //   }),
+        // );
+        // console.log('AppInner log(userType)', userType);
+        // console.log('AppInner log(isLogin)', isLogIn);
       } catch (error) {
-        console.error(error);
-        if ((error as AxiosError<any>).response?.data.code === 'expired') {
-          Alert.alert('알림', '다시 로그인 해주세요.');
-        }
+        console.error('login', error);
+        // if ((error as AxiosError<any>).response?.data.code === 'expired') {
+        //   Alert.alert('알림', '다시 로그인 해주세요.');
+        // }
       } finally {
         // console.log('asdf');
         SplashScreen.hide();
@@ -82,11 +81,13 @@ function AppInner() {
     };
     getTokenAndRefresh();
   }, [dispatch, isLogIn, userType]);
-
+  console.log('AppInner', userType);
   return isLogIn ? (
     userType === 'Owner' ? (
-      <OwnerWrapper />
+      // <OwnerWrapper />
+      <StackOwnerWrapper />
     ) : (
+      // <StackWrapper />
       <StackWrapper />
     )
   ) : (

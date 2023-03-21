@@ -114,6 +114,8 @@ const styles = StyleSheet.create({
   continer: {
     justifyContent: 'center',
     marginTop: screenHeight / 40,
+    height: screenHeight / 10,
+    width: screenWidth,
   },
   marketContainer: {
     flexDirection: 'row',

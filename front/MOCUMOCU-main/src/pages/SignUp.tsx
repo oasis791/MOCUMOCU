@@ -88,11 +88,6 @@ function SignUp({navigation}: SignUpScreenProps) {
 
     if (telephoneNumber.length === 11) {
       setTelephoneNumber(
-        telephoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'),
-      );
-    }
-    if (telephoneNumber.length === 11) {
-      setTelephoneNumber(
         telephoneNumber
           .replace(/-/g, '')
           .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
@@ -604,6 +599,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: 280,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   emailWrapper: {
@@ -622,6 +618,7 @@ const styles = StyleSheet.create({
   textInputEmail: {
     fontWeight: 'bold',
     height: 40,
+    color: 'black',
   },
   certificationButton: {
     // backgroundColor: 'black',

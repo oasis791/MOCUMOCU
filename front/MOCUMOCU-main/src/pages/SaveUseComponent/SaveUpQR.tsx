@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontFamily: 'GmarketSansTTFMedium',
     bottom: -5,
+    color: 'black',
   },
 });
 export default SaveUpQR;

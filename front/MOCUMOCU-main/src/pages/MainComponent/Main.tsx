@@ -14,6 +14,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Modal,
+  FlatList,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Carousel from 'react-native-snap-carousel';
@@ -77,8 +78,8 @@ function Main({navigation}: MainScreenProps) {
           setLoading(false);
           const errorResponse = (error as AxiosError<any>).response;
           if (errorResponse) {
-            Alert.alert('알림', 'coupon');
-            console.log(error);
+            // Alert.alert('알림', 'coupon');
+            // console.log(error);
             setLoading(false);
           }
         }
@@ -93,7 +94,7 @@ function Main({navigation}: MainScreenProps) {
         } catch (error) {
           const errorResponse = (error as AxiosError<any>).response;
           if (errorResponse) {
-            Alert.alert('알림', 'attendance');
+            // Alert.alert('알림', 'attendance');
             setLoading(false);
           }
         }
@@ -109,8 +110,7 @@ function Main({navigation}: MainScreenProps) {
         } catch (error) {
           const errorResponse = (error as AxiosError<any>).response;
           if (errorResponse) {
-            Alert.alert('알림', 'point');
-
+            // Alert.alert('알림', 'point');
             setLoading(false);
           }
         }
@@ -124,8 +124,8 @@ function Main({navigation}: MainScreenProps) {
           console.log('banner', response.data);
         } catch (error) {
           const errorResponse = (error as AxiosError<any>).response;
-          Alert.alert('알림', 'banner');
-          console.log('banner', errorResponse);
+          // Alert.alert('알림', 'banner');
+          // console.log('banner', errorResponse);
         }
       };
       getCouponInfo();
@@ -202,14 +202,15 @@ function Main({navigation}: MainScreenProps) {
             source={
               coupon.stampUrl
                 ? {uri: `${coupon.stampUrl}`}
-                : require('../../assets/blueLogo.png')
+                : require('../../assets/icon/basicStamp.png')
             }
             resizeMode="center"
             style={{
-              width: screenHeight / 12,
+              width: screenHeight / 25,
               // flex: 1 / 3,
-              // marginHorizontal: 15,
-              height: screenHeight / 13,
+              marginVertical: 10,
+              marginLeft: 20,
+              height: screenHeight / 23,
               // marginVertical: 10,
             }}
           />,
@@ -224,26 +225,40 @@ function Main({navigation}: MainScreenProps) {
     }
     return arr;
   }, []);
-  const renderCoupon =
-    coupons.length !== 0 ? (
-      coupons.map(coupon => (
-        // ImageBackground 넣어야 함(source = coupon.couponImage)
-        <ImageBackground
-          source={
-            coupon.boardUrl
-              ? {uri: `${coupon.boardUrl}`}
-              : require('../../assets/largeBoard.png')
-          }
-          key={coupon.couponId}
-          style={styles.viewCouponImage}>
-          {renderStamp(coupon)}
-        </ImageBackground>
-      ))
-    ) : (
+  const couponsTest = [
+    {
+      couponId: 1,
+      boardUrl:
+        'https://cdn.pixabay.com/photo/2014/04/02/10/23/ticket-303706_1280.png',
+    },
+    {
+      couponId: 2,
+      boardUrl:
+        'https://cdn.pixabay.com/photo/2015/08/11/08/21/coupon-883643_1280.jpg',
+    },
+  ];
+  const renderCoupon = ({item}) => {
+    return (
+      <ImageBackground
+        source={
+          item.boardUrl
+            ? {uri: `${item.boardUrl}`}
+            : require('../../assets/largeBoard.png')
+        }
+        key={item.couponId}
+        style={styles.viewCouponImage}
+        resizeMode="stretch">
+        {renderStamp(item)}
+      </ImageBackground>
+    );
+  };
+  const renderEmpty = () => {
+    return (
       <View style={styles.scrollItemNone}>
         <Text style={styles.myCouponText}>보유한 쿠폰이 없습니다</Text>
       </View>
     );
+  };
   const renderItem = ({item}: any) => {
     return (
       <TouchableOpacity
@@ -370,13 +385,14 @@ function Main({navigation}: MainScreenProps) {
                 </Pressable>
               </View>
               <View style={styles.ScrollViewWrapper}>
-                <ScrollView
-                  horizontal={true}
-                  pagingEnabled={true}
-                  showsHorizontalScrollIndicator={true}
-                  contentContainerStyle={styles.scrollViewHorizontal}>
-                  {renderCoupon}
-                </ScrollView>
+                <FlatList
+                  data={coupons}
+                  renderItem={renderCoupon}
+                  onEndReachedThreshold={0.1}
+                  horizontal
+                  contentContainerStyle={{flexGrow: 1}}
+                  ListEmptyComponent={renderEmpty}
+                />
               </View>
             </View>
             <View style={styles.footer}>

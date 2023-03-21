@@ -61,11 +61,6 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
 
     if (ownerPhoneNum.length === 11) {
       setOwnerPhoneNumber(
-        ownerPhoneNum.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'),
-      );
-    }
-    if (ownerPhoneNum.length === 11) {
-      setOwnerPhoneNumber(
         ownerPhoneNum
           .replace(/-/g, '')
           .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
@@ -115,18 +110,13 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
     try {
       setLoading(true);
       // http method : get, put, patch, post, delete, head, options 가 주로 쓰임 ${Config.API_URL}/owner/signup
-      const response = await axios.post(
-        'http://54.180.91.167:8080/owner/signup ',
-        {
-          ownerEmail,
-          ownerName,
-          ownerPassword,
-          ownerCheckPassword,
-          ownerPhoneNum,
-        },
-      ); //비동기 요청이므로 await가 필요
-      console.log(response);
-      console.log(Config.API_URL);
+      const response = await axios.post(`${Config.API_URL}/owner/signup`, {
+        ownerEmail,
+        ownerName,
+        ownerPassword,
+        ownerCheckPassword,
+        ownerPhoneNum,
+      }); //비동기 요청이므로 await가 필요
       Alert.alert('알림', '회원가입 되었습니다.');
       navigation.navigate('SignInOwner');
     } catch (error) {
@@ -422,6 +412,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: 280,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   inputWrapper: {
@@ -498,6 +489,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 40,
     marginBottom: 120,
     lineHeight: 20,
+    color: '#c4c4c4',
   },
   welcomeText: {
     fontSize: 24,

@@ -31,6 +31,7 @@ function SignIn({navigation}: SignInScreenProps) {
   // const canGoNext = email && password;
   const emailRef = useRef<TextInput | null>(null); //< > => generic
   const passwordRef = useRef<TextInput | null>(null);
+
   const onSubmit = useCallback(async () => {
     if (loading) {
       return;
@@ -48,7 +49,7 @@ function SignIn({navigation}: SignInScreenProps) {
         customerEmail: email,
         customerPassword: password,
       });
-      console.log('response data: ', response.data);
+      console.log('response data: ', response.data.userType);
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
       // dispatch(userSliceTest.actions.setUserInfoTest(response.data.data));
@@ -201,11 +202,11 @@ function SignIn({navigation}: SignInScreenProps) {
             <Pressable onPress={toFindId}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
-            <Text style={{marginLeft: 5}}>ㅣ</Text>
+            <Text style={{marginLeft: 5, color: 'gray'}}>ㅣ</Text>
             <Pressable onPress={toFindPassword}>
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
             </Pressable>
-            <Text style={{marginLeft: 5}}>ㅣ</Text>
+            <Text style={{marginLeft: 5, color: 'gray'}}>ㅣ</Text>
             <Pressable onPress={toSignUp}>
               <Text style={styles.zZoneText}>회원가입</Text>
             </Pressable>
@@ -276,9 +277,10 @@ const styles = StyleSheet.create({
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
     borderWidth: 1,
     borderColor: '#e5e5e5',
+    color: 'black',
   },
   inputWrapper: {padding: 20, alignItems: 'center'},
-  inputBoxWrapper: {padding: 3, alignItems: 'center'},
+  inputBoxWrapper: {padding: 3, alignItems: 'center', color: 'black'},
   label: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -341,6 +343,7 @@ const styles = StyleSheet.create({
   zZoneText: {
     marginLeft: 5,
     fontSize: 12,
+    color: 'gray',
   },
   indicator: {
     // backgroundColor: 'gray',

@@ -7,7 +7,7 @@ import {Camera, CameraType} from 'react-native-camera-kit';
 import Config from 'react-native-config';
 import {LoggedInOwnerParamList} from '../../App';
 
-const window = Dimensions.get('window');
+const window = Dimensions.get('screen');
 
 type QRCodeScannerScreenProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
@@ -43,14 +43,19 @@ function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
     let qrValue: SaveQRProps | UseQRProps | undefined;
     switch (route.params.type) {
       case 'saveUp':
-        qrValue = JSON.parse(event.nativeEvent.codeStringValue);
+         qrValue = JSON.parse(
+          event.nativeEvent.codeStringValue,
+        );
         break;
       case 'use':
-        qrValue = JSON.parse(event.nativeEvent.codeStringValue);
+         qrValue = JSON.parse(
+          event.nativeEvent.codeStringValue,
+        );
         break;
       default:
         qrValue = undefined;
         return;
+
     }
     // const qrValue: SaveQRProps = JSON.parse(
     //   event.nativeEvent.codeStringValue,
@@ -59,28 +64,22 @@ function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
     if (qrValue) {
       switch (route.params.type) {
         case 'saveUp': // 적립
-          setScaned(true);
-          navigation.navigate('StampAmount', {
-            marketId: marketId,
-            customerId: qrValue.customerId,
-          });
+          setScaned(false);
+          navigation.navigate('StampAmount', { marketId: marketId, customerId: qrValue.customerId });
           break;
         case 'use': // 사용
-          setScaned(true);
           try {
-            const response = await axios.patch(
-              'http://54.180.91.167:8080/owner/stamp',
-              {
-                couponId: qrValue.couponId,
-                couponRequire: qrValue.couponRequire,
-              },
-            );
+            setScaned(false);
+            const response = await axios.patch(`${Config.API_URL}/coupon/stamp`, {
+              couponId: qrValue.couponId,
+              couponRequire: qrValue.couponRequire,
+            });
             Alert.alert('알림', '정상적으로 사용되었습니다.');
             navigation.navigate('SaveUpOwner');
           } catch (error) {
             const errorResponse = (error as AxiosError).response;
             if (errorResponse) {
-              Alert.alert('알림', '사용 처리에 실패했습니다.');
+              Alert.alert('알림', '유효하지 않은 QR코드 입니다.');
             }
           }
           break;
@@ -114,7 +113,7 @@ function QRCodeScanner({navigation, route}: QRCodeScannerScreenProps) {
       <View style={styles.scanAreaBackground}>
         <Text style={styles.scanAreaText}>손님이 제시한</Text>
         <Text style={styles.scanAreaText}>QR코드를 스캔하세요</Text>
-        <Text style={styles.scanAreaText}>{route.params.type}</Text>
+        {/* <Text style={styles.scanAreaText}>{route.params.type}</Text> */}
       </View>
     </View>
   );

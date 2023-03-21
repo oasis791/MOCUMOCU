@@ -20,7 +20,7 @@ import {RootState} from '../store/reducer';
 
 type AddStoreProps = NativeStackScreenProps<LoggedInOwnerParamList, 'AddStore'>;
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('window').height;
 
 function AddMarket({navigation, route}: AddStoreProps) {
@@ -52,19 +52,14 @@ function AddMarket({navigation, route}: AddStoreProps) {
     }
     try {
       setLoading(true);
-
-      const response = await axios.post(
-        'http://54.180.91.167:8080/owner/store',
-        {
-          businessNum,
-          marketPhoneNum,
-          marketName,
-          ownerId,
-        },
-      );
+      const response = await axios.post(`${Config.API_URL}/market/store`, {
+        businessNum,
+        marketPhoneNum,
+        marketName,
+        ownerId,
+      });
       Alert.alert('알림', '매장 등록에 성공했습니다.');
       setLoading(false);
-
       navigation.navigate('MainOwner');
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
@@ -88,18 +83,21 @@ function AddMarket({navigation, route}: AddStoreProps) {
         <TextInput
           style={styles.inputBox}
           placeholder="사업자등록번호"
+          placeholderTextColor={'#c4c4c4'}
           value={businessNum}
           onChangeText={changeCorporationNumber}
         />
         <TextInput
           style={styles.inputBox}
           placeholder="가게번호"
+          placeholderTextColor={'#c4c4c4'}
           value={marketPhoneNum}
           onChangeText={changeStorePhoneNumber}
         />
         <TextInput
           style={styles.inputBox}
           placeholder="가게이름"
+          placeholderTextColor={'#c8c8c8'}
           value={marketName}
           onChangeText={changeStoreName}
         />
@@ -146,6 +144,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderWidth: 1,
     borderColor: '#e5e5e5',
+    color: 'black',
   },
 
   okButtonWrapper: {
@@ -189,6 +188,3 @@ const styles = StyleSheet.create({
 });
 
 export default AddMarket;
-function dispatch(arg0: any) {
-  throw new Error('Function not implemented.');
-}

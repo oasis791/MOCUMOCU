@@ -21,6 +21,7 @@ import CouponUsageHelp from './MoreComponent/CouponUsageHelp';
 import CustomizingHelp from './MoreComponent/CustomizingHelp';
 
 const Stack = createNativeStackNavigator();
+console.log('stackWrapper');
 function StackWrapper() {
   return (
     <Stack.Navigator>

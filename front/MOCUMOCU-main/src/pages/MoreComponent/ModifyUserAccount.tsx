@@ -29,13 +29,15 @@ type ModifyUserAccountScreenProps = NativeStackScreenProps<
 
 function ModifyUserAccount({navigation}: ModifyUserAccountScreenProps) {
   const customerId = useSelector((state: RootState) => state.userTest.id);
+  const customerName = useSelector((state: RootState) => state.userTest.name);
+  const customerEmail = useSelector((state: RootState) => state.userTest.email);
   const [loading, setLoading] = useState(false);
 
   const [telephoneNumber, setTelephoneNumber] = useState('');
 
   const telephoneNumberRef = useRef<TextInput | null>(null);
   const askUnregister = () => {
-    Alert.alert('정말로 탈퇴할꺼임?');
+    Alert.alert('탈퇴 하시겠습니까?');
   };
 
   const onChangeTelephoneNumber = useCallback(text => {
@@ -108,12 +110,10 @@ function ModifyUserAccount({navigation}: ModifyUserAccountScreenProps) {
           </View>
           <View style={styles.inputWrapper}>
             {/* <Text style={styles.textDisableInput}>{customerNameTest}</Text> */}
-            <Text style={styles.textDisableInput}>김현욱</Text>
+            <Text style={styles.textDisableInput}>{customerName}</Text>
           </View>
           <View style={styles.inputWrapper}>
-            <Text style={styles.textDisableInput}>
-              kimhyunwook@pizza.hamburger
-            </Text>
+            <Text style={styles.textDisableInput}>{customerEmail}</Text>
           </View>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -201,6 +201,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: screenWidth / 1.29,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   textDisableInput: {
@@ -232,6 +233,7 @@ const styles = StyleSheet.create({
   textInputEmail: {
     fontWeight: 'bold',
     height: 40,
+    color: 'black',
   },
   certificationButton: {
     // backgroundColor: 'black',

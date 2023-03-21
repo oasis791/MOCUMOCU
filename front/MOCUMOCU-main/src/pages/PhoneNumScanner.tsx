@@ -6,6 +6,8 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -32,10 +34,12 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post('http://54.180.91.167:8080/owner/phoneNum', {
+      const response = await axios.post(`${Config.API_URL}/owner/phoneNum`, {
         phoneNumber,
       });
-
+      if (response.data.name === undefined){
+        throw new Error();
+      }
       Alert.alert('알림', `${response.data.name}님이 맞는지 확인해주세요`, [
         // The "Yes" button
         {
@@ -55,26 +59,20 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
-        switch (errorResponse.status) {
-          case 400: // 404
-            Alert.alert('알림', '등록되어 있지 않는 전화번호입니다');
-            break;
-          default:
-            Alert.alert('알림', `error code: ${errorResponse.status}`);
-            break;
-        }
+        Alert.alert('알림', '등록되어 있지 않는 전화번호입니다');
         setLoading(false);
       }
     }
   }, [loading, navigation, phoneNumber, marketId]);
 
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
+
   useEffect(() => {
     setPhoneNumber(phoneNumber.trim());
     // setPhoneNumber(phoneNumber.replace('-', ''));
 
-    if (phoneNumber.length === 11) {
-      setPhoneNumber(phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
-    }
     if (phoneNumber.length === 11) {
       setPhoneNumber(
         phoneNumber
@@ -87,6 +85,15 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
 
   return (
     <View style={styles.stampAmountWrapper}>
+       <View style={styles.mainHeader}>
+          <View style={styles.headerButtonWrapper}>
+            <Pressable style={styles.headerButton} onPress={toBack}>
+              <Image
+                source={require('../assets/icon/arrowBack.png')}
+                style={styles.headerSetting}/>
+            </Pressable>
+          </View>
+        </View>
       <View style={styles.stampAmountTitleWrapper}>
         <Text style={styles.stampAmountTitleText}>전화번호를 입력해주세요</Text>
       </View>
@@ -99,6 +106,7 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
           }}
           value={phoneNumber}
           placeholder="전화번호를 입력해주세요"
+          placeholderTextColor={'#c4c4c4'}
           maxLength={13}
           keyboardType="decimal-pad"
           returnKeyType="next"
@@ -123,15 +131,39 @@ function PhoneNumScanner({ navigation, route }: PhoneNumScannerOwnerProps) {
   );
 }
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
   stampAmountWrapper: {
     flex: 1,
     backgroundColor: '#F7F7F7',
   },
+   mainHeader: {
+    width: screenWidth,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  headerButtonWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 19,
+    marginTop: 5,
+    // justifyContent: 'space-around',
+  },
+  headerSetting: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+  },
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
+  },
 
   stampAmountTitleWrapper: {
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     flex: 1,
     // backgroundColor: 'red',
   },
@@ -158,6 +190,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e5e5e5',
     paddingHorizontal: 15,
+    color: 'black',
   },
 
   okButtonWrapper: {

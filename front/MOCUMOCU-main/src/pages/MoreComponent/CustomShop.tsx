@@ -115,7 +115,7 @@ const defaultBoardImage = {
 };
 const defaultStampImage = {
   id: -1,
-  smallImageUrl: require('../../assets/smallBoard.png'),
+  smallImageUrl: '',
   point: 0,
 };
 
@@ -262,7 +262,7 @@ function CustomShop({navigation}: CustomShopScreenProps) {
             source={{
               uri: `${boardImage[clickBoardElement].bigImageUrl}`,
             }}
-            resizeMode="contain"
+            resizeMode="stretch"
             resizeMethod="auto"
             style={styles.viewCouponImage}
           />
@@ -271,16 +271,20 @@ function CustomShop({navigation}: CustomShopScreenProps) {
             source={{
               uri: `${boardImage[clickBoardElement].bigImageUrl}`,
             }}
-            resizeMode="contain"
+            resizeMode="stretch"
             resizeMethod="auto"
             style={styles.viewCouponImage}>
             <View style={styles.stampContainer}>
               {stampImage.map(stamp => {
                 return (
                   <Image
-                    source={{
-                      uri: `${stampImage[clickStampElement].smallImageUrl}`,
-                    }}
+                    source={
+                      stampImage[clickStampElement].smallImageUrl
+                        ? {
+                            uri: `${stampImage[clickStampElement].smallImageUrl}`,
+                          }
+                        : require('../../assets/icon/basicStamp.png')
+                    }
                     style={{
                       width: screenHeight / 25,
                       resizeMode: 'contain',
@@ -359,7 +363,11 @@ function CustomShop({navigation}: CustomShopScreenProps) {
                     }
                   }}>
                   <ImageBackground
-                    source={{uri: `${stamp.smallImageUrl}`}}
+                    source={
+                      stamp.smallImageUrl
+                        ? {uri: `${stamp.smallImageUrl}`}
+                        : require('../../assets/icon/basicStamp.png')
+                    }
                     // resizeMode="contain"
                   >
                     <Text

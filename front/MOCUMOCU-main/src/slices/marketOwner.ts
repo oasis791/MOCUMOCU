@@ -12,15 +12,20 @@ export interface ActivityData {
   color: string;
 }
 
+export interface GenderDTO {
+  female: number;
+  male: number;
+}
+
 export interface Market {
   id: number;
   phoneNum: string;
   name: string;
   rewardList: Array<Reward>;
-  today: number;
-  male: number;
-  female: number;
+  genderDTO: GenderDTO;
   activityData: Array<ActivityData>;
+  bannerURL: string;
+  detailURL: string;
 }
 
 export interface InitialState {
@@ -32,7 +37,7 @@ const initialState: InitialState = {
   // markets: [
   //   {
   //     id: 0,
-  //     phoneNum: '010-1111-2222',
+  //     phoneNum: '010-1234-5678',
   //     name: '카페현욱',
   //     rewardList: [
   //       {
@@ -59,7 +64,7 @@ const initialState: InitialState = {
   //   },
   //   {
   //     id: 1,
-  //     phoneNum: '010-1111-2222',
+  //     phoneNum: '010-3333-4444',
   //     name: '커피맛을 조금 아는 승민',
   //     rewardList: [
   //       {
@@ -86,7 +91,7 @@ const initialState: InitialState = {
   //   },
   //   {
   //     id: 2,
-  //     phoneNum: '010-1111-2222',
+  //     phoneNum: '010-5467-1234',
   //     name: 'INYEONGCAFE',
   //     rewardList: [
   //       {
@@ -113,7 +118,7 @@ const initialState: InitialState = {
   //   },
   //   {
   //     id: 3,
-  //     phoneNum: '010-1111-2222',
+  //     phoneNum: '010-7878-3434',
   //     name: '민수와 아이들',
   //     rewardList: [
   //       {
@@ -155,14 +160,30 @@ const marketOwnerSlice = createSlice({
       state.markets[action.payload.index].phoneNum = action.payload.phoneNum;
     },
     setReward(state, action) {
-      console.log('setReward');
+      state.markets[action.payload.index].rewardList =
+        action.payload.rewardList;
+      // state.markets.map(market => {
+      //   if (market.id === action.payload.marketId) {
+      //     market.rewardList = action.payload.rewardList;
+      //     return;
+      //   }
+      // });
+    },
+    setGender(state, action) {
+      let genderDataList = action.payload.genderData;
+      for (let index = 0; index < genderDataList.length; index++) {
+        state.markets[index].male = genderDataList[index].male;
+        state.markets[index].female = genderDataList[index].female;
+        state.markets[index].todays =
+          genderDataList[index].male + genderDataList[index].female;
+      }
+    },
 
-      state.markets.map(market => {
-        if (market.id === action.payload.marketId) {
-          market.rewardList = action.payload.rewardList;
-          return;
-        }
-      });
+    setBannerURL(state, action) {
+      state.markets[action.payload.index].bannerURL = action.payload.bannerURL;
+    },
+    setDetailURL(state, action) {
+      state.markets[action.payload.index].detailURL = action.payload.detailURL;
     },
   },
   extraReducers: builder => {}, // 비동기 action 만들 때 사용

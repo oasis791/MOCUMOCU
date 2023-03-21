@@ -8,9 +8,12 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  Pressable,
+  Image,
 } from 'react-native';
+import Config from 'react-native-config';
 import {LoggedInOwnerParamList} from '../../App';
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('window').height;
 
 type StampAmountOwnerProps = NativeStackScreenProps<
@@ -24,34 +27,51 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
   const marketId = route.params.marketId;
   const customerId = route.params.customerId;
 
+  const upAmount = () => {
+    setAmount(x => x + 1);
+  };
+  const downAmount = () => {
+    setAmount(x => x - 1);
+  };
+
   const onSubmit = useCallback(async () => {
     if (loading) {
       return;
     }
     try {
       setLoading(true);
-      const response = await axios.post(
-        'http://54.180.91.167:8080/owner/stamp',
-        {
-          marketId,
-          customerId,
-          amount,
-        },
-      );
+      const response = await axios.post(`${Config.API_URL}/coupon/stamp`, {
+        marketId,
+        customerId,
+        amount,
+      });
       Alert.alert('알림', '적립되었습니다');
       setLoading(false);
       navigation.navigate('SaveUpOwner');
     } catch (error) {
       const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
-        Alert.alert('알림', '적립에 실패하였습니다.');
+        Alert.alert('알림', `${errorResponse.status}`);
         setLoading(false);
       }
     }
-  }, [customerId, loading, marketId, navigation]);
+  }, [amount, customerId, loading, marketId, navigation]);
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
   return (
     <View style={styles.stampAmountWrapper}>
       {/* <Text>{customerId}</Text> */}
+      <View style={styles.mainHeader}>
+        <View style={styles.headerButtonWrapper}>
+          <Pressable style={styles.headerButton} onPress={toBack}>
+            <Image
+              source={require('../assets/icon/arrowBack.png')}
+              style={styles.headerSetting}
+            />
+          </Pressable>
+        </View>
+      </View>
       <View style={styles.stampAmountTitleWrapper}>
         <Text style={styles.stampAmountTitleText}>
           적립할 개수를 입력해 주세요
@@ -59,10 +79,7 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
       </View>
 
       <View style={styles.counterWrapper}>
-        <TouchableOpacity
-          onPress={() => {
-            setAmount(x => x + 1);
-          }}>
+        <TouchableOpacity onPress={upAmount}>
           <Text style={styles.controlIcon}>+</Text>
         </TouchableOpacity>
 
@@ -70,7 +87,7 @@ function StampAmount({navigation, route}: StampAmountOwnerProps) {
 
         <TouchableOpacity
           onPress={() => {
-            amount > 1 ? setAmount(x => x - 1) : null;
+            amount > 1 ? downAmount() : null;
           }}>
           <Text style={styles.controlIcon}>-</Text>
         </TouchableOpacity>
@@ -89,6 +106,28 @@ const styles = StyleSheet.create({
   stampAmountWrapper: {
     flex: 1,
     backgroundColor: '#F7F7F7',
+  },
+
+  mainHeader: {
+    width: screenWidth,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  headerButtonWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 19,
+    marginTop: 5,
+    // justifyContent: 'space-around',
+  },
+  headerSetting: {
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+  },
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
   },
 
   stampAmountTitleWrapper: {

@@ -194,7 +194,7 @@ function CouponUsageHistory({navigation}: couponUsageHistoryScreenProps) {
           {couponHistory[date].map((history: History) => (
             // <View style={styles.historyContent}>
             <View style={styles.historyText}>
-              <Text style={{fontWeight: 'bold'}}>
+              <Text style={{fontWeight: 'bold', color: 'black'}}>
                 {history.marketName} {'\n'}
                 <Text
                   style={{

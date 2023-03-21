@@ -31,7 +31,7 @@ export interface Store {
   activityData: Array<AcitivityData>;
 }
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('window').height;
 
 type SaveUpOwnerProps = NativeStackScreenProps<
@@ -55,26 +55,6 @@ function SaveUpOwner({navigation}: SaveUpOwnerProps) {
   return (
     <View style={styles.screen}>
       <StatusBar hidden={true} />
-      <View style={styles.mainHeader}>
-        <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitAlarm}>
-            <Image
-              source={
-                isAlarm
-                  ? require('../assets/icon/mainAlarmActive.png')
-                  : require('../assets/icon/mainAlarm.png')
-              }
-              style={styles.headerAlarm}
-            />
-          </Pressable>
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
-              style={styles.headerSetting}
-            />
-          </Pressable>
-        </View>
-      </View>
       <View style={styles.selectMarketListTitle}>
         <Text style={styles.selectMarketListTitleText}>
           매장을 선택해 주세요
@@ -144,7 +124,6 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-around',
   },
   headerSetting: {
-    // marginTop: screenHeight / 25,
     resizeMode: 'contain',
     width: 20,
     height: 20,
@@ -163,6 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     marginBottom: 20,
+    marginTop: 30,
   },
 
   selectMarketListTitleText: {
@@ -189,6 +169,7 @@ const styles = StyleSheet.create({
   marketTabNameText: {
     fontFamily: 'NotoSansCJKkr-Medium (TTF)',
     fontSize: 15,
+    color: '#a0a0a0',
   },
 
   marketTabArrow: {

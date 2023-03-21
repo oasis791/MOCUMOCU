@@ -198,6 +198,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: screenWidth / 1.29,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   textDropDown: {
@@ -262,6 +263,7 @@ const styles = StyleSheet.create({
   textInputEmail: {
     fontWeight: 'bold',
     height: 40,
+    color: 'black',
   },
   certificationButton: {
     // backgroundColor: 'black',

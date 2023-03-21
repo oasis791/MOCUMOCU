@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   Alert,
   Dimensions,
@@ -20,7 +20,7 @@ type MarketInfoScreenProps = NativeStackScreenProps<
   'MarketInfo'
 >;
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('window').height;
 
 function MarketInfo({navigation, route}: MarketInfoScreenProps) {
@@ -31,11 +31,13 @@ function MarketInfo({navigation, route}: MarketInfoScreenProps) {
   const isAlarm = false;
 
   const toMarektAnalysis = () => {
-    Alert.alert('알림', '매장 분석으로 이동');
+    // Alert.alert('알림', '매장 분석으로 이동');
+    navigation.navigate('MarketAnalysis', {marketIndex});
   };
 
   const toMarketModify = () => {
-    Alert.alert('알림', '매장정보 수정로 이동');
+    // Alert.alert('알림', '매장정보 수정로 이동');
+    navigation.navigate('ModifyMarket', {marketIndex});
   };
 
   const toMarketReward = () => {
@@ -43,39 +45,26 @@ function MarketInfo({navigation, route}: MarketInfoScreenProps) {
   };
 
   const toMarketEvent = () => {
-    Alert.alert('알림', '이벤트 관리로 이동');
+    // Alert.alert('알림', '이벤트 관리로 이동');
+    navigation.navigate('EventControl', {marketIndex});
   };
 
   const toMarketUsageHistory = () => {
-    Alert.alert('알림', '적립/사용 내역으로 이동');
+    // Alert.alert('알림', '적립/사용 내역으로 이동');
+    navigation.navigate('MarketCouponLog', {marketIndex});
   };
 
-  const onSubmitSetting = () => {
-    // Alert.alert('알림', '설정');
-    navigation.navigate('SettingsOwner');
-  };
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
-  };
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
   return (
     <View style={styles.mainBackground}>
       <StatusBar hidden={true} />
       <View style={styles.mainHeader}>
         <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitAlarm}>
+          <Pressable style={styles.headerButton} onPress={toBack}>
             <Image
-              source={
-                isAlarm
-                  ? require('../assets/icon/mainAlarmActive.png')
-                  : require('../assets/icon/mainAlarm.png')
-              }
-              style={styles.headerAlarm}
-            />
-          </Pressable>
-
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
+              source={require('../assets/icon/arrowBack.png')}
               style={styles.headerSetting}
             />
           </Pressable>
@@ -158,7 +147,6 @@ const styles = StyleSheet.create({
     width: screenWidth,
     paddingVertical: 15,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     marginBottom: 10,
   },
 
@@ -175,11 +163,8 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  headerAlarm: {
-    resizeMode: 'contain',
-    width: 20,
-    height: 20,
-    marginRight: 15,
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
   },
 
   marketTitleWrapper: {

@@ -61,3 +61,5 @@ buck-out/
 .DS_Store
 
 .eslintrc.js
+#env
+.env

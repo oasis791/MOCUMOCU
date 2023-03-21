@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -17,38 +17,25 @@ type StampControlProps = NativeStackScreenProps<
   LoggedInOwnerParamList,
   'StampControl'
 >;
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('window').height;
 
 function StampControl({navigation, route}: StampControlProps) {
   const [marketId, setMarketId] = useState(route.params.marketId);
   const [isAlarm, setIsAlarm] = useState(false);
 
-  const onSubmitSetting = () => {
-    Alert.alert('알림', '설정');
-  };
-  const onSubmitAlarm = () => {
-    Alert.alert('알림', '알람');
-  };
+  const toBack = useCallback(() => {
+    navigation.pop(); // 뒤로 가기
+  }, [navigation]);
 
   return (
     <View style={styles.screen}>
       <StatusBar hidden={true} />
       <View style={styles.mainHeader}>
         <View style={styles.headerButtonWrapper}>
-          <Pressable onPress={onSubmitAlarm}>
+          <Pressable style={styles.headerButton} onPress={toBack}>
             <Image
-              source={
-                isAlarm
-                  ? require('../assets/icon/mainAlarmActive.png')
-                  : require('../assets/icon/mainAlarm.png')
-              }
-              style={styles.buttonIcon}
-            />
-          </Pressable>
-          <Pressable onPress={onSubmitSetting}>
-            <Image
-              source={require('../assets/icon/mainSetting.png')}
+              source={require('../assets/icon/arrowBack.png')}
               style={styles.headerSetting}
             />
           </Pressable>
@@ -131,9 +118,7 @@ const styles = StyleSheet.create({
     width: screenWidth,
     paddingVertical: 15,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginBottom: 85,
-    left: 15,
+    marginBottom: 35,
   },
   headerLogo: {
     resizeMode: 'contain',
@@ -151,11 +136,13 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-around',
   },
   headerSetting: {
-    // marginTop: screenHeight / 25,
     resizeMode: 'contain',
     width: 20,
     height: 20,
     marginRight: 15,
+  },
+  headerButton: {
+    marginHorizontal: screenHeight / 60,
   },
 
   selectStoreListTitle: {

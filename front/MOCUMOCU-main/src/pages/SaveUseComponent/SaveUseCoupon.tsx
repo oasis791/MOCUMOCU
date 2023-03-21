@@ -68,7 +68,7 @@ function SaveUseCoupon({navigation}: SaveUseCouponScreenProps) {
   //     }
   //     setLoading(true);
   //     const response = await axios.post(
-  //       'http://54.180.91.167:8080/user/useCoupon',
+  //       'http://15.164.100.68:8080/user/useCoupon',
   //       {
   //         customerId: customerId,
   //       },

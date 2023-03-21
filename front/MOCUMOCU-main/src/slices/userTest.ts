@@ -18,10 +18,10 @@ interface initialStateTest {
 }
 
 const initialState: initialStateTest = {
-  name: '',
+  name: '김준서',
   id: 0,
-  email: '',
-  userType: '',
+  email: 'jykim9868@gmail.com',
+  userType: 'Customer',
   isLogIn: false,
   point: 0,
 };
