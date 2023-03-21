@@ -8,16 +8,19 @@ import {
   Alert,
   StyleSheet,
   Image,
-  TouchableHighlight,
   ActivityIndicator,
 } from 'react-native';
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
-import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
-import userSlice from '../slices/user';
+// import userSlice, { UserInfo } from '../slices/user';
+import userSliceTest, {UserInfoTest} from '../slices/userTest';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import LinearGradient from 'react-native-linear-gradient';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store/reducer';
+import Config from 'react-native-config';
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
 function SignIn({navigation}: SignInScreenProps) {
@@ -28,6 +31,7 @@ function SignIn({navigation}: SignInScreenProps) {
   // const canGoNext = email && password;
   const emailRef = useRef<TextInput | null>(null); //< > => generic
   const passwordRef = useRef<TextInput | null>(null);
+
   const onSubmit = useCallback(async () => {
     if (loading) {
       return;
@@ -41,34 +45,47 @@ function SignIn({navigation}: SignInScreenProps) {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/login`, {
-        email,
-        password,
+      const response = await axios.post(`${Config.API_URL}/customer/login`, {
+        customerEmail: email,
+        customerPassword: password,
       });
-      console.log(response.data);
+      console.log('response data: ', response.data.userType);
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
+      // dispatch(userSliceTest.actions.setUserInfoTest(response.data.data));
       dispatch(
-        userSlice.actions.setUser({
+        // userSlice.actions.setUserInfo({
+        //   // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
+        //   name: response.data.data.name,
+        //   id: response.data.data.id,
+        //   email: response.data.data.email,
+        //   accessToken: response.data.data.accessToken,
+        // }),
+        userSliceTest.actions.setUserInfoTest({
           // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
-          name: response.data.data.name,
-          email: response.data.data.email,
-          accessToken: response.data.data.accessToken,
+          name: response.data.customerName,
+          id: response.data.customerId,
+          email: response.data.customerEmail,
+          userType: response.data.userType,
+          isLogIn: response.data.logIn,
         }),
       );
-      await EncryptedStorage.setItem(
-        'refreshToken',
-        response.data.data.refreshToken,
-      );
-      console.log(EncryptedStorage.getItem('refreshToken'));
+      // console.log('알림', 'userInfoTest dispatch완료');
+      // console.log('test', test);
+
+      // await EncryptedStorage.setItem(
+      //   'refreshToken',
+      //   response.data.data.refreshToken,
+      // );
+      // console.log(EncryptedStorage.getItem('refreshToken'));
     } catch (error) {
       setLoading(false);
-      const errorResponse = (error as AxiosError).response;
+      const errorResponse = (error as AxiosError<any>).response;
       if (errorResponse) {
-        Alert.alert('알림', errorResponse.data.message);
+        Alert.alert('알림', '회원정보와 일치하지 않습니다.');
       }
     }
-  }, [loading, dispatch, email, password]);
+  }, [loading, email, password, dispatch]);
   const onChangeEmail = useCallback(text => {
     setEmail(text);
   }, []);
@@ -78,6 +95,55 @@ function SignIn({navigation}: SignInScreenProps) {
   const toSignUp = useCallback(() => {
     navigation.navigate('SignUp');
   }, [navigation]);
+  const toFindId = useCallback(() => {
+    navigation.navigate('FindId');
+  }, [navigation]);
+  const toFindPassword = useCallback(() => {
+    navigation.navigate('FindPassword');
+  }, [navigation]);
+  const loginButton = () => {
+    return (
+      <Pressable
+        onPress={onSubmit}
+        style={styles.loginButton}
+        disabled={!canGoNext}>
+        {loading ? (
+          <ActivityIndicator style={styles.indicator} color="white" />
+        ) : (
+          <Text style={styles.loginButtonText}>로그인</Text>
+        )}
+      </Pressable>
+    );
+  };
+  const linearGradientButton = () => {
+    return (
+      <Pressable
+        style={{
+          height: '33%',
+        }}
+        onPress={onSubmit}>
+        <LinearGradient
+          colors={['#FA6072', '#414FFD']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          locations={[0, 1]}
+          style={{
+            marginTop: 5,
+            marginBottom: 1,
+            paddingHorizontal: 115,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: '#e5e5e5',
+          }}>
+          {loading ? (
+            <ActivityIndicator style={styles.indicator} color="white" />
+          ) : (
+            <Text style={styles.loginButtonText}>로그인</Text>
+          )}
+        </LinearGradient>
+      </Pressable>
+    );
+  };
   const canGoNext = email && password;
   return (
     <View>
@@ -86,12 +152,12 @@ function SignIn({navigation}: SignInScreenProps) {
           <Image
             style={{
               marginTop: 30,
-              resizeMode: 'stretch',
-              width: 100,
-              height: 50,
-              marginBottom: 10,
+              resizeMode: 'contain',
+              width: 150,
+              height: 20,
+              marginBottom: 15,
             }}
-            source={require('../assets/logo_blue.png')}
+            source={require('../assets/gradLogo.png')}
           />
         </View>
         <View style={styles.inputBoxWrapper}>
@@ -131,50 +197,27 @@ function SignIn({navigation}: SignInScreenProps) {
           />
         </View>
         <View style={styles.buttonZone}>
-          <Pressable
-            onPress={onSubmit}
-            style={
-              !canGoNext
-                ? styles.loginButton
-                : StyleSheet.compose(
-                    styles.loginButton,
-                    styles.loginButtonActive,
-                  )
-            }
-            disabled={!canGoNext}>
-            {loading ? (
-              <ActivityIndicator style={styles.indicator} color="white" />
-            ) : (
-              <Text
-                style={
-                  !canGoNext
-                    ? styles.loginButtonText
-                    : StyleSheet.compose(
-                        styles.loginButtonText,
-                        styles.loginButtonTextActive,
-                      )
-                }>
-                로그인
-              </Text>
-            )}
-          </Pressable>
-          <TouchableHighlight
-            underlayColor={'#e6e6e6'}
-            onPress={toSignUp}
-            style={styles.signUpButton}>
-            <Text style={styles.signUpButtonText}>회원가입</Text>
-          </TouchableHighlight>
+          {!canGoNext ? <>{loginButton()}</> : <>{linearGradientButton()}</>}
           <View style={styles.zZone}>
-            <Pressable onPress={toSignUp}>
+            <Pressable onPress={toFindId}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
-            <Text style={{marginLeft: 5}}>/</Text>
-            <Pressable onPress={toSignUp}>
+            <Text style={{marginLeft: 5, color: 'gray'}}>ㅣ</Text>
+            <Pressable onPress={toFindPassword}>
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
+            </Pressable>
+            <Text style={{marginLeft: 5, color: 'gray'}}>ㅣ</Text>
+            <Pressable onPress={toSignUp}>
+              <Text style={styles.zZoneText}>회원가입</Text>
             </Pressable>
           </View>
         </View>
       </DismissKeyboardView>
+      <View style={styles.socialDivider}>
+        <View style={styles.socialDividerLineLeft} />
+        <Text style={{color: '#cecece', fontSize: 12}}>SNS 간편 로그인</Text>
+        <View style={styles.socialDividerLineRight} />
+      </View>
       <View style={styles.socialButtonWrapper}>
         <Pressable style={styles.socialButton}>
           <Image
@@ -224,46 +267,48 @@ const styles = StyleSheet.create({
   textInput: {
     padding: 5,
     // borderBottomWidth: StyleSheet.hairlineWidth,
-    marginTop: 1,
     borderStyle: 'solid',
     borderRadius: 8,
-    elevation: 10,
+    // elevation: 10,
     backgroundColor: 'white',
     paddingVertical: 8,
     paddingHorizontal: 20,
     width: 270,
+    // fontFamily: 'NotoSansCJKkr-Black (TTF)',
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
+    color: 'black',
   },
   inputWrapper: {padding: 20, alignItems: 'center'},
-  inputBoxWrapper: {padding: 5, alignItems: 'center'},
+  inputBoxWrapper: {padding: 3, alignItems: 'center', color: 'black'},
   label: {
     fontWeight: 'bold',
     fontSize: 16,
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   buttonZone: {
     alignItems: 'center',
     // marginBottom: '10%',
   },
   loginButton: {
+    // textAlign: 'center',
+    marginTop: 5,
+    marginBottom: 1,
     backgroundColor: '#e6e6e6',
     paddingHorizontal: 115,
-    height: '18%',
+    height: '30%',
     borderRadius: 8,
-    marginBottom: 10,
-    elevation: 10,
+    // marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
   },
-  signUpButton: {
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 108,
-    height: '18%',
-    borderRadius: 8,
-    elevation: 10,
-  },
+
   loginButtonActive: {backgroundColor: '#414FFD'},
   loginButtonText: {
+    // textAlign: 'center',
     color: 'white',
     fontSize: 14,
-    bottom: '15%',
+    bottom: '5%',
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   loginButtonTextActive: {color: '#ffffff'},
@@ -275,7 +320,7 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   socialButtonWrapper: {
-    marginTop: 90,
+    marginTop: 23,
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -287,25 +332,49 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     marginHorizontal: 12,
-    elevation: 5,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
+    // elevation: 5,
   },
   zZone: {
     flexDirection: 'row',
-    marginTop: '5%',
+    marginTop: 15,
   },
   zZoneText: {
     marginLeft: 5,
     fontSize: 12,
+    color: 'gray',
   },
   indicator: {
     // backgroundColor: 'gray',
-    paddingHorizontal: '7%',
+    // paddingHorizontal: '7%',
     // paddingVertical: 10,
     borderRadius: 5,
     // marginTop: '4%',
-    height: 40,
+    height: 35,
+    paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  socialDivider: {
+    marginTop: 23,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  socialDividerLineLeft: {
+    width: 65,
+    height: 0,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#cecece',
+    marginRight: 5,
+  },
+  socialDividerLineRight: {
+    width: 65,
+    height: 0,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#cecece',
+    marginLeft: 5,
   },
 });
 

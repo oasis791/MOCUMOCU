@@ -8,98 +8,161 @@ import {
   Alert,
   StyleSheet,
   Image,
-  TouchableHighlight,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import {RootStackParamList} from '../../App';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
-import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
-type SignInOwnerScreenProps = NativeStackScreenProps<RootStackParamList, 'SignInOwner'>;
+import LinearGradient from 'react-native-linear-gradient';
+import userSliceTest from '../slices/userTest';
+import Config from 'react-native-config';
+import {RootState} from '../store/reducer';
+import {useSelector} from 'react-redux';
+type SignInOwnerScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'SignInOwner'
+>;
 
 function SignInOwner({navigation}: SignInOwnerScreenProps) {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [ownerEmail, setOwnerEmail] = useState('');
+  const [ownerPassword, setOwnerPassword] = useState('');
   // const canGoNext = email && password;
   const emailRef = useRef<TextInput | null>(null); //< > => generic
   const passwordRef = useRef<TextInput | null>(null);
+
+  const userType = useSelector((state: RootState) => state.userTest.userType);
   const onSubmit = useCallback(async () => {
     if (loading) {
       return;
     }
-    if (!email || !email.trim()) {
+    if (!ownerEmail || !ownerEmail.trim()) {
       //trim은 좌우 공백 없애는 함수
       return Alert.alert('알림', '이메일을 입력해주세요');
     }
-    if (!password || !password.trim()) {
+    if (!ownerPassword || !ownerPassword.trim()) {
       return Alert.alert('알림', '비밀번호를 입력해주세요');
     }
     try {
-      setLoading(true);
-      const response = await axios.post(`${Config.API_URL}/login`, {
-        email,
-        password,
+      // setLoading(true); `${Config.API_URL}/login`
+      const response = await axios.post(`${Config.API_URL}/owner/login`, {
+        ownerEmail,
+        ownerPassword,
       });
       console.log(response.data);
       Alert.alert('알림', '로그인 되었습니다.');
       setLoading(false);
+      console.log('userType dispatch 이전', userType);
       dispatch(
-        userSlice.actions.setUser({
+        userSliceTest.actions.setUserInfoTest({
           // redux userSlice 값을 바꾸는 작업 = action => action이 dispatch되면 실행 즉, reducer가 진행됨
-          name: response.data.data.name,
-          email: response.data.data.email,
-          accessToken: response.data.data.accessToken,
+          name: response.data.ownerName,
+          id: response.data.ownerId,
+          email: response.data.ownerEmail,
+          userType: response.data.userType,
+          isLogIn: response.data.logIn,
         }),
       );
-      await EncryptedStorage.setItem(
-        'refreshToken',
-        response.data.data.refreshToken,
-      );
-      console.log(EncryptedStorage.getItem('refreshToken'));
+      // await EncryptedStorage.setItem(
+      //   'refreshToken',
+      //   response.data.data.refreshToken,
+      // );
+      // console.log(EncryptedStorage.getItem('refreshToken'));
+      console.log('userType', userType);
     } catch (error) {
       setLoading(false);
       const errorResponse = (error as AxiosError).response;
       if (errorResponse) {
-        Alert.alert('알림', errorResponse.data.message);
+        Alert.alert('알림', '회원정보와 일치하지 않습니다.');
+        console.log(errorResponse.status);
       }
     }
-  }, [loading, dispatch, email, password]);
+  }, [loading, dispatch, ownerEmail, ownerPassword]);
   const onChangeEmail = useCallback(text => {
-    setEmail(text);
+    setOwnerEmail(text);
   }, []);
   const onChangePassword = useCallback(text => {
-    setPassword(text);
+    setOwnerPassword(text);
   }, []);
   const toSignUpOwner = useCallback(() => {
     navigation.navigate('SignUpOwner');
   }, [navigation]);
-  const canGoNext = email && password;
+  const toFindIdOwner = useCallback(() => {
+    navigation.navigate('FindIdOwner');
+  }, [navigation]);
+  const toFindPasswordOwner = useCallback(() => {
+    navigation.navigate('FindPasswordOwner');
+  }, [navigation]);
+
+  const loginButton = () => {
+    return (
+      <Pressable
+        onPress={onSubmit}
+        style={styles.loginButton}
+        disabled={!canGoNext}>
+        {loading ? (
+          <ActivityIndicator style={styles.indicator} color="white" />
+        ) : (
+          <Text style={styles.loginButtonText}>로그인</Text>
+        )}
+      </Pressable>
+    );
+  };
+  const linearGradientButton = () => {
+    return (
+      <Pressable
+        style={{
+          height: '33%',
+        }}
+        onPress={onSubmit}>
+        <LinearGradient
+          colors={['#FA6072', '#414FFD']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          locations={[0, 1]}
+          // eslint-disable-next-line react-native/no-inline-styles
+          style={{
+            marginTop: 5,
+            marginBottom: 1,
+            paddingHorizontal: 115,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: '#e5e5e5',
+          }}>
+          <Text style={styles.loginButtonText}>로그인</Text>
+        </LinearGradient>
+      </Pressable>
+    );
+  };
+
+  const canGoNext = ownerEmail && ownerPassword;
   return (
     <View>
+      <StatusBar hidden={true} />
       <DismissKeyboardView>
         <View style={styles.inputWrapper}>
           <Image
             style={{
               marginTop: 30,
-              resizeMode: 'stretch',
-              width: 100,
-              height: 50,
-              marginBottom: 10,
+              resizeMode: 'contain',
+              width: 150,
+              height: 20,
+              marginBottom: 15,
             }}
-            source={require('../assets/logo_black.png')}
+            source={require('../assets/gradLogo.png')}
           />
         </View>
         <View style={styles.inputBoxWrapper}>
-          {/* <Text style={styles.label}>이메일</Text> */}
           <TextInput
             style={styles.textInput}
             placeholder="이메일"
-            value={email}
+            placeholderTextColor={'#c4c4c4'}
+            value={ownerEmail}
             onChangeText={onChangeEmail}
             importantForAutofill="yes"
             autoComplete="email"
@@ -118,7 +181,8 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
           <TextInput
             style={styles.textInput}
             placeholder="비밀번호"
-            value={password}
+            placeholderTextColor={'#c4c4c4'}
+            value={ownerPassword}
             onChangeText={onChangePassword}
             secureTextEntry
             importantForAutofill="yes"
@@ -131,46 +195,18 @@ function SignInOwner({navigation}: SignInOwnerScreenProps) {
           />
         </View>
         <View style={styles.buttonZone}>
-          <Pressable
-            onPress={onSubmit}
-            style={
-              !canGoNext
-                ? styles.loginButton
-                : StyleSheet.compose(
-                    styles.loginButton,
-                    styles.loginButtonActive,
-                  )
-            }
-            disabled={!canGoNext}>
-            {loading ? (
-              <ActivityIndicator style={styles.indicator} color="white" />
-            ) : (
-              <Text
-                style={
-                  !canGoNext
-                    ? styles.loginButtonText
-                    : StyleSheet.compose(
-                        styles.loginButtonText,
-                        styles.loginButtonTextActive,
-                      )
-                }>
-                로그인
-              </Text>
-            )}
-          </Pressable>
-          <TouchableHighlight
-            underlayColor={'#e6e6e6'}
-            onPress={toSignUpOwner}
-            style={styles.signUpButton}>
-            <Text style={styles.signUpButtonText}>회원가입</Text>
-          </TouchableHighlight>
+          {!canGoNext ? <>{loginButton()}</> : <>{linearGradientButton()}</>}
           <View style={styles.zZone}>
-            <Pressable onPress={toSignUpOwner}>
+            <Pressable onPress={toFindIdOwner}>
               <Text style={styles.zZoneText}>아이디 찾기</Text>
             </Pressable>
-            <Text style={{marginLeft: 5}}>/</Text>
-            <Pressable onPress={toSignUpOwner}>
+            <Text style={{marginLeft: 5}}>ㅣ</Text>
+            <Pressable onPress={toFindPasswordOwner}>
               <Text style={styles.zZoneText}>비밀번호 찾기</Text>
+            </Pressable>
+            <Text style={{marginLeft: 5}}>ㅣ</Text>
+            <Pressable onPress={toSignUpOwner}>
+              <Text style={styles.zZoneText}>회원가입</Text>
             </Pressable>
           </View>
         </View>
@@ -190,6 +226,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     width: 270,
+    color: 'black',
   },
   inputWrapper: {padding: 20, alignItems: 'center'},
   inputBoxWrapper: {padding: 5, alignItems: 'center'},
@@ -203,12 +240,16 @@ const styles = StyleSheet.create({
     // marginBottom: '10%',
   },
   loginButton: {
+    // textAlign: 'center',
+    marginTop: 5,
+    marginBottom: 1,
     backgroundColor: '#e6e6e6',
     paddingHorizontal: 115,
-    height: '18%',
+    height: '30%',
     borderRadius: 8,
-    marginBottom: 10,
-    elevation: 10,
+    // marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
   },
   signUpButton: {
     backgroundColor: '#ffffff',
@@ -217,11 +258,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 10,
   },
-  loginButtonActive: {backgroundColor: '#363636'},
+  loginButtonActive: {backgroundColor: '#414FFD'},
   loginButtonText: {
     color: 'white',
     fontSize: 14,
-    bottom: '15%',
+    bottom: '5%',
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   loginButtonTextActive: {color: '#ffffff'},
@@ -254,6 +295,7 @@ const styles = StyleSheet.create({
   zZoneText: {
     marginLeft: 5,
     fontSize: 12,
+    color: '#c8c8c8',
   },
   indicator: {
     // backgroundColor: 'gray',

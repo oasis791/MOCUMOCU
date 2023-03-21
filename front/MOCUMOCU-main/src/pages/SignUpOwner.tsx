@@ -22,80 +22,103 @@ import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
 // import DismissKeyboardView from '../components/DismissKeyboardView';
 import Config from 'react-native-config';
-type SignUpOwnerScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpOwner'>;
+type SignUpOwnerScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'SignUpOwner'
+>;
 
 function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [checkPassword, setCheckPassword] = useState('');
-  const [telephoneNumber, setTelephoneNumber] = useState('');
+  const [ownerEmail, setOwnerEmail] = useState('');
+  const [ownerName, setOwnerName] = useState('');
+  const [ownerPassword, setOwnerPassword] = useState('');
+  const [ownerCheckPassword, setOwnerCheckPassword] = useState('');
+  const [ownerPhoneNum, setOwnerPhoneNumber] = useState('');
   const emailRef = useRef<TextInput | null>(null);
   const nameRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
   const checkPasswordRef = useRef<TextInput | null>(null);
   const telephoneNumberRef = useRef<TextInput | null>(null);
   const onChangeEmail = useCallback(text => {
-    setEmail(text.trim());
+    setOwnerEmail(text.trim());
   }, []);
   const onChangeName = useCallback(text => {
-    setName(text.trim());
+    setOwnerName(text.trim());
   }, []);
   const onChangePassword = useCallback(text => {
-    setPassword(text.trim());
+    setOwnerPassword(text.trim());
   }, []);
   const onChangeCheckPassword = useCallback(text => {
-    setCheckPassword(text.trim());
+    setOwnerCheckPassword(text.trim());
   }, []);
   const onChangeTelephoneNumber = useCallback(text => {
-    setTelephoneNumber(text.trim());
+    setOwnerPhoneNumber(text.trim());
   }, []);
+
+  useEffect(() => {
+    setOwnerPhoneNumber(ownerPhoneNum.trim());
+    // setPhoneNumber(phoneNumber.replace('-', ''));
+
+    if (ownerPhoneNum.length === 11) {
+      setOwnerPhoneNumber(
+        ownerPhoneNum
+          .replace(/-/g, '')
+          .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
+      );
+    }
+  }, [ownerPhoneNum]);
+
   const onSubmit = useCallback(async () => {
     if (loading) {
       return;
     }
-    if (!email || !email.trim()) {
+    if (!ownerEmail || !ownerEmail.trim()) {
       return Alert.alert('알림', '이메일을 입력해주세요.');
     }
-    if (!name || !name.trim()) {
+    if (!ownerName || !ownerName.trim()) {
       return Alert.alert('알림', '이름을 입력해주세요.');
     }
-    if (!password || !password.trim()) {
+    if (!ownerPassword || !ownerPassword.trim()) {
       return Alert.alert('알림', '비밀번호를 입력해주세요.');
     }
-    if (!checkPassword || !checkPassword.trim()) {
+    if (!ownerCheckPassword || !ownerCheckPassword.trim()) {
       return Alert.alert('알림', '비밀번호 확인을 입력해주세요.');
     }
     if (
       !/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/.test(
-        email,
+        ownerEmail,
       )
     ) {
       return Alert.alert('알림', '올바른 이메일 주소가 아닙니다.');
     }
-    if (!/^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@^!%*#?&]).{8,50}$/.test(password)) {
+    if (
+      !/^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@^!%*#?&]).{8,50}$/.test(ownerPassword)
+    ) {
       return Alert.alert(
         '알림',
         '비밀번호는 영문,숫자,특수문자($@^!%*#?&)를 모두 포함하여 8자 이상 입력해야합니다.',
       );
     }
-    console.log(email, name, password, checkPassword, telephoneNumber);
+    console.log(
+      ownerEmail,
+      ownerName,
+      ownerPassword,
+      ownerCheckPassword,
+      ownerPhoneNum,
+    );
     // Alert.alert('알림', '회원가입 되었습니다.');
     try {
       setLoading(true);
-      // http method : get, put, patch, post, delete, head, options 가 주로 쓰임
-      const response = await axios.post(`${Config.API_URL}/user `, {
-        email,
-        name,
-        password,
-        checkPassword,
-        telephoneNumber,
+      // http method : get, put, patch, post, delete, head, options 가 주로 쓰임 ${Config.API_URL}/owner/signup
+      const response = await axios.post(`${Config.API_URL}/owner/signup`, {
+        ownerEmail,
+        ownerName,
+        ownerPassword,
+        ownerCheckPassword,
+        ownerPhoneNum,
       }); //비동기 요청이므로 await가 필요
-      console.log(response);
-      console.log(Config.API_URL);
       Alert.alert('알림', '회원가입 되었습니다.');
-      navigation.navigate('SignIn');
+      navigation.navigate('SignInOwner');
     } catch (error) {
       const errorResponse = (error as AxiosError).response;
       if (errorResponse) {
@@ -106,27 +129,32 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
   }, [
     navigation,
     loading,
-    email,
-    name,
-    password,
-    checkPassword,
-    telephoneNumber,
+    ownerEmail,
+    ownerName,
+    ownerPassword,
+    ownerCheckPassword,
+    ownerPhoneNum,
   ]); // password는 일방향 암호화(hash화) -> 예측 불가능한 값이 되어버림 but, hash 값이 고정되어있기 때문에 해당 값으로 인증 가능
   const canGoNext =
-    email && name && password && checkPassword && telephoneNumber;
+    ownerEmail &&
+    ownerName &&
+    ownerPassword &&
+    ownerCheckPassword &&
+    ownerPhoneNum;
   const [modalVisible, setModalVisible] = useState<any>(true);
   const [scrollToBottom, setScrollToBottom] = useState<any>(false);
-  
-//   useEffect(() => {
-//     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => modalVisible)
-//       return () => backHandler.remove()
-//   }, []);
-    
+
+  //   useEffect(() => {
+  //     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => modalVisible)
+  //       return () => backHandler.remove()
+  //   }, []);
+
   return (
     <DismissKeyboardView>
       <View>
+        <StatusBar hidden={true} />
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <SafeAreaView style={{paddingTop: StatusBar.currentHeight}}>
+          <SafeAreaView style={{paddingTop: 0}}>
             <ScrollView
               style={styles.scrollView}
               fadingEdgeLength={10}
@@ -229,7 +257,7 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
         </Modal>
         <View>
           <Text style={[styles.welcomeText, {marginBottom: 18}]}>
-            회원님, {'\n'}환영합니다!
+            점주님, {'\n'}환영합니다!
           </Text>
         </View>
         <View style={styles.inputWrapper}>
@@ -238,7 +266,7 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
             placeholder="이름"
             placeholderTextColor="#c4c4c4"
             onChangeText={onChangeName}
-            value={name}
+            value={ownerName}
             textContentType="name"
             returnKeyType="next"
             clearButtonMode="while-editing"
@@ -256,7 +284,7 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
             placeholder="이메일"
             placeholderTextColor="#c4c4c4"
             textContentType="emailAddress"
-            value={email}
+            value={ownerEmail}
             returnKeyType="next"
             clearButtonMode="while-editing"
             ref={emailRef}
@@ -271,10 +299,7 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
             placeholder="비밀번호"
             placeholderTextColor="#c4c4c4"
             onChangeText={onChangePassword}
-            value={password}
-            keyboardType={
-              Platform.OS === 'android' ? 'default' : 'ascii-capable'
-            }
+            value={ownerPassword}
             textContentType="password"
             secureTextEntry
             returnKeyType="next"
@@ -289,7 +314,7 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
             placeholder="비밀번호 확인"
             placeholderTextColor="#c4c4c4"
             onChangeText={onChangeCheckPassword}
-            value={checkPassword}
+            value={ownerCheckPassword}
             textContentType="password"
             secureTextEntry
             returnKeyType="next"
@@ -306,13 +331,15 @@ function SignUpOwner({navigation}: SignUpOwnerScreenProps) {
             placeholder="전화번호"
             placeholderTextColor="#c4c4c4"
             onChangeText={onChangeTelephoneNumber}
-            value={telephoneNumber}
+            keyboardType="decimal-pad"
+            value={ownerPhoneNum}
             textContentType="telephoneNumber"
             returnKeyType="next"
             clearButtonMode="while-editing"
             ref={telephoneNumberRef}
             onSubmitEditing={onSubmit}
             blurOnSubmit={false}
+            maxLength={13}
           />
           {/* <Text style={styles.label}>이름</Text> */}
         </View>
@@ -385,6 +412,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: 280,
     fontWeight: 'bold',
+    color: 'black',
     // fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   inputWrapper: {
@@ -408,7 +436,7 @@ const styles = StyleSheet.create({
     marginTop: '4%',
   },
   signUpButtonActive: {
-    backgroundColor: '#363636',
+    backgroundColor: '#FA6072',
   },
   signUpButtonText: {
     color: 'white',
@@ -416,9 +444,12 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
   },
   scrollView: {
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     backgroundColor: 'white',
     width: '100%',
     height: '100%',
+    paddingTop: 10,
     // alignItems: 'center',
     // justifyContent: 'center',
   },
@@ -438,7 +469,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     // position: 'relative',
   },
-  modalButtonActive: {backgroundColor: '#363636'},
+  modalButtonActive: {backgroundColor: '#FA6072'},
   modalButtonText: {
     color: 'gray',
     justifyContent: 'center',
@@ -452,16 +483,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
     fontFamily: 'GmarketSansTTFBold',
-    color: '#363636',
+    color: '#FA6072',
   },
   privacyAgreeText: {
     marginHorizontal: 40,
-    marginBottom: 100,
+    marginBottom: 120,
+    lineHeight: 20,
+    color: '#c4c4c4',
   },
   welcomeText: {
     fontSize: 24,
     fontFamily: 'GmarketSansTTFBold',
-    color: '#363636',
+    color: '#FA6072',
     marginTop: '10%',
     marginLeft: '10%',
     lineHeight: 30,

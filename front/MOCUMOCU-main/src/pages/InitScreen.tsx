@@ -1,28 +1,35 @@
 import React, {useCallback} from 'react';
 import {
+  Dimensions,
   Image,
   ImageBackground,
   Pressable,
+  StatusBar,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
+
 const image = require('../assets/initScreen.png');
 const logo_kor = require('../assets/logo_kor.png');
 const logo_eng = require('../assets/logo_eng.png');
+
 type InitScreenProps = NativeStackScreenProps<RootStackParamList, 'InitScreen'>;
 
 function InitScreen({navigation}: InitScreenProps) {
   const toSignInUser = useCallback(() => {
+    // userSlice.actions.setUserAuthority({authority: 'customer'});
     navigation.navigate('SignIn');
   }, [navigation]);
   const toSignInOwner = useCallback(() => {
     navigation.navigate('SignInOwner');
+    // userSlice.actions.setUserAuthority({authority: 'owner'});
   }, [navigation]);
   return (
     <View>
+      <StatusBar hidden={true} />
       <ImageBackground style={styles.background} source={image}>
         <View style={styles.logoWrapper}>
           <Image style={styles.logoImage} source={logo_kor} />
@@ -61,6 +68,9 @@ function InitScreen({navigation}: InitScreenProps) {
   );
 }
 
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
   background: {resizeMode: 'stretch', width: '100%', height: '100%'},
   initText: {
@@ -90,7 +100,8 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
   },
   startZone: {
-    marginTop: '60%',
+    flex: 1,
+    marginTop: '70%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -98,8 +109,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: 'white',
-    width: '77%',
-    height: '22%',
+    width: screenWidth * 0.8,
+    height: screenHeight * 0.06,
     borderRadius: 8,
     elevation: 5,
     opacity: 0.9,
@@ -108,7 +119,7 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansCJKkr-Black (TTF)',
     height: '100%',
     textAlignVertical: 'center',
-    // marginBottom: '1%',
+    marginBottom: 4,
   },
 });
 export default InitScreen;

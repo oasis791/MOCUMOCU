@@ -3,13 +3,81 @@ import {Provider} from 'react-redux';
 import store from './src/store';
 import AppInner from './AppInner';
 import {NavigationContainer} from '@react-navigation/native';
-export type LoggedInParamList = {
-  Orders: undefined;
-  Settings: undefined;
+import {PortalProvider} from '@gorhom/portal';
+import {Coupon} from './src/pages/SaveUseComponent/RewardList';
+import {Select} from './src/pages/SaveUseComponent/UseCoupon';
+import {Customizing} from './src/pages/MainComponent/CouponDetail';
+
+export type LoggedInUserParamList = {
+  /** MainComponent Type  */
   Main: undefined;
-  Complete: {orderId: string};
+  Settings: undefined;
+  PushNotice: undefined; // 푸시알림
+  Notice: undefined; // 공지사항
+  QnA: undefined;
+  CouponDetail: undefined;
+  SelectCustomizing: Customizing;
+
+  /** MoreComponent Type */
+  More: undefined;
+  ModifyUserAccount: undefined;
+  TermsOfUse: undefined;
+  CouponUsageHistory: undefined;
+  MyPointLog: undefined; // 더보기랑 메인 둘 다 해당
+  Help: undefined;
+  CouponReserveHelp: undefined;
+  CouponUsageHelp: undefined;
+  CustomizingHelp: undefined;
+  ChangePassword: undefined;
+
+  /** SaveUseComponent Type */
+  SaveUseCoupon: undefined;
+  UseCoupon: undefined;
+  RewardList: Select;
+  UseQR: Coupon;
+
+  // EventInfo: undefined;
+  CustomShop: undefined;
+  // Help: undefined;
   // orderId : parameter 칸 => 주문에 고유한 ID가 부여되어 있음 이걸 변수처럼 사용하기 위해서 넣어줌
 }; // -> 로그인 했을 때 보이는 페이지들
+
+export type LoggedInOwnerParamList = {
+  MarketAnalysis: {marketIndex: number};
+  ModifyMarket: {marketIndex: number};
+  MarketCouponLog: {marketIndex: number};
+  MainOwner: undefined;
+  SaveUpOwner: undefined;
+  StampControl: undefined;
+  SettingsOwner: undefined;
+  AddMarket: undefined;
+  AddStore: undefined;
+  MarketReward: {marketIndex: number};
+  MarketInfo: {marketIndex: number};
+  EventControl: {marketIndex: number};
+  NoticeOwner: undefined;
+  ModifyStore: undefined;
+  AddEvent: {
+    marketIndex: number | null;
+    bannerImage: string | null;
+    bannerDetailImage: string | null;
+  };
+  MarektAnalysis: undefined;
+  PrivacyOwner: undefined;
+  HelpOwner: undefined;
+  ModifyInfoOwner: undefined;
+  DevInfoOwner: undefined;
+  QRCodeScanner: {marketId: number; type: 'saveUp' | 'use'};
+  PhoneNumScanner: {marketId: number};
+  StampAmount: {marketId: number; customerId: number};
+  SaveUp: undefined;
+  MarketFunc: undefined;
+  MoreOwner: undefined;
+  ModifyOwnerAccount: undefined;
+  PrivacyPolicyOwner: undefined;
+  ModifyOwnerPassword: undefined;
+  // orderId : parameter 칸 => 주문에 고유한 ID가 부여되어 있음 이걸 변수처럼 사용하기 위해서 넣어줌
+};
 
 // 타입을 나눠 놓은 이유 -> 합쳐도 큰 문제는 되지 않지만 화면에 나타내는 조건이 달라서 나눠놓음
 //export -> 다른 파일에서 import 가능 => 타입도 다른 파일로 export, import 가능
@@ -19,15 +87,22 @@ export type RootStackParamList = {
   SignUp: undefined;
   SignUpOwner: undefined;
   InitScreen: undefined;
+  FindId: undefined;
+  FindIdOwner: undefined;
+  FindPassword: undefined;
+  FindPasswordOwner: undefined;
+  AppInner: undefined;
 }; // -> 이 타입은 로그인 안 했을 때 보이는 페이지들
 
 function App() {
   // const [isLoggedIn, setLoggedIn] = useState(true);
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <AppInner />
-      </NavigationContainer>
+      <PortalProvider>
+        <NavigationContainer>
+          <AppInner />
+        </NavigationContainer>
+      </PortalProvider>
     </Provider>
   );
 }
