@@ -336,7 +336,7 @@ function Main({navigation}: MainScreenProps) {
                     onPress={toMyPointLog}>
                     <Text
                       style={{
-                        marginRight: 8,
+                        marginRight: screenWidth / 100,
                         fontFamily: 'GmarketSansTTFBold',
                         color: '#9b9b9b',
                         fontSize: 14,
@@ -353,9 +353,9 @@ function Main({navigation}: MainScreenProps) {
                     style={{
                       color: '#414FFD',
                       fontSize: 24,
+                      // backgroundColor: 'blue',
                     }}>
-                    {'      '}
-                    {point} P
+                    {100} P
                   </Text>
                 </Text>
               </View>
@@ -511,7 +511,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     // marginLeft: 50,
-    marginLeft: screenWidth / 5,
+    marginLeft: screenWidth / 7,
     // alignItems: 'baseline',
     width: screenWidth / 4,
     height: screenHeight / 9,
@@ -519,16 +519,16 @@ const styles = StyleSheet.create({
     // height: 40,
     // borderRadius: 10,
   },
-  // myInfoPointText: {
-  //   fontSize: 15,
-  //   // paddingVertical: 5,
-  //   fontFamily: 'GmarketSansTTFBold',
-  //   color: '#9b9b9b',
-  //   height: screenHeight / 8,
-  //   width: screenWidth / 4.5,
-  //   lineHeight: 25,
-  //   backgroundColor: 'orange',
-  // },
+  myInfoPointText: {
+    fontSize: 15,
+    // paddingVertical: 5,
+    fontFamily: 'GmarketSansTTFBold',
+    color: '#9b9b9b',
+    height: screenHeight / 10,
+    width: screenWidth / 4.5,
+    lineHeight: 25,
+    // backgroundColor: 'orange',
+  },
   eventBanner: {
     // height: 210,
     // height: screenHeight / 10,
@@ -547,11 +547,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 12,
-    // backgroundColor: 'green',
-    width: screenWidth / 4,
-    // height: screenHeight / 8,
+    // fontSize: 12,
     // marginBottom: 10,
+    // backgroundColor: 'green',
   },
   toMyPointImg: {
     resizeMode: 'contain',
