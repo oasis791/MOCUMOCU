@@ -20,27 +20,31 @@
 
 ### 개발 환경
 
+<p dir="auto">
 <img src="https://img.shields.io/badge/visual studio code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white" />
 <img src="https://img.shields.io/badge/intellij idea-000000?style=for-the-badge&logo=intellijidea&logoColor=white" />
 <img src="https://img.shields.io/badge/amazon s3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white" />
 <img src="https://img.shields.io/badge/git -F05032?style=for-the-badge&logo=git&logoColor=white" />
-
 <img src="https://img.shields.io/badge/amazon aws-232F3E?style=for-the-badge&logo=Amazon AWS&logoColor=white" />
-
+</p>
 
 ### 프론트엔드
 
+<p dir="auto">
 <img src="https://img.shields.io/badge/react--native-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
 <img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white" />
 <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
 <img src="https://img.shields.io/badge/redux-764ABC?style=for-the-badge&logo=redux&logoColor=white" />
+</p>
 
 ### 백엔드
 
 ### 커뮤니케이션
 
+<p dir="auto">
 <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white" />
 <img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" />
+</p>
 
 ## 아키텍쳐
 
