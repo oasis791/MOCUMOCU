@@ -1,11 +1,10 @@
 # 💮 MOCU MOCU
 <p align="center"><img src="https://user-images.githubusercontent.com/71623879/228467837-52c0b68c-62ff-4e47-90f5-4315ba63ebe1.png" width="300"/></p>
 
-> 쿠폰 적립 애플리케이션  
+> __쿠폰 적립 애플리케이션__
 [발표자료](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/26535a21-3f4e-42c3-a5fb-f3991579d030/%E1%84%80%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AF%E1%84%87%E1%85%A1%E1%86%AF%E1%84%91%E1%85%AD.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230321T082443Z&X-Amz-Expires=86400&X-Amz-Signature=7bee2b93fbc1bcdc6ecf36b391adf08006f4bae422792050d04cf5b6f089df3a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22%25E1%2584%2580%25E1%2585%25B5%25E1%2584%2586%25E1%2585%25A1%25E1%2586%25AF%25E1%2584%2587%25E1%2585%25A1%25E1%2586%25AF%25E1%2584%2591%25E1%2585%25AD.pdf%22&x-id=GetObject)
 
 ## 기획 의도
----
 대부분의 소상공인들은 항상 쿠폰을 발급하고, 이를 관리하는 일이 부담스럽고 환경적, 경제적 문제를 야기합니다. 이러한 문제를 해결하기 위해 대기업에서는 스마트폰을 이용해 쿠폰을 저장 및 관리하는 서비스를 제공하고 있습니다. 하지만 동네 카페, 미용실, 베이커리 등의 소상공인들은 이러한 혜택을 누리기 어렵습니다. 이러한 문제점을 해결하기 위해 모바일 애플리케이션을 통해 실물 쿠폰을 디지털화하여 소상공인이 더 체계적으로 관리할 수 있도록 지원하고, 실물 쿠폰 제작으로 인한 경제적 부담을 줄이고자 합니다. 또한, 소비자는 애플리케이션을 통해 더욱 편리하게 쿠폰을 적립하고 사용할 수 있습니다.
 
 ## 개발 인원
@@ -18,7 +17,6 @@
 |[lee2963](https://github.com/lee2963)|이승민|<img src="https://i.ibb.co/qMFWhSQ/lee2963.png">|백엔드 개발 및 배포
 
 ## 📚 기술 스택
----
 
 ### 개발 환경
 
