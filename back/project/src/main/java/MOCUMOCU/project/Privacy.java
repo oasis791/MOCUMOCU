@@ -3,7 +3,7 @@ package MOCUMOCU.project;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 @Getter @Setter

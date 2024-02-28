@@ -5,8 +5,7 @@ import MOCUMOCU.project.couponlog.entity.CouponLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 
 @Repository
