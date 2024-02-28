@@ -8,7 +8,7 @@ import MOCUMOCU.project.reward.entity.Reward;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
