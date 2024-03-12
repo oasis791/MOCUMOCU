@@ -6,6 +6,9 @@ import MOCUMOCU.project.customer.entity.Gender;
 import MOCUMOCU.project.customize.entity.Customize;
 import MOCUMOCU.project.customize.entity.Type;
 import MOCUMOCU.project.customize.service.CustomizeService;
+import MOCUMOCU.project.market.dto.MarketAddDTO;
+import MOCUMOCU.project.market.entity.Market;
+import MOCUMOCU.project.market.service.MarketService;
 import MOCUMOCU.project.owner.entity.Owner;
 import MOCUMOCU.project.owner.service.OwnerService;
 import org.springframework.boot.CommandLineRunner;
@@ -25,7 +28,7 @@ public class ProjectApplication {
 
 
 	@Bean
-	CommandLineRunner run(OwnerService ownerService, CustomerService customerService, CustomizeService customizeService) {
+	CommandLineRunner run(OwnerService ownerService, CustomerService customerService, CustomizeService customizeService, MarketService marketService) {
 		return args -> {
 			Owner owner = new Owner();
 			Privacy privacy = new Privacy();
@@ -37,6 +40,14 @@ public class ProjectApplication {
 			owner.setPrivacy(privacy);
 
 			ownerService.join(owner);
+
+			MarketAddDTO marketAddDTO = new MarketAddDTO();
+			marketAddDTO.setMarketName("Test Cafe");
+			marketAddDTO.setMarketPhoneNum("010-1234-1234");
+			marketAddDTO.setBusinessNum("010-1231-1231");
+			marketAddDTO.setOwnerId(owner.getId());
+
+			marketService.addMarket(marketAddDTO);
 
 			Customer customer = new Customer();
 			customer.setGender(Gender.MALE);

@@ -64,16 +64,17 @@ public class CouponServiceImpl implements CouponService {
 			newCoupon.setCoupon(customerRepository.findOne(saveStampDTO.getCustomerId()),
 				marketRepository.findOne(saveStampDTO.getMarketId()), saveStampDTO.getAmount());
 
-			couponRepository.save(newCoupon);
-
+			couponLogRepository.save(newCouponLog);
 			newCouponLog.setLog(newCoupon, saveStampDTO.getAmount());
+			newCoupon.setCouponLog(newCouponLog);
+			couponRepository.save(newCoupon);
 		} else {
 			Coupon findCoupon = optionalCoupon.get();
 			findCoupon.setAmountStamp(findCoupon.getAmountStamp() + saveStampDTO.getAmount());
 			newCouponLog.setLog(findCoupon, saveStampDTO.getAmount());
+			findCoupon.setCouponLog(newCouponLog);
+			couponLogRepository.save(newCouponLog);
 		}
-
-		couponLogRepository.save(newCouponLog);
 	}
 
 	@Override
