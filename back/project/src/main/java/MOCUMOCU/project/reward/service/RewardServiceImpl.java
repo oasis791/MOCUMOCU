@@ -1,5 +1,6 @@
 package MOCUMOCU.project.reward.service;
 
+import MOCUMOCU.project.coupon.entity.Coupon;
 import MOCUMOCU.project.coupon.repository.CouponRepository;
 import MOCUMOCU.project.reward.entity.Reward;
 import MOCUMOCU.project.reward.form.RewardAddDTO;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -49,7 +51,12 @@ public class RewardServiceImpl implements RewardService {
 
     @Override
     public List<RewardCustomerDTO> customerReward(Long couponId) {
-        Long marketId = couponRepository.findOne(couponId).getMarket().getId();
+        Optional<Coupon> optionalCoupon = couponRepository.findById(couponId);
+
+        Coupon findCoupon = optionalCoupon.orElseThrow(() ->
+            new RuntimeException("Coupon Doesn't exist"));
+
+        Long marketId = findCoupon.getMarket().getId();
 
         List<Reward> findRewards = rewardRepository.findByMarketId(marketId);
         List<RewardCustomerDTO> rewardCustomerDTOS = new ArrayList<>();
