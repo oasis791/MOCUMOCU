@@ -31,6 +31,6 @@ public class Market {
     @OneToMany(mappedBy = "market", cascade = CascadeType.ALL)
     private List<Reward> rewards = new ArrayList<>();
 
-    @OneToOne(mappedBy = "market")
-    private Coupon coupon;
+    @OneToMany(mappedBy = "market", fetch = FetchType.LAZY)
+    private List<Coupon> coupon = new ArrayList<>();
 }

@@ -1,53 +1,19 @@
 package MOCUMOCU.project.coupon.repository;
 
-import MOCUMOCU.project.coupon.entity.Coupon;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-
-import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-@RequiredArgsConstructor
-public class CouponRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-    private final EntityManager em;
+import MOCUMOCU.project.coupon.entity.Coupon;
 
-    public Long save(Coupon coupon) {
-        em.persist(coupon);
+public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
-        return coupon.getId();
-    }
+	@Query(value = "SELECT c FROM Coupon c WHERE c.customer.id = :customerId AND c.market.id = :marketId")
+	Optional<Coupon> findByCustomerIdAndMarketId(@Param("customerId") Long customerId, @Param("marketId") Long marketId);
 
-    public Coupon findOne(Long id) {
-       return em.find(Coupon.class, id);
-
-    }
-
-
-    public List<Coupon> findByCustomerId(Long customerId) {
-        return em.createQuery("select c from Coupon c where c.customer.id = : customerId", Coupon.class)
-                .setParameter("customerId", customerId)
-                .getResultList();
-    }
-
-    public Coupon findByCustomerIdAndMarketId(Long customerId, Long marketId) {
-        List<Coupon> coupons = em.createQuery("select c from Coupon c where c.customer.id = :customerId and c.market.id = :marketId", Coupon.class)
-                .setParameter("customerId", customerId)
-                .setParameter("marketId", marketId)
-                .getResultList();
-
-        if (coupons.isEmpty()) {
-            return null;
-        } else{
-            return coupons.get(0);
-        }
-
-
-    }
-
-
-    public void remove(Coupon coupon) {
-        em.remove(coupon);
-    }
+	@Query(value = "SELECT c FROM Coupon c JOIN FETCH c.market WHERE c.customer.id = :customerId")
+	Optional<List<Coupon>> findByCustomerId(@Param("customerId") Long customerId);
 }

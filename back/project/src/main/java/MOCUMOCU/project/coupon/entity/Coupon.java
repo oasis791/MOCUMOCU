@@ -33,7 +33,7 @@ public class Coupon {
     @JoinColumn(name = "couponlog_id")
     private CouponLog couponLog;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "market_id")
     private Market market;
 

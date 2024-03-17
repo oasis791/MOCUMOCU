@@ -1,20 +1,26 @@
 package MOCUMOCU.project;
 
+import MOCUMOCU.project.coupon.dto.SaveStampDTO;
+import MOCUMOCU.project.coupon.entity.Coupon;
+import MOCUMOCU.project.coupon.service.CouponService;
 import MOCUMOCU.project.customer.entity.Customer;
 import MOCUMOCU.project.customer.service.CustomerService;
 import MOCUMOCU.project.customer.entity.Gender;
 import MOCUMOCU.project.customize.entity.Customize;
 import MOCUMOCU.project.customize.entity.Type;
 import MOCUMOCU.project.customize.service.CustomizeService;
+import MOCUMOCU.project.market.dto.MarketAddDTO;
+import MOCUMOCU.project.market.entity.Market;
+import MOCUMOCU.project.market.service.MarketService;
 import MOCUMOCU.project.owner.entity.Owner;
 import MOCUMOCU.project.owner.service.OwnerService;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
-
 
 @SpringBootApplication
 public class ProjectApplication {
@@ -24,8 +30,10 @@ public class ProjectApplication {
 	}
 
 
+/*
 	@Bean
-	CommandLineRunner run(OwnerService ownerService, CustomerService customerService, CustomizeService customizeService) {
+	CommandLineRunner run(OwnerService ownerService, CustomerService customerService, CustomizeService customizeService,
+		MarketService marketService, CouponService couponService) {
 		return args -> {
 			Owner owner = new Owner();
 			Privacy privacy = new Privacy();
@@ -63,6 +71,22 @@ public class ProjectApplication {
 			femaleCustomer.setPrivacy(privacy);
 
 			customerService.join(femaleCustomer);
+
+			for (long l = 1; l <= 2; l++) {
+				MarketAddDTO marketAddDTO = new MarketAddDTO();
+				marketAddDTO.setMarketName("Test Cafe");
+				marketAddDTO.setMarketPhoneNum("010-1234-1234");
+				marketAddDTO.setBusinessNum("010-1231-1231");
+				marketAddDTO.setOwnerId(owner.getId());
+
+				marketService.addMarket(marketAddDTO);
+
+				SaveStampDTO saveStampDTO = new SaveStampDTO();
+				saveStampDTO.setAmount(100);
+				saveStampDTO.setCustomerId(customer.getId());
+				saveStampDTO.setMarketId(l);
+				couponService.earnStamp(saveStampDTO);
+			}
 
 			Customize board1 = new Customize();
 			board1.setCustomizePoint(30);
@@ -125,4 +149,5 @@ public class ProjectApplication {
 			customizeService.saveCustomize(stamp4);
 		};
 	}
+*/
 }
