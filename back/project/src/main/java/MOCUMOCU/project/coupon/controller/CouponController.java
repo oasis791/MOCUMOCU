@@ -39,9 +39,13 @@ public class CouponController {
 
     @GetMapping("/{customerId}/coupon")
     public ResponseEntity<List<CouponInfoDTO>> findMyCoupons(@PathVariable Long customerId) {
+        long beforeLogic = System.currentTimeMillis();
 
         List<CouponInfoDTO> couponInfoDTOList = couponService.findAllCoupon(customerId);
 
+        long afterLogic = System.currentTimeMillis();
+
+        log.info("실행 시간 : " + String.valueOf(afterLogic - beforeLogic) + "ms");
         return new ResponseEntity<>(couponInfoDTOList, HttpStatus.OK);
     }
 
